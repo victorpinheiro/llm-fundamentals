@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 10 — Produção: Observabilidade e Segurança · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a class="active" aria-current="page" href="Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="modulo-10-producao-observabilidade-e-seguranca">Módulo 10 — Produção: Observabilidade e Segurança</h1>
+<p><strong>Conceitos:</strong> <a href="../concepts/Observability.html">Referência — Observabilidade</a> · <a href="../concepts/Security.html">Referência — Segurança</a></p>
+<hr />
+<h2 id="objetivo">Objetivo</h2>
+<p>Instrumentar um sistema de IA de forma que ele avise quando quebra, e<br />
+revisar sua própria arquitetura pela ótica de segurança antes que outra<br />
+pessoa o faça.</p>
+<hr />
+<h2 id="por-que-importa">Por que importa</h2>
+<p>Um sistema que exige sua presença constante não foi entregue — foi<br />
+emprestado. Observabilidade é o que permite entregar de verdade.</p>
+<p>E numa organização com dados sensíveis, a revisão de segurança é o que<br />
+decide se o sistema vai a produção ou morre em análise.</p>
+<hr />
+<h2 id="observabilidade">Observabilidade</h2>
+<h3 id="o-que-medir">O que medir</h3>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consumo de tokens</td>
+<td>Previsão e controle de custo</td>
+</tr>
+<tr>
+<td>Latência por percentil</td>
+<td>Acordo de nível de serviço</td>
+</tr>
+<tr>
+<td>Taxa de erro</td>
+<td>Saúde básica</td>
+</tr>
+<tr>
+<td>Pontuação de avaliação contínua</td>
+<td>Regressão silenciosa</td>
+</tr>
+<tr>
+<td>Sucesso de chamadas de ferramenta</td>
+<td>Saúde de agentes</td>
+</tr>
+<tr>
+<td>Custo por execução</td>
+<td>Detecção de explosão de custo</td>
+</tr>
+</tbody>
+</table>
+<p>Percentis importam mais que média. Uma média de 2 segundos com percentil<br />
+95 em 30 segundos significa que uma parcela relevante dos usuários tem<br />
+experiência ruim — e a média esconde isso.</p>
+<h3 id="rastreamento">Rastreamento</h3>
+<p>Para agentes, rastreamento por execução não é opcional. Você precisa<br />
+conseguir reconstruir: quais ferramentas foram chamadas, com quais<br />
+argumentos, que resultado voltou, e o que o modelo decidiu depois.</p>
+<p>Sem isso, depurar um agente é adivinhação.</p>
+<h3 id="alertas-minimos">Alertas mínimos</h3>
+<ul>
+<li>Taxa de erro acima do limite numa janela curta</li>
+<li>Latência de percentil alto acima do acordo</li>
+<li>Anomalia de custo</li>
+<li>Pontuação de avaliação abaixo do mínimo</li>
+</ul>
+<p><strong>Dispare cada alerta de propósito uma vez.</strong> Alerta não testado é<br />
+alerta que você descobre quebrado durante o incidente.</p>
+<h3 id="registro-com-cuidado">Registro com cuidado</h3>
+<p>Registre: identificador anonimizado, momento, modelo, tokens, latência,<br />
+custo, ferramentas usadas, resultado da avaliação.</p>
+<p><strong>Nunca registre:</strong> conteúdo com dados pessoais, credenciais, informação<br />
+financeira ou de saúde. Log é frequentemente o vazamento mais fácil de<br />
+cometer e o mais difícil de reverter.</p>
+<hr />
+<h2 id="seguranca">Segurança</h2>
+<h3 id="superficies-de-risco">Superfícies de risco</h3>
+<table>
+<thead>
+<tr>
+<th>Risco</th>
+<th>Mitigação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Injeção de prompt</td>
+<td>Tratar conteúdo externo como dado</td>
+</tr>
+<tr>
+<td>Vazamento no prompt</td>
+<td>Remover dados sensíveis antes da chamada</td>
+</tr>
+<tr>
+<td>Permissão excessiva</td>
+<td>Permissões do usuário, não do sistema</td>
+</tr>
+<tr>
+<td>Segredo exposto</td>
+<td>Cofre de segredos</td>
+</tr>
+<tr>
+<td>Log com dado sensível</td>
+<td>Remoção na camada de registro</td>
+</tr>
+<tr>
+<td>Saída não validada</td>
+<td>Esquema e validação antes de usar</td>
+</tr>
+</tbody>
+</table>
+<h3 id="remocao-de-dados-sensiveis">Remoção de dados sensíveis</h3>
+<p>Antes de enviar qualquer texto a um modelo, considere o que ele contém.<br />
+Dados pessoais, financeiros ou de saúde frequentemente não podem sair<br />
+do perímetro da organização.</p>
+<p>Se não souber se um dado pode ser enviado, <strong>assuma que não pode</strong> e<br />
+consulte quem sabe. Essa é a postura correta e é o que se espera de um<br />
+engenheiro sênior.</p>
+<h3 id="conformidade">Conformidade</h3>
+<p>Você não precisa ser especialista, mas precisa reconhecer quando um<br />
+requisito se aplica e saber a quem perguntar.</p>
+<table>
+<thead>
+<tr>
+<th>Área</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proteção de dados pessoais</td>
+<td>Praticamente sempre</td>
+</tr>
+<tr>
+<td>Residência de dados</td>
+<td>Operação internacional</td>
+</tr>
+<tr>
+<td>Setor regulado</td>
+<td>Saúde, finanças, governo</td>
+</tr>
+<tr>
+<td>Auditoria e controle</td>
+<td>Empresas de capital aberto</td>
+</tr>
+</tbody>
+</table>
+<p>Descubra os requisitos na descoberta, não na véspera do lançamento.<br />
+Um requisito de residência de dados descoberto tarde pode invalidar toda<br />
+a arquitetura.</p>
+<h3 id="opcoes-de-implantacao">Opções de implantação</h3>
+<table>
+<thead>
+<tr>
+<th>Opção</th>
+<th>Quando necessária</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serviço gerenciado</td>
+<td>Padrão</td>
+</tr>
+<tr>
+<td>Rede privada</td>
+<td>Dados não podem trafegar em rede pública</td>
+</tr>
+<tr>
+<td>Infraestrutura própria</td>
+<td>Requisito de soberania</td>
+</tr>
+<tr>
+<td>Isolamento total</td>
+<td>Ambientes de segurança máxima</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="autoavaliacao">Autoavaliação</h2>
+<ol>
+<li>Por que percentil 95 importa mais que média?</li>
+<li>Por que testar alertas disparando de propósito?</li>
+<li>Que campos nunca vão para log?</li>
+<li>Como decidir se um dado pode ir para o modelo?</li>
+<li>Que perguntas de conformidade fazer na primeira conversa?</li>
+</ol>
+<hr />
+<h2 id="erros-comuns">Erros comuns</h2>
+<ul>
+<li>Instrumentar depois do incidente</li>
+<li>Alerta configurado e nunca testado</li>
+<li>Registrar o prompt inteiro por conveniência</li>
+<li>Descobrir conformidade tarde demais</li>
+<li>Confiar no prompt como controle de acesso</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Module_09_Multi_Agent.html">&larr; Módulo 9 — Múltiplos Agentes e Protocolos</a><a class="pager-link next" href="Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

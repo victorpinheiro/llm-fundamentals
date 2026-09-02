@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P0 — Ambiente e Primeira Chamada · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Projetos</summary>
+<ul>
+<li><a class="active" aria-current="page" href="P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="p0-ambiente-e-primeira-chamada">P0 — Ambiente e Primeira Chamada</h1>
+<p><strong>Antes do Módulo 1</strong> · <strong>Tempo:</strong> 2–3h</p>
+<hr />
+<h2 id="objetivo">Objetivo</h2>
+<p>Ter ambiente funcionando e fazer a primeira chamada com sucesso.<br />
+Projeto pequeno de propósito — o valor é remover atrito antes do<br />
+conteúdo começar.</p>
+<hr />
+<h2 id="passo-a-passo">Passo a passo</h2>
+
+<h3 id="passo-1-ambiente-virtual">1. Crie o ambiente virtual</h3>
+<p>Abra o terminal na raiz do seu projeto e execute:</p>
+<pre><code>python -m venv .venv</code></pre>
+<p>Ative o ambiente:</p>
+<pre><code># Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+
+# Windows (cmd)
+.venv\Scripts\activate.bat
+
+# macOS / Linux
+source .venv/bin/activate</code></pre>
+<p>Confirme que está ativo — o prompt do terminal deve mostrar <code>(.venv)</code> no início da linha.</p>
+
+<h3 id="passo-2-dependencias">2. Instale as dependências</h3>
+<p>Com o ambiente ativo, instale os pacotes necessários para a sua trilha:</p>
+<pre><code># Trilha A — OpenAI + Anthropic
+pip install openai anthropic python-dotenv
+
+# Trilha B — Google Cloud / Vertex AI
+pip install google-cloud-aiplatform python-dotenv</code></pre>
+<p>Salve as dependências para reprodutibilidade:</p>
+<pre><code>pip freeze > requirements.txt</code></pre>
+
+<h3 id="passo-3-credenciais">3. Configure as credenciais</h3>
+<p>Crie um arquivo <code>.env</code> na raiz do projeto. <strong>Nunca comite este arquivo.</strong></p>
+
+<h4>Trilha A — OpenAI + Anthropic</h4>
+<pre><code># .env
+OPENAI_API_KEY=sk-proj-...sua-chave-aqui...
+ANTHROPIC_API_KEY=sk-ant-...sua-chave-aqui...</code></pre>
+<p>Obtenha suas chaves em:</p>
+<ul>
+<li>OpenAI: <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></li>
+<li>Anthropic: <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com/settings/keys</a></li>
+</ul>
+
+<h4>Trilha B — Google Cloud / Vertex AI</h4>
+<pre><code># .env
+GOOGLE_CLOUD_PROJECT=meu-projeto-id
+GOOGLE_CLOUD_LOCATION=us-central1</code></pre>
+<p>A Trilha B usa <strong>Application Default Credentials</strong> (ADC) — nunca chave de API. Configure com:</p>
+<pre><code>gcloud auth application-default login</code></pre>
+<p>Se ainda não tem o <code>gcloud</code> instalado, siga o <a href="https://cloud.google.com/sdk/docs/install" target="_blank">guia de instalação do Google Cloud CLI</a>.</p>
+
+<h3 id="passo-4-gitignore">4. Proteja suas credenciais</h3>
+<p>Crie o <code>.gitignore</code> antes de qualquer <code>git add</code>:</p>
+<pre><code># .gitignore
+.env
+.venv/
+__pycache__/
+*.pyc</code></pre>
+<p>Crie também um <code>.env.example</code> sem valores reais, para documentar quais variáveis são esperadas:</p>
+<pre><code># .env.example — copie para .env e preencha com seus valores
+OPENAI_API_KEY=
+ANTHROPIC_API_KEY=
+GOOGLE_CLOUD_PROJECT=
+GOOGLE_CLOUD_LOCATION=</code></pre>
+
+<h3 id="passo-5-alertas">5. Configure alertas de orçamento</h3>
+<p>Antes de escrever qualquer código, configure um limite de gasto. Você <strong>vai</strong> esquecer uma chamada em loop algum dia — o alerta é o que impede uma conta de centenas de dólares.</p>
+<ul>
+<li><strong>OpenAI:</strong> <a href="https://platform.openai.com/settings/organization/limits" target="_blank">Configurar limites de uso</a> — defina um limite mensal (ex: US$10 para começar).</li>
+<li><strong>Anthropic:</strong> <a href="https://console.anthropic.com/settings/plans" target="_blank">Console Anthropic — Plans</a> — configure o limite de gasto.</li>
+<li><strong>Google Cloud:</strong> <a href="https://cloud.google.com/billing/docs/how-to/budgets" target="_blank">Criar alertas de orçamento</a> — crie um alerta no console de faturamento.</li>
+</ul>
+
+<h3 id="passo-6-hello-py">6. Escreva o <code>hello.py</code></h3>
+<p>Este é o momento da verdade: uma chamada real ao modelo. Escolha o código da sua trilha.</p>
+
+<h4>Trilha A — OpenAI</h4>
+<pre><code># hello.py — Trilha A (OpenAI)
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+
+client = OpenAI()  # usa OPENAI_API_KEY do .env automaticamente
+
+resposta = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "Você é um assistente útil."},
+        {"role": "user", "content": "Diga 'Olá, mundo!' e explique em uma frase o que é um LLM."}
+    ],
+    temperature=0,
+)
+
+print(resposta.choices[0].message.content)
+print(f"\nTokens usados: {resposta.usage.total_tokens}")</code></pre>
+
+<h4>Trilha A — Anthropic</h4>
+<pre><code># hello.py — Trilha A (Anthropic)
+import os
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+
+client = anthropic.Anthropic()  # usa ANTHROPIC_API_KEY do .env automaticamente
+
+resposta = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=256,
+    messages=[
+        {"role": "user", "content": "Diga 'Olá, mundo!' e explique em uma frase o que é um LLM."}
+    ],
+    temperature=0,
+)
+
+print(resposta.content[0].text)
+print(f"\nTokens — entrada: {resposta.usage.input_tokens}, saída: {resposta.usage.output_tokens}")</code></pre>
+
+<h4>Trilha B — Vertex AI</h4>
+<pre><code># hello.py — Trilha B (Vertex AI)
+import os
+from dotenv import load_dotenv
+import vertexai
+from vertexai.generative_models import GenerativeModel
+
+load_dotenv()
+
+vertexai.init(
+    project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+    location=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"),
+)
+
+modelo = GenerativeModel("gemini-2.0-flash")
+
+resposta = modelo.generate_content(
+    "Diga 'Olá, mundo!' e explique em uma frase o que é um LLM.",
+    generation_config={"temperature": 0},
+)
+
+print(resposta.text)
+print(f"\nTokens — entrada: {resposta.usage_metadata.prompt_token_count}, "
+      f"saída: {resposta.usage_metadata.candidates_token_count}")</code></pre>
+
+<h3 id="passo-7-testar">7. Execute e valide</h3>
+<pre><code>python hello.py</code></pre>
+<p>Se tudo estiver correto, você verá a resposta do modelo e a contagem de tokens. Se receber erro de autenticação, revise o passo 3.</p>
+
+<h3 id="passo-8-git">8. Inicialize o repositório</h3>
+<pre><code>git init
+git add .gitignore .env.example hello.py requirements.txt
+git commit -m "P0: ambiente configurado e primeira chamada funcionando"</code></pre>
+<p>Note que <code>.env</code> <strong>não</strong> está na lista de arquivos adicionados — e deve aparecer no <code>git status</code> como ignorado.</p>
+
+<hr />
+
+<h2 id="links-uteis">Links úteis</h2>
+<ul>
+<li><a href="https://platform.openai.com/docs/quickstart" target="_blank">OpenAI — Quickstart</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/initial-setup" target="_blank">Anthropic — Initial Setup</a></li>
+<li><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/start/quickstarts/quickstart-multimodal" target="_blank">Vertex AI — Quickstart</a></li>
+<li><a href="https://docs.python.org/3/library/venv.html" target="_blank">Python — venv (documentação oficial)</a></li>
+<li><a href="https://pypi.org/project/python-dotenv/" target="_blank">python-dotenv — PyPI</a></li>
+</ul>
+
+<hr />
+<h2 id="entregavel">Entregável</h2>
+<pre><code>p0_setup/
+├── .env.example        # sem valores reais
+├── .gitignore
+├── hello.py            # chamada de teste
+└── README.md           # como rodar
+</code></pre>
+<hr />
+<h2 id="definition-of-done">Definition of Done</h2>
+<ul>
+<li><input type="checkbox"> <code>python hello.py</code> retorna resposta do modelo</li>
+<li><input type="checkbox"> <code>.env</code> está no <code>.gitignore</code> e não foi comitado</li>
+<li><input type="checkbox"> Alerta de orçamento configurado</li>
+<li><input type="checkbox"> README explica como reproduzir o setup</li>
+</ul>
+<p>→ <a href="P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></p>
+</article>
+<nav class="pager"><a class="pager-link next" href="P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

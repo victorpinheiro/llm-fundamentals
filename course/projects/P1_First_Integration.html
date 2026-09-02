@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P1 — Primeira Integração com Saída Estruturada · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Projetos</summary>
+<ul>
+<li><a href="P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a class="active" aria-current="page" href="P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="p1-primeira-integracao-com-saida-estruturada">P1 — Primeira Integração com Saída Estruturada</h1>
+<p><strong>Módulo:</strong> <a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a> · <strong>Tempo:</strong> 8–12h · <strong>Degrau 1</strong></p>
+<hr />
+<h2 id="objetivo">Objetivo</h2>
+<p>Integrar um modelo com saída estruturada confiável e instrumentar custo<br />
+e latência. Comparar pelo menos dois modelos na mesma tarefa.</p>
+<hr />
+<h2 id="cenario">Cenário</h2>
+<p>Um sistema de triagem que recebe pedidos de suporte em texto livre e<br />
+produz classificação estruturada.</p>
+<p>O texto de entrada pode vir malformado — abreviado, sem pontuação, com<br />
+erros de digitação, em idioma inesperado. Sistemas reais recebem isso.</p>
+<hr />
+<h2 id="especificacao">Especificação</h2>
+<pre><code>Entrada: &quot;sistema fora do ar desde ontem, ninguem consegue acessar, urgente&quot;
+
+Saída:
+{
+  &quot;categoria&quot;: &quot;indisponibilidade&quot;,
+  &quot;urgencia&quot;: 5,
+  &quot;area_responsavel&quot;: &quot;infraestrutura&quot;,
+  &quot;resumo&quot;: &quot;Sistema indisponível desde ontem, acesso bloqueado&quot;,
+  &quot;requer_escalonamento&quot;: true,
+  &quot;_meta&quot;: {
+    &quot;modelo&quot;: &quot;...&quot;,
+    &quot;latencia_ms&quot;: 0,
+    &quot;tokens_entrada&quot;: 0,
+    &quot;tokens_saida&quot;: 0,
+    &quot;custo_usd&quot;: 0.0
+  }
+}
+</code></pre>
+<hr />
+<h2 id="requisitos">Requisitos</h2>
+<ul>
+<li><input type="checkbox"> Saída estruturada nativa do provedor — <strong>zero expressão regular</strong></li>
+<li><input type="checkbox"> Validação por modelo de dados no código</li>
+<li><input type="checkbox"> Temperatura zero</li>
+<li><input type="checkbox"> Instrumentação de latência, tokens e custo em toda chamada</li>
+<li><input type="checkbox"> Mesmos 20 casos executados em pelo menos dois modelos</li>
+<li><input type="checkbox"> Tratamento de entrada malformada</li>
+</ul>
+<p><strong>Trilha A:</strong> compare dois provedores diferentes.<br />
+<strong>Trilha B:</strong> autenticação por credencial padrão; compare duas camadas<br />
+de modelo. Nunca use chave de API.</p>
+<hr />
+
+<h2 id="passo-a-passo">Passo a passo</h2>
+
+<h3 id="passo-1-esquema">Passo 1 — Defina o esquema de saída (<code>esquemas.py</code>)</h3>
+<p>Antes de escrever qualquer prompt, defina <strong>exatamente</strong> o que você espera receber. O Pydantic serve como contrato entre o modelo e o seu código — se a saída não bater, a validação explode imediatamente em vez de propagar lixo silenciosamente.</p>
+<pre><code># esquemas.py
+from pydantic import BaseModel, Field
+from typing import Literal
+
+
+class MetaInstrumentacao(BaseModel):
+    """Metadados de instrumentação de cada chamada."""
+    modelo: str
+    latencia_ms: float = Field(ge=0, description="Latência da chamada em milissegundos")
+    tokens_entrada: int = Field(ge=0)
+    tokens_saida: int = Field(ge=0)
+    custo_usd: float = Field(ge=0, description="Custo estimado em dólares")
+
+
+class ClassificacaoTicket(BaseModel):
+    """Resultado da classificação de um ticket de suporte."""
+    categoria: Literal[
+        "indisponibilidade",
+        "lentidao",
+        "erro_funcional",
+        "duvida",
+        "solicitacao",
+        "seguranca",
+    ]
+    urgencia: int = Field(ge=1, le=5, description="1=baixa, 5=crítica")
+    area_responsavel: Literal[
+        "infraestrutura",
+        "backend",
+        "frontend",
+        "dados",
+        "seguranca",
+        "suporte_n1",
+    ]
+    resumo: str = Field(max_length=200, description="Resumo limpo do pedido")
+    requer_escalonamento: bool
+
+    _meta: MetaInstrumentacao | None = None</code></pre>
+
+<h3 id="passo-2-prompt">Passo 2 — Escreva o prompt de classificação</h3>
+<p>O prompt é o coração do sistema. Ele deve ser preciso, com exemplos, e deixar claro o que fazer com entradas ambíguas.</p>
+<pre><code># prompt.py
+SYSTEM_PROMPT = """Você é um sistema de triagem de tickets de suporte técnico.
+
+Sua tarefa: receber o texto de um ticket e produzir uma classificação estruturada.
+
+## Regras
+1. categoria: escolha entre indisponibilidade, lentidao, erro_funcional, duvida, solicitacao, seguranca.
+2. urgencia: inteiro de 1 (baixa) a 5 (crítica).
+   - 5 = sistema fora do ar, dados vazando, ou impacto em todos os usuários.
+   - 4 = funcionalidade crítica degradada, workaround difícil.
+   - 3 = problema impacta parte dos usuários, existe workaround.
+   - 2 = inconveniente, não bloqueia trabalho.
+   - 1 = dúvida ou melhoria.
+3. area_responsavel: escolha entre infraestrutura, backend, frontend, dados, seguranca, suporte_n1.
+4. resumo: reescreva o pedido em no máximo 200 caracteres, corrigindo erros e mantendo o sentido.
+5. requer_escalonamento: true se urgencia >= 4.
+
+## Entradas malformadas
+- Se o texto estiver vazio ou for incompreensível, classifique como categoria="duvida", urgencia=1, area_responsavel="suporte_n1".
+- Se o idioma não for português, ainda assim classifique pelo conteúdo.
+
+Responda APENAS com o JSON estruturado, sem texto adicional."""</code></pre>
+
+<h3 id="passo-3-saida-estruturada">Passo 3 — Implemente a saída estruturada</h3>
+<p>Cada provedor tem seu próprio mecanismo para garantir que a resposta do modelo siga um schema JSON. Aqui está a implementação completa para cada trilha.</p>
+
+<h4>Trilha A — OpenAI (com <code>response_format</code>)</h4>
+<pre><code># provedores/openai_provider.py
+import os
+import time
+import json
+from dotenv import load_dotenv
+from openai import OpenAI
+from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from prompt import SYSTEM_PROMPT
+
+load_dotenv()
+client = OpenAI()
+
+# Preços por 1M tokens (consulte a página de pricing para valores atuais)
+PRECO_INPUT = 0.15   # gpt-4o-mini input
+PRECO_OUTPUT = 0.60  # gpt-4o-mini output
+MODELO = "gpt-4o-mini"
+
+
+def classificar(texto: str) -> ClassificacaoTicket:
+    inicio = time.time()
+
+    resposta = client.chat.completions.create(
+        model=MODELO,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": texto},
+        ],
+        temperature=0,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "ClassificacaoTicket",
+                "strict": True,
+                "schema": ClassificacaoTicket.model_json_schema(),
+            },
+        },
+    )
+
+    latencia_ms = (time.time() - inicio) * 1000
+    dados = json.loads(resposta.choices[0].message.content)
+    resultado = ClassificacaoTicket(**dados)
+
+    resultado._meta = MetaInstrumentacao(
+        modelo=MODELO,
+        latencia_ms=round(latencia_ms, 1),
+        tokens_entrada=resposta.usage.prompt_tokens,
+        tokens_saida=resposta.usage.completion_tokens,
+        custo_usd=round(
+            (resposta.usage.prompt_tokens * PRECO_INPUT
+             + resposta.usage.completion_tokens * PRECO_OUTPUT) / 1_000_000,
+            6,
+        ),
+    )
+    return resultado</code></pre>
+
+<h4>Trilha A — Anthropic (com tool use)</h4>
+<p>A Anthropic não tem um parâmetro <code>response_format</code> nativo como a OpenAI. Em vez disso, use <strong>tool use</strong>: defina uma "ferramenta" cujo schema é a sua classificação e instrua o modelo a chamá-la. O modelo retorna os argumentos estruturados da ferramenta.</p>
+<pre><code># provedores/anthropic_provider.py
+import os
+import time
+from dotenv import load_dotenv
+import anthropic
+from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from prompt import SYSTEM_PROMPT
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+PRECO_INPUT = 3.00    # claude-sonnet input por 1M tokens
+PRECO_OUTPUT = 15.00  # claude-sonnet output por 1M tokens
+MODELO = "claude-sonnet-4-20250514"
+
+TOOL_DEFINITION = {
+    "name": "registrar_classificacao",
+    "description": "Registra a classificação estruturada do ticket de suporte.",
+    "input_schema": ClassificacaoTicket.model_json_schema(),
+}
+
+
+def classificar(texto: str) -> ClassificacaoTicket:
+    inicio = time.time()
+
+    resposta = client.messages.create(
+        model=MODELO,
+        max_tokens=512,
+        system=SYSTEM_PROMPT + "\n\nUse a ferramenta registrar_classificacao para retornar o resultado.",
+        messages=[{"role": "user", "content": texto}],
+        tools=[TOOL_DEFINITION],
+        tool_choice={"type": "tool", "name": "registrar_classificacao"},
+        temperature=0,
+    )
+
+    latencia_ms = (time.time() - inicio) * 1000
+
+    # O resultado está no bloco tool_use
+    tool_block = next(b for b in resposta.content if b.type == "tool_use")
+    resultado = ClassificacaoTicket(**tool_block.input)
+
+    resultado._meta = MetaInstrumentacao(
+        modelo=MODELO,
+        latencia_ms=round(latencia_ms, 1),
+        tokens_entrada=resposta.usage.input_tokens,
+        tokens_saida=resposta.usage.output_tokens,
+        custo_usd=round(
+            (resposta.usage.input_tokens * PRECO_INPUT
+             + resposta.usage.output_tokens * PRECO_OUTPUT) / 1_000_000,
+            6,
+        ),
+    )
+    return resultado</code></pre>
+
+<h4>Trilha B — Vertex AI (com <code>response_schema</code>)</h4>
+<pre><code># provedores/vertexai_provider.py
+import os
+import time
+from dotenv import load_dotenv
+import vertexai
+from vertexai.generative_models import GenerativeModel, GenerationConfig
+from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from prompt import SYSTEM_PROMPT
+
+load_dotenv()
+vertexai.init(
+    project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+    location=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"),
+)
+
+# Preços por 1M tokens — Gemini 2.0 Flash (consulte a página de pricing)
+PRECO_INPUT = 0.10
+PRECO_OUTPUT = 0.40
+MODELO_NOME = "gemini-2.0-flash"
+
+modelo = GenerativeModel(
+    MODELO_NOME,
+    system_instruction=SYSTEM_PROMPT,
+)
+
+
+def classificar(texto: str) -> ClassificacaoTicket:
+    inicio = time.time()
+
+    resposta = modelo.generate_content(
+        texto,
+        generation_config=GenerationConfig(
+            temperature=0,
+            response_mime_type="application/json",
+            response_schema=ClassificacaoTicket.model_json_schema(),
+        ),
+    )
+
+    latencia_ms = (time.time() - inicio) * 1000
+    import json
+    dados = json.loads(resposta.text)
+    resultado = ClassificacaoTicket(**dados)
+
+    resultado._meta = MetaInstrumentacao(
+        modelo=MODELO_NOME,
+        latencia_ms=round(latencia_ms, 1),
+        tokens_entrada=resposta.usage_metadata.prompt_token_count,
+        tokens_saida=resposta.usage_metadata.candidates_token_count,
+        custo_usd=round(
+            (resposta.usage_metadata.prompt_token_count * PRECO_INPUT
+             + resposta.usage_metadata.candidates_token_count * PRECO_OUTPUT) / 1_000_000,
+            6,
+        ),
+    )
+    return resultado</code></pre>
+
+<h3 id="passo-4-instrumentacao">Passo 4 — Entenda a instrumentação</h3>
+<p>Toda chamada a LLM em produção precisa registrar três números: <strong>latência</strong>, <strong>tokens</strong> e <strong>custo</strong>. No código acima, isso já está implementado no objeto <code>MetaInstrumentacao</code>. A fórmula de custo é simples:</p>
+<pre><code># Custo = (tokens_entrada * preço_input + tokens_saida * preço_output) / 1_000_000
+# Os preços são por 1 milhão de tokens — consulte sempre a página oficial:
+# - OpenAI:    https://openai.com/api/pricing/
+# - Anthropic: https://docs.anthropic.com/en/docs/about-claude/models
+# - Vertex AI: https://cloud.google.com/vertex-ai/generative-ai/pricing</code></pre>
+<p>No P1 você coleta esses números manualmente. A partir do P3, isso vai virar pipeline automatizado.</p>
+
+<h3 id="passo-5-comparar">Passo 5 — Construa o script de comparação (<code>comparar.py</code>)</h3>
+<p>Este script executa os mesmos 20 casos de teste em dois ou mais provedores e gera a tabela comparativa.</p>
+<pre><code># comparar.py
+import json
+import sys
+from pathlib import Path
+
+# Importe os provedores que você implementou
+# Trilha A:
+from provedores.openai_provider import classificar as classificar_openai
+from provedores.anthropic_provider import classificar as classificar_anthropic
+# Trilha B:
+# from provedores.vertexai_provider import classificar as classificar_vertexai_flash
+# (crie um segundo provider com modelo diferente para comparar)
+
+PROVEDORES = {
+    "openai_gpt4o_mini": classificar_openai,
+    "anthropic_sonnet": classificar_anthropic,
+    # "vertexai_flash": classificar_vertexai_flash,
+}
+
+
+def carregar_casos(caminho: str = "casos_teste.json") -> list[dict]:
+    with open(caminho) as f:
+        return json.load(f)
+
+
+def executar_comparacao():
+    casos = carregar_casos()
+    resultados = {nome: [] for nome in PROVEDORES}
+
+    for i, caso in enumerate(casos, 1):
+        texto = caso["texto"]
+        print(f"\n--- Caso {i}/{len(casos)}: {texto[:60]}...")
+
+        for nome, fn in PROVEDORES.items():
+            try:
+                resultado = fn(texto)
+                resultados[nome].append({
+                    "caso": i,
+                    "texto": texto,
+                    "classificacao": resultado.model_dump(),
+                    "meta": resultado._meta.model_dump() if resultado._meta else {},
+                    "erro": None,
+                })
+                meta = resultado._meta
+                print(f"  {nome}: {resultado.categoria} (urg={resultado.urgencia}) "
+                      f"— {meta.latencia_ms:.0f}ms, ${meta.custo_usd:.6f}")
+            except Exception as e:
+                resultados[nome].append({
+                    "caso": i,
+                    "texto": texto,
+                    "classificacao": None,
+                    "meta": {},
+                    "erro": str(e),
+                })
+                print(f"  {nome}: ERRO — {e}")
+
+    # Salva resultados
+    Path("resultados").mkdir(exist_ok=True)
+    with open("resultados/comparacao.json", "w") as f:
+        json.dump(resultados, f, indent=2, ensure_ascii=False)
+
+    # Imprime resumo
+    print("\n\n=== RESUMO ===")
+    for nome, lista in resultados.items():
+        sucessos = [r for r in lista if r["erro"] is None]
+        erros = len(lista) - len(sucessos)
+        if sucessos:
+            lat_media = sum(r["meta"]["latencia_ms"] for r in sucessos) / len(sucessos)
+            custo_total = sum(r["meta"]["custo_usd"] for r in sucessos)
+            print(f"\n{nome}:")
+            print(f"  Sucessos: {len(sucessos)}/{len(lista)}")
+            print(f"  Latência média: {lat_media:.0f}ms")
+            print(f"  Custo total (20 casos): ${custo_total:.6f}")
+            print(f"  Custo projetado (1000/dia): ${custo_total / len(sucessos) * 1000:.4f}/dia")
+            if erros:
+                print(f"  Erros: {erros}")
+
+
+if __name__ == "__main__":
+    executar_comparacao()</code></pre>
+
+<h3 id="passo-6-malformado">Passo 6 — Trate entradas malformadas</h3>
+<p>Sistemas reais recebem lixo. Envolva cada chamada em tratamento de erro robusto:</p>
+<pre><code># No seu classificador.py principal, encapsule a chamada:
+from pydantic import ValidationError
+
+def classificar_seguro(texto: str, fn_classificar) -> ClassificacaoTicket | dict:
+    """Tenta classificar; retorna erro estruturado em caso de falha."""
+    if not texto or not texto.strip():
+        return ClassificacaoTicket(
+            categoria="duvida",
+            urgencia=1,
+            area_responsavel="suporte_n1",
+            resumo="Entrada vazia recebida",
+            requer_escalonamento=False,
+        )
+    try:
+        return fn_classificar(texto)
+    except ValidationError as e:
+        print(f"[ERRO] Saída do modelo não passou na validação: {e}")
+        raise
+    except Exception as e:
+        print(f"[ERRO] Falha na chamada ao modelo: {e}")
+        raise</code></pre>
+<p>Teste com entradas intencionalmente ruins: string vazia, caracteres aleatórios, texto em outro idioma, e textos com mais de 1000 palavras.</p>
+
+<hr />
+
+<h2 id="casos-de-teste">Como criar bons casos de teste</h2>
+<p>Você precisa de 20 casos em <code>casos_teste.json</code>. Não invente 20 variações do mesmo tema — distribua intencionalmente:</p>
+
+<h4>Distribuição recomendada</h4>
+<ul>
+<li><strong>5 casos claros (happy path):</strong> tickets bem escritos, sem ambiguidade. Servem de baseline.</li>
+<li><strong>5 casos ambíguos:</strong> textos que poderiam ser classificados em mais de uma categoria. O modelo vai errar alguns — e tudo bem, você quer saber <em>como</em> ele erra.</li>
+<li><strong>5 casos com ruído:</strong> abreviações, erros de digitação, gírias, texto em inglês ou misturado.</li>
+<li><strong>5 casos de borda:</strong> texto vazio, um único emoji, texto muito longo, pedido que não é suporte.</li>
+</ul>
+
+<h4>Exemplo de <code>casos_teste.json</code></h4>
+<pre><code>[
+  {"texto": "sistema fora do ar desde ontem, ninguem consegue acessar, urgente",
+   "categoria_esperada": "indisponibilidade", "urgencia_esperada": 5},
+
+  {"texto": "como faço para resetar minha senha?",
+   "categoria_esperada": "duvida", "urgencia_esperada": 1},
+
+  {"texto": "pagina d login ta mto lenta hj, demora uns 30seg p carregar",
+   "categoria_esperada": "lentidao", "urgencia_esperada": 3},
+
+  {"texto": "botão de salvar não funciona no Chrome mas funciona no Firefox",
+   "categoria_esperada": "erro_funcional", "urgencia_esperada": 2},
+
+  {"texto": "",
+   "categoria_esperada": "duvida", "urgencia_esperada": 1},
+
+  {"texto": "🔥🔥🔥",
+   "categoria_esperada": "duvida", "urgencia_esperada": 1},
+
+  {"texto": "preciso de acesso ao relatório de vendas do Q3 para apresentação amanhã",
+   "categoria_esperada": "solicitacao", "urgencia_esperada": 2},
+
+  {"texto": "someone is trying to access our admin panel from a foreign IP",
+   "categoria_esperada": "seguranca", "urgencia_esperada": 5}
+]</code></pre>
+<p>Adicione mais 12 casos seguindo a mesma lógica. Inclua a classificação esperada em cada caso — no P3 você vai automatizar a comparação entre esperado e real.</p>
+
+<hr />
+
+<h2 id="links-uteis">Links úteis</h2>
+<ul>
+<li><a href="https://platform.openai.com/docs/guides/structured-outputs" target="_blank">OpenAI — Structured Outputs</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use" target="_blank">Anthropic — Tool Use (para saída estruturada)</a></li>
+<li><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/control-generated-output" target="_blank">Vertex AI — Controlar saída gerada</a></li>
+<li><a href="https://docs.pydantic.dev/latest/" target="_blank">Pydantic — Documentação</a></li>
+<li><a href="https://openai.com/api/pricing/" target="_blank">OpenAI — Pricing</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/about-claude/models" target="_blank">Anthropic — Modelos e preços</a></li>
+<li><a href="https://cloud.google.com/vertex-ai/generative-ai/pricing" target="_blank">Vertex AI — Pricing</a></li>
+</ul>
+
+<hr />
+<h2 id="entregavel">Entregável</h2>
+<pre><code>p1_integracao/
+├── classificador.py
+├── esquemas.py
+├── provedores/
+├── comparar.py
+├── casos_teste.json        # 20 casos
+├── resultados/
+│   └── comparacao.md
+└── testes/
+</code></pre>
+<hr />
+<h2 id="definition-of-done">Definition of Done</h2>
+<ul>
+<li><input type="checkbox"> 20 casos classificados</li>
+<li><input type="checkbox"> Saída válida em 100% — nenhuma exceção de parsing</li>
+<li><input type="checkbox"> Tabela comparativa preenchida com números reais</li>
+<li><input type="checkbox"> Conclusão escrita: qual modelo em produção e por quê</li>
+<li><input type="checkbox"> Custo projetado para volume realista</li>
+</ul>
+<hr />
+<h2 id="autoavaliacao">Autoavaliação</h2>
+<ul>
+<li>Qual modelo escolheria e por quê?</li>
+<li>Quanto custaria processar mil itens por dia?</li>
+<li>Como o sistema se comporta com entrada vazia?</li>
+</ul>
+<p>→ <a href="P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></p>
+</article>
+<nav class="pager"><a class="pager-link prev" href="P0_Environment.html">&larr; P0 — Ambiente e Primeira Chamada</a><a class="pager-link next" href="P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

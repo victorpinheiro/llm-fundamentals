@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluation &amp; Testing · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../../course/start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../../course/start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../../course/start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../../course/start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../../course/start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../../course/modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../../course/modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../../course/modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../../course/modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../../course/modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../../course/modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../../course/modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../../course/modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../../course/modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../../course/modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../../course/modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../../course/concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../../course/concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../../course/concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../../course/concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../../course/concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../../course/concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../../course/concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../../course/concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../../course/concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../../course/concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../../course/concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../../course/concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../../course/tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../../course/tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../../course/tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../../course/tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../../course/projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../../course/projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../../course/projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../../course/projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../../course/projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../../course/projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../../course/projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../../course/projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../../course/projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../../course/projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../../course/resources/Glossary.html">Glossário</a></li>
+<li><a href="../../course/resources/Links.html">Links de Referência</a></li>
+<li><a href="../../course/resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../../course/resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../../course/resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a class="active" aria-current="page" href="Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="Security_First.html">Security-First Design</a></li>
+<li><a href="Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="evaluation-testing">Evaluation &amp; Testing</h1>
+<p><strong>Fase:</strong> 1 | <strong>Semanas:</strong> 5–6 | <strong>Projeto:</strong> <a href="../projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></p>
+<blockquote>
+<p>PDF: <em>"AI testing is an extension of software testing, not a separate research<br />
+discipline."</em> DeepEval integra nativamente com pytest — você já sabe fazer isso.</p>
+</blockquote>
+<p>O perfil da função pede "applied ML workflows". Evaluation é a parte disso que mais importa<br />
+para quem entrega IA — é o que prova que a solução funciona.</p>
+<hr />
+<h2 id="por-que-e-diferente-de-software-tradicional">Por que é diferente de software tradicional</h2>
+<ul>
+<li>Outputs não-determinísticos: mesmo prompt → outputs diferentes</li>
+<li>"Correto" é frequentemente subjetivo</li>
+<li><code>assert output == expected</code> é inválido</li>
+<li>Mesmo com temperature=0, updates do modelo mudam outputs</li>
+</ul>
+<hr />
+<h2 id="a-hierarquia-pdf">A Hierarquia (PDF)</h2>
+<table>
+<thead>
+<tr>
+<th>Nível</th>
+<th>O que testa</th>
+<th>Ferramenta</th>
+<th>Quando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unit</td>
+<td>Formato, toxicidade, constraints</td>
+<td>DeepEval</td>
+<td>Toda mudança de prompt</td>
+</tr>
+<tr>
+<td>Integration</td>
+<td>Pipeline: RAG recupera certo?</td>
+<td>Ragas, DeepEval</td>
+<td>Mudanças de arquitetura</td>
+</tr>
+<tr>
+<td>Regression</td>
+<td>Update quebrou casos que passavam?</td>
+<td>Golden set + CI</td>
+<td>Todo release</td>
+</tr>
+<tr>
+<td>Red team</td>
+<td>Prompt injection, jailbreak, edge</td>
+<td>Manual + adversarial</td>
+<td>Antes de produção</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="llm-as-a-judge">LLM-as-a-Judge</h2>
+<p>Regra crítica do PDF:</p>
+<blockquote>
+<p><em>"Use categorical evaluations (Pass/Fail, Good/Neutral/Bad) rather than<br />
+numeric scores (1–10). LLMs produce inconsistent results on continuous scales —<br />
+even slight prompt wording changes shift scores."</em></p>
+</blockquote>
+<pre><code>✅ &quot;Rate this response: PASS or FAIL&quot;
+❌ &quot;Rate this response from 1 to 10&quot;
+</code></pre>
+<hr />
+<h2 id="ragas-para-rag">Ragas para RAG</h2>
+<p>Métricas: retrieval precision, retrieval recall, faithfulness, answer relevancy.</p>
+<p><strong>Killer feature (PDF):</strong> <code>TestsetGenerator</code> gera QA pairs sintéticos a partir<br />
+do seu próprio corpus. Resolve o problema real de não ter dataset anotado —<br />
+que é exatamente a situação de qualquer time interno da sua empresa.</p>
+<hr />
+<h2 id="golden-set-best-practices-pdf">Golden Set — best practices (PDF)</h2>
+<ul>
+<li>Comece com 25–50 casos curados</li>
+<li>Inclua: happy path, edge cases, adversarial, out-of-scope</li>
+<li>Expanda quando encontrar novo failure pattern</li>
+<li><strong>Versione junto com prompts e código</strong></li>
+</ul>
+<hr />
+<h2 id="recursos">Recursos</h2>
+<ul>
+<li>📖 DeepEval: https://docs.deepeval.com/</li>
+<li>📖 Ragas: https://docs.ragas.io/</li>
+<li>📖 Vertex AI Eval: https://cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview</li>
+<li>📰 RAGAS paper: https://arxiv.org/abs/2309.15217</li>
+</ul>
+<hr />
+<h2 id="checklist">Checklist</h2>
+<ul>
+<li><input type="checkbox"> <code>deepeval test run</code> rodando</li>
+<li><input type="checkbox"> Golden set de 40 casos versionado no git</li>
+<li><input type="checkbox"> LLM-as-judge com critérios categóricos (PASS/FAIL)</li>
+<li><input type="checkbox"> Pipeline de eval no CI</li>
+<li><input type="checkbox"> Ragas rodando no meu RAG</li>
+<li><input type="checkbox"> Testei também o Vertex AI Evaluation Service (é o nativo do stack)</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Prompt_Engineering.html">&larr; Prompt Engineering</a><a class="pager-link next" href="Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

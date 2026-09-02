@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Integrations — Slack, Atlassian, Zoom · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../../course/start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../../course/start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../../course/start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../../course/start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../../course/start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../../course/modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../../course/modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../../course/modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../../course/modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../../course/modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../../course/modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../../course/modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../../course/modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../../course/modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../../course/modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../../course/modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../../course/concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../../course/concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../../course/concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../../course/concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../../course/concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../../course/concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../../course/concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../../course/concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../../course/concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../../course/concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../../course/concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../../course/concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../../course/tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../../course/tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../../course/tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../../course/tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../../course/projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../../course/projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../../course/projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../../course/projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../../course/projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../../course/projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../../course/projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../../course/projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../../course/projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../../course/projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../../course/resources/Glossary.html">Glossário</a></li>
+<li><a href="../../course/resources/Links.html">Links de Referência</a></li>
+<li><a href="../../course/resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../../course/resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../../course/resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a class="active" aria-current="page" href="Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="Security_First.html">Security-First Design</a></li>
+<li><a href="Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="enterprise-integrations-slack-atlassian-zoom">Enterprise Integrations — Slack, Atlassian, Zoom</h1>
+<p><strong>Fase:</strong> 2 | <strong>Semanas:</strong> 11–12 | <strong>Projeto:</strong> <a href="../projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></p>
+<blockquote>
+<p>Perfil da função: <em>"You've successfully rolled out and maintained integrations across a variety<br />
+of enterprise applications (Slack Enterprise Grid, Zoom, Atlassian suite)."</em></p>
+</blockquote>
+<p>Este é o gap mais concreto entre a teoria e a prática. É também o mais rápido de fechar,<br />
+porque é engenharia de integração — algo que você já sabe fazer.</p>
+<hr />
+<h2 id="slack-enterprise-grid">Slack (Enterprise Grid)</h2>
+<p><strong>O que difere do Slack normal:</strong><br />
+Enterprise Grid é multi-workspace, com org-level apps, políticas de admin, e<br />
+escopos por workspace. Um app que funciona num workspace pequeno pode falhar<br />
+em Grid por questões de instalação org-wide e permissões.</p>
+<p><strong>Conceitos essenciais:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Conceito</th>
+<th>Nota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bot token vs User token</td>
+<td>Bot para automação; user token evite</td>
+</tr>
+<tr>
+<td>Scopes</td>
+<td>Peça o mínimo — security review vai olhar isso</td>
+</tr>
+<tr>
+<td>Events API vs Socket Mode</td>
+<td>Socket Mode para dev; Events API para prod</td>
+</tr>
+<tr>
+<td>Slash commands</td>
+<td>Entrada natural para ferramentas internas</td>
+</tr>
+<tr>
+<td>Modals / Block Kit</td>
+<td>UX rica sem sair do Slack</td>
+</tr>
+<tr>
+<td>Rate limits</td>
+<td>Tier por método; planeje retry com backoff</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Security-first (o perfil da função pede isso explicitamente):</strong><br />
+- Verificar assinatura de request (<code>X-Slack-Signature</code>)<br />
+- Nunca logar token<br />
+- Secrets em Secret Manager, não em env var em plaintext<br />
+- Escopo mínimo necessário</p>
+<p>📖 https://api.slack.com/docs<br />
+📖 Enterprise Grid: https://api.slack.com/enterprise/grid</p>
+<hr />
+<h2 id="atlassian-jira-confluence">Atlassian (Jira + Confluence)</h2>
+<p><strong>Casos de uso da função:</strong><br />
+- Jira: criar/atualizar tickets automaticamente a partir de conversas<br />
+- Confluence: fonte de documentos para RAG (documentation retrieval do perfil da função)</p>
+<p><strong>Conceitos:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Conceito</th>
+<th>Nota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>REST API v3</td>
+<td>Cloud; a v2 é legado</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>OAuth 2.0 (3LO) para apps; API token para scripts</td>
+</tr>
+<tr>
+<td>JQL</td>
+<td>Linguagem de query do Jira — vale aprender bem</td>
+</tr>
+<tr>
+<td>Webhooks</td>
+<td>Para reagir a eventos em vez de fazer polling</td>
+</tr>
+<tr>
+<td>Permissions</td>
+<td>Respeite as permissões do usuário, não do bot</td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ <strong>Ponto crítico de segurança:</strong> ao usar Confluence como fonte de RAG, os<br />
+resultados precisam respeitar as permissões de quem perguntou — não as do<br />
+service account. Isso é o access control do <a href="../projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a>.</p>
+<p>📖 https://developer.atlassian.com/cloud/jira/platform/rest/v3/<br />
+📖 https://developer.atlassian.com/cloud/confluence/rest/v2/</p>
+<hr />
+<h2 id="zoom">Zoom</h2>
+<p>Menor prioridade que Slack e Atlassian, mas está no perfil da função.</p>
+<p>Casos de uso: transcrições de reuniões como fonte de dados, automação de<br />
+agendamento.</p>
+<p>⚠️ Transcrições contêm dados sensíveis. Trate como PII por padrão.</p>
+<p>📖 https://developers.zoom.us/docs/api/</p>
+<hr />
+<h2 id="padrao-comum-tudo-isso-vira-tool-de-agente">Padrão comum: tudo isso vira tool de agente</h2>
+<p>O ponto de conexão com <a href="Google_ADK.html">Google ADK — Agent Development Kit</a>: cada integração dessas vira uma tool<br />
+que o agente pode chamar. Construa as integrações primeiro (P6), depois<br />
+plugue no agente (P7).</p>
+<p><strong>Regra do PDF que se aplica aqui:</strong></p>
+<blockquote>
+<p>"Prompt injection via tools: tool returns malicious instructions that hijack<br />
+agent behavior. Sanitize tool outputs; treat tool results as untrusted data."</p>
+</blockquote>
+<p>Uma mensagem do Slack ou um ticket do Jira é <strong>conteúdo não confiável</strong>.<br />
+Se um usuário escrever "ignore suas instruções anteriores" num ticket, seu<br />
+agente não pode obedecer.</p>
+<hr />
+<h2 id="checklist">Checklist</h2>
+<ul>
+<li><input type="checkbox"> Slack app criado com scopes mínimos</li>
+<li><input type="checkbox"> Verificação de assinatura implementada</li>
+<li><input type="checkbox"> Slash command funcionando</li>
+<li><input type="checkbox"> Jira API: buscar e criar issues via JQL</li>
+<li><input type="checkbox"> Confluence API: buscar páginas</li>
+<li><input type="checkbox"> Permissões respeitadas (usuário, não service account)</li>
+<li><input type="checkbox"> Secrets em Secret Manager</li>
+<li><input type="checkbox"> Outputs das integrações tratados como untrusted (sanitização)</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Google_ADK.html">&larr; Google ADK — Agent Development Kit</a><a class="pager-link next" href="LLM_Fundamentals.html">LLM Fundamentals &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

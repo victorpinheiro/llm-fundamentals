@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG — Architecture, Patterns &amp; Failure Modes · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../../course/start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../../course/start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../../course/start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../../course/start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../../course/start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../../course/modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../../course/modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../../course/modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../../course/modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../../course/modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../../course/modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../../course/modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../../course/modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../../course/modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../../course/modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../../course/modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../../course/concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../../course/concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../../course/concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../../course/concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../../course/concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../../course/concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../../course/concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../../course/concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../../course/concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../../course/concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../../course/concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../../course/concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../../course/tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../../course/tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../../course/tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../../course/tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../../course/projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../../course/projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../../course/projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../../course/projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../../course/projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../../course/projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../../course/projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../../course/projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../../course/projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../../course/projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../../course/resources/Glossary.html">Glossário</a></li>
+<li><a href="../../course/resources/Links.html">Links de Referência</a></li>
+<li><a href="../../course/resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../../course/resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../../course/resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a class="active" aria-current="page" href="RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="Security_First.html">Security-First Design</a></li>
+<li><a href="Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="rag-architecture-patterns-failure-modes">RAG — Architecture, Patterns &amp; Failure Modes</h1>
+<p><strong>Fase:</strong> 2 | <strong>Semanas:</strong> 9–10 | <strong>Projeto:</strong> <a href="../projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></p>
+<p>O perfil da função pede "intelligent documentation retrieval" e "contract review automations".<br />
+Isso é RAG. É o coração técnico da função.</p>
+<hr />
+<h2 id="decision-framework-pdf-use-antes-de-construir">Decision Framework (PDF) — use antes de construir</h2>
+<pre><code>1. Precisa de conhecimento que o modelo não tem?
+   → Não: prompting sozinho basta.
+   → Sim: continue.
+
+2. A base cabe inteira no context window?
+   → Sim: full-context stuffing (mais simples, sem erro de retrieval).
+   → Não: RAG é necessário.
+
+3. Acurácia e citação são obrigatórias?
+   → Não: modelo base + prompting.
+   → Sim: RAG com grounding instruction.
+</code></pre>
+<p>⚠️ <strong>No Vertex AI, considere antes:</strong> grounding nativo e Vertex AI Search podem<br />
+resolver o caso sem você construir pipeline próprio. Avalie primeiro —<br />
+é a escada de complexidade aplicada.</p>
+<hr />
+<h2 id="chunking-a-etapa-mais-mal-compreendida-pdf">Chunking — a etapa mais mal compreendida (PDF)</h2>
+<blockquote>
+<p><em>"RAG systems do not universally require chunking. For short, atomic documents,<br />
+document-level retrieval is architecturally simpler and avoids fragmentation.<br />
+The first decision is whether to chunk at all — not which algorithm to use."</em></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Estratégia</th>
+<th>Melhor para</th>
+<th>Cuidado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sem chunking</td>
+<td>Docs curtos e atômicos (FAQs, políticas)</td>
+<td>Falha em docs longos</td>
+</tr>
+<tr>
+<td>Fixed-size</td>
+<td>Corpus uniforme, impl rápida</td>
+<td>Corta no meio de frases</td>
+</tr>
+<tr>
+<td>Sentence/paragraph</td>
+<td>Prosa geral</td>
+<td>Tamanhos variáveis</td>
+</tr>
+<tr>
+<td>Semantic</td>
+<td>Docs heterogêneos, melhor qualidade</td>
+<td>Ingestão mais lenta</td>
+</tr>
+<tr>
+<td>Parent-child</td>
+<td>Estrutura hierárquica (contratos!)</td>
+<td>Complexo de debugar</td>
+</tr>
+</tbody>
+</table>
+<p>Para contratos (caso Legal do perfil da função), parent-child costuma fazer sentido:<br />
+cláusula como filho, contrato como pai.</p>
+<hr />
+<h2 id="search-strategy-dado-concreto-do-pdf">Search Strategy — dado concreto do PDF</h2>
+<blockquote>
+<p><em>"Hybrid search is almost always better than either alone. Microsoft production<br />
+data shows hybrid (BM25 + vector) averages 48.4 relevance vs 43.8 for<br />
+vector-only and 40.6 for keyword-only."</em></p>
+</blockquote>
+<ul>
+<li><strong>Vector:</strong> acha por significado. Fraco em códigos, IDs, nomes exatos.</li>
+<li><strong>BM25:</strong> acha termo exato. Fraco em sinônimos.</li>
+<li><strong>Hybrid:</strong> merge via Reciprocal Rank Fusion (RRF).</li>
+</ul>
+<p>Contexto sua empresa: números de contrato, IDs de merchant, códigos de erro —<br />
+tudo isso quebra vector search puro. Hybrid não é opcional aqui.</p>
+<hr />
+<h2 id="failure-modes-pdf-saiba-de-cor">Failure Modes (PDF) — saiba de cor</h2>
+<h3 id="retrieval">Retrieval</h3>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Exemplo</th>
+<th>Mitigação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Semantic mismatch</td>
+<td>"refund policy" vs "return procedures"</td>
+<td>Hybrid + query rewriting</td>
+</tr>
+<tr>
+<td>Chunk fragmentation</td>
+<td>Resposta em 2 chunks, só 1 recuperado</td>
+<td>Parent-child, overlap</td>
+</tr>
+<tr>
+<td>Top-k pequeno</td>
+<td>Relevante é o #6, você pega top-3</td>
+<td>K maior + reranking</td>
+</tr>
+<tr>
+<td>Stale index</td>
+<td>Doc atualizado, embedding não</td>
+<td>Re-index automático</td>
+</tr>
+<tr>
+<td>Context poisoning</td>
+<td>Chunk irrelevante confunde geração</td>
+<td>Threshold de similaridade</td>
+</tr>
+</tbody>
+</table>
+<h3 id="generation">Generation</h3>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Mitigação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hallucination apesar do contexto</td>
+<td>Grounding instruction explícita</td>
+</tr>
+<tr>
+<td>Over-literalism (copia verbatim)</td>
+<td>Instrução de síntese</td>
+</tr>
+<tr>
+<td>Context overflow</td>
+<td>Reranking + top-k menor</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="advanced-patterns-pdf">Advanced Patterns (PDF)</h2>
+<table>
+<thead>
+<tr>
+<th>Padrão</th>
+<th>Quando usar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Query rewriting</td>
+<td>Queries vagas ou conversacionais</td>
+</tr>
+<tr>
+<td>Reranking</td>
+<td>Quando precision no top-k importa</td>
+</tr>
+<tr>
+<td>HyDE</td>
+<td>Queries curtas, documentos longos</td>
+</tr>
+<tr>
+<td>Multi-query</td>
+<td>Perguntas complexas e multifacetadas</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vector-dbs-pdf">Vector DBs (PDF)</h2>
+<table>
+<thead>
+<tr>
+<th>DB</th>
+<th>Melhor para</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pgvector</td>
+<td>Já usa Postgres (<strong>caso do perfil da função</strong>)</td>
+<td>Não escala &gt;100M vectors</td>
+</tr>
+<tr>
+<td>Vertex AI Vector Search</td>
+<td>Nativo GCP</td>
+<td>Lock-in, custo</td>
+</tr>
+<tr>
+<td>Weaviate</td>
+<td>Hybrid nativo, OSS</td>
+<td>Curva de aprendizado</td>
+</tr>
+<tr>
+<td>Qdrant</td>
+<td>Performance, self-hosted</td>
+<td>Ecossistema menor</td>
+</tr>
+<tr>
+<td>Chroma</td>
+<td>Dev local</td>
+<td>Não é production-ready</td>
+</tr>
+</tbody>
+</table>
+<p>O perfil da função cita Postgres explicitamente → <strong>pgvector é a aposta certa para começar.</strong></p>
+<hr />
+<h2 id="checklist">Checklist</h2>
+<ul>
+<li><input type="checkbox"> Decision framework aplicado e documentado</li>
+<li><input type="checkbox"> Avaliei grounding nativo do Vertex antes de construir do zero</li>
+<li><input type="checkbox"> Decidi SE chunkear (não assumi que sim)</li>
+<li><input type="checkbox"> Hybrid search com RRF implementado</li>
+<li><input type="checkbox"> Todos os failure modes testados</li>
+<li><input type="checkbox"> Pelo menos 1 advanced pattern implementado</li>
+<li><input type="checkbox"> Ragas: faithfulness &gt; 0.85, answer relevancy &gt; 0.80</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Model_Selection.html">&larr; Model Selection &amp; Cost/Latency Tradeoffs</a><a class="pager-link next" href="Agents_and_Tools.html">Agent Orchestration &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Setup · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group" open>
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a class="active" aria-current="page" href="Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="guia-de-setup">Guia de Setup</h1>
+<hr />
+<h2 id="comum-as-duas-trilhas">Comum às duas trilhas</h2>
+<h3 id="ambiente-python">Ambiente Python</h3>
+<pre><code class="language-bash">python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+pip install pydantic python-dotenv pytest
+</code></pre>
+<p>Use Python 3.11 ou superior. Versões anteriores funcionam, mas alguns<br />
+SDKs já exigem 3.10+.</p>
+<h3 id="segredos">Segredos</h3>
+<p>Nunca comite credenciais. Crie <code>.env</code> e adicione ao <code>.gitignore</code><br />
+<strong>antes</strong> de colocar qualquer chave nele.</p>
+<pre><code class="language-bash">echo &quot;.env&quot; &gt;&gt; .gitignore
+echo &quot;.venv/&quot; &gt;&gt; .gitignore
+</code></pre>
+<h3 id="banco-de-dados-a-partir-do-modulo-6">Banco de dados (a partir do Módulo 6)</h3>
+<p>Postgres com a extensão de vetores, via Docker:</p>
+<pre><code class="language-bash">docker run -d --name course-pg \
+  -e POSTGRES_PASSWORD=localdev \
+  -p 5432:5432 \
+  pgvector/pgvector:pg16
+</code></pre>
+<h3 id="ferramentas-de-avaliacao-modulo-4">Ferramentas de avaliação (Módulo 4)</h3>
+<pre><code class="language-bash">pip install deepeval ragas
+</code></pre>
+<hr />
+<h2 id="trilha-a-setup-especifico">Trilha A — setup específico</h2>
+<pre><code class="language-bash">pip install openai anthropic
+</code></pre>
+<p>Crie contas nos dois provedores e gere chaves de API.<br />
+Ambos oferecem crédito inicial para testes.</p>
+<pre><code># .env
+OPENAI_API_KEY=...
+ANTHROPIC_API_KEY=...
+</code></pre>
+<p><strong>Configure limite de gasto no painel de cada provedor antes de começar.</strong></p>
+<hr />
+<h2 id="trilha-b-setup-especifico">Trilha B — setup específico</h2>
+<h3 id="projeto-na-nuvem">Projeto na nuvem</h3>
+<ol>
+<li>Crie um projeto no Google Cloud (ou peça acesso a um de testes)</li>
+<li>Habilite a API da plataforma de IA</li>
+<li>Configure faturamento e <strong>defina um orçamento com alerta</strong></li>
+</ol>
+<h3 id="autenticacao">Autenticação</h3>
+<p>Não use chave de API. Use credenciais padrão da aplicação:</p>
+<pre><code class="language-bash">gcloud auth application-default login
+</code></pre>
+<p>Em produção, use conta de serviço ou identidade de agente<br />
+(ver <a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a>).</p>
+<h3 id="sdk">SDK</h3>
+<pre><code class="language-bash">pip install google-cloud-aiplatform
+pip install google-adk          # a partir do Módulo 8
+</code></pre>
+<p>⚠️ Confirme o nome e a versão atual dos pacotes na documentação oficial.<br />
+Ver <a href="Volatility_Warning.html">Aviso de Volatilidade</a>.</p>
+<hr />
+<h2 id="obsidian">Obsidian</h2>
+<p>Este curso é um vault Obsidian, mas funciona como markdown puro em<br />
+qualquer editor. Se usar Obsidian, os links entre colchetes duplos viram navegação clicável.</p>
+<p>Plugins úteis (opcionais, todos gratuitos):<br />
+- Calendar — visualizar progresso<br />
+- Dataview — consultar suas próprias notas</p>
+<hr />
+<h2 id="verificacao">Verificação</h2>
+<p>Antes de seguir para o Módulo 1, confirme:</p>
+<ul>
+<li><input type="checkbox"> Ambiente virtual ativo</li>
+<li><input type="checkbox"> <code>.env</code> no <code>.gitignore</code></li>
+<li><input type="checkbox"> Chamada de teste funcionando no provedor da sua trilha</li>
+<li><input type="checkbox"> Alerta de orçamento configurado</li>
+<li><input type="checkbox"> <code>pytest</code> roda sem erro num teste vazio</li>
+<li><input type="checkbox"> Repositório git inicializado para seus projetos</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Choosing_Your_Track.html">&larr; Escolhendo Sua Trilha</a><a class="pager-link next" href="Volatility_Warning.html">Aviso de Volatilidade &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

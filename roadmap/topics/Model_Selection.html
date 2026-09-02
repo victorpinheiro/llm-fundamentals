@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Model Selection &amp; Cost/Latency Tradeoffs · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../../course/start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../../course/start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../../course/start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../../course/start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../../course/start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../../course/modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../../course/modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../../course/modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../../course/modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../../course/modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../../course/modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../../course/modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../../course/modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../../course/modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../../course/modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../../course/modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../../course/concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../../course/concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../../course/concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../../course/concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../../course/concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../../course/concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../../course/concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../../course/concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../../course/concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../../course/concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../../course/concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../../course/concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../../course/tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../../course/tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../../course/tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../../course/tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../../course/projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../../course/projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../../course/projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../../course/projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../../course/projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../../course/projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../../course/projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../../course/projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../../course/projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../../course/projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../../course/resources/Glossary.html">Glossário</a></li>
+<li><a href="../../course/resources/Links.html">Links de Referência</a></li>
+<li><a href="../../course/resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../../course/resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../../course/resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a class="active" aria-current="page" href="Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="Security_First.html">Security-First Design</a></li>
+<li><a href="Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="model-selection-costlatency-tradeoffs">Model Selection &amp; Cost/Latency Tradeoffs</h1>
+<p><strong>Fase:</strong> 1 | <strong>Semanas:</strong> 7–8 | <strong>Projeto:</strong> <a href="../projects/Project_4_Model_Routing.html">P4 — Model Router</a></p>
+<blockquote>
+<p>PDF: <em>"There is no universally optimal model. Model selection is a Pareto<br />
+frontier problem — every deployment has specific accuracy, latency, and cost<br />
+constraints."</em></p>
+</blockquote>
+<hr />
+<h2 id="as-5-perguntas-pdf-decore-isso">As 5 Perguntas (PDF) — decore isso</h2>
+<ol>
+<li>
+<p><strong>Latência máxima aceitável?</strong> (&lt;1s / &lt;5s / &lt;30s / batch)<br />
+   → &lt;1s descarta a maioria dos modelos frontier para resposta completa.</p>
+</li>
+<li>
+<p><strong>Quality floor?</strong> (enterprise / best-effort / exploratório)<br />
+   → Enterprise: teste os modelos maiores primeiro.</p>
+</li>
+<li>
+<p><strong>Volume de calls e budget de tokens?</strong><br />
+   → Alto volume + tarefa commodity → modelo pequeno.</p>
+</li>
+<li>
+<p><strong>Precisa de extended reasoning?</strong> (math, código, lógica multi-passo)<br />
+   → Sim: modelo otimizado para raciocínio.</p>
+</li>
+<li>
+<p><strong>Dado sensível? Data residency?</strong><br />
+   → Sim: região específica, VPC-SC, ou self-hosted.<br />
+   → <strong>No sua empresa isso quase sempre é "sim".</strong></p>
+</li>
+</ol>
+<hr />
+<h2 id="tiers-mapeamento-conceitual-confirme-modelos-atuais">Tiers (mapeamento conceitual — confirme modelos atuais)</h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Google</th>
+<th>Outros</th>
+<th>Use quando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontier</td>
+<td>Gemini Pro</td>
+<td>Claude Opus, GPT-4o</td>
+<td>Análise complexa, decisões críticas</td>
+</tr>
+<tr>
+<td>Mid / Fast</td>
+<td>Gemini Flash</td>
+<td>Claude Sonnet</td>
+<td>Maioria dos casos enterprise</td>
+</tr>
+<tr>
+<td>Small / Cheap</td>
+<td>Gemini Flash-Lite</td>
+<td>Claude Haiku</td>
+<td>Classificação, roteamento, extração</td>
+</tr>
+<tr>
+<td>Reasoning</td>
+<td>Gemini (thinking)</td>
+<td>o3, Opus extended</td>
+<td>Código, lógica multi-passo</td>
+</tr>
+<tr>
+<td>Self-hosted</td>
+<td>—</td>
+<td>Llama, Mistral</td>
+<td>Regulado, air-gapped</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="padroes-de-otimizacao-de-custo-pdf">Padrões de otimização de custo (PDF)</h2>
+<h3 id="model-routing-reduz-5070">Model Routing (reduz 50–70%)</h3>
+<pre><code>Input → classificador de dificuldade (modelo barato)
+      → fácil?   → Flash-Lite
+      → médio?   → Flash
+      → difícil? → Pro
+</code></pre>
+<h3 id="prompt-caching">Prompt Caching</h3>
+<p>Cacheia a porção estável do contexto (system prompt, docs de RAG).<br />
+Corta custo de input tokens significativamente.</p>
+<h3 id="async-batching">Async Batching</h3>
+<p>Batch APIs custam ~50% menos. Ideal para: processamento de documentos,<br />
+enriquecimento de dados, geração de embeddings — casos típicos de automação interna.</p>
+<hr />
+<h2 id="checklist">Checklist</h2>
+<ul>
+<li><input type="checkbox"> Sei responder as 5 perguntas para qualquer caso de uso</li>
+<li><input type="checkbox"> Model router implementado com 3 tiers</li>
+<li><input type="checkbox"> Medi latência real de 3 modelos na mesma tarefa</li>
+<li><input type="checkbox"> Calculei custo mensal projetado para cenário realista</li>
+<li><input type="checkbox"> Testei prompt caching</li>
+<li><input type="checkbox"> Sei quando batch API é aplicável</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Evaluation_Frameworks.html">&larr; Evaluation &amp; Testing</a><a class="pager-link next" href="RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

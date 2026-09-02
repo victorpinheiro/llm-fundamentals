@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 6 — Geração Aumentada por Recuperação · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a class="active" aria-current="page" href="Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="modulo-6-geracao-aumentada-por-recuperacao">Módulo 6 — Geração Aumentada por Recuperação</h1>
+<p><strong>Projeto:</strong> <a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a> · <strong>Conceito:</strong> <a href="../concepts/RAG.html">Referência — Recuperação</a></p>
+<hr />
+<h2 id="objetivo">Objetivo</h2>
+<p>Decidir se RAG é a resposta certa, implementar recuperação híbrida, e<br />
+testar cada modo de falha antes de considerar o sistema pronto.</p>
+<hr />
+<h2 id="por-que-importa">Por que importa</h2>
+<p>É o padrão dominante para conectar modelos a conhecimento corporativo.<br />
+Também é onde mais se erra: muita gente implementa RAG por reflexo,<br />
+sem verificar se era necessário, e depois não entende por que a<br />
+qualidade está ruim.</p>
+<hr />
+<h2 id="decidir-antes-de-construir">Decidir antes de construir</h2>
+<pre><code>1. Precisa de conhecimento que o modelo não tem?
+   Não → prompt sozinho resolve. Pare aqui.
+   Sim → continue.
+
+2. Todo o acervo cabe na janela de contexto?
+   Sim → considere enviar tudo. Mais simples, sem erro de recuperação.
+   Não → RAG é necessário.
+
+3. Precisão e citação de fonte são obrigatórias?
+   Não → modelo base com prompt pode bastar.
+   Sim → RAG com ancoragem.
+</code></pre>
+<p><strong>Passo adicional:</strong> verifique se sua plataforma já oferece recuperação<br />
+gerenciada. Construir do zero o que a plataforma entrega pronto é<br />
+trabalho desperdiçado. Ver o guia da sua trilha.</p>
+<hr />
+<h2 id="as-cinco-etapas">As cinco etapas</h2>
+<ol>
+<li><strong>Ingestão</strong> — carregar, extrair texto, preservar metadados</li>
+<li><strong>Fragmentação</strong> — dividir, se necessário</li>
+<li><strong>Indexação</strong> — gerar embeddings e armazenar</li>
+<li><strong>Recuperação</strong> — buscar trechos relevantes para a pergunta</li>
+<li><strong>Geração</strong> — responder com base no que foi recuperado</li>
+</ol>
+<hr />
+<h2 id="fragmentacao-a-decisao-mal-compreendida">Fragmentação: a decisão mal compreendida</h2>
+<p><strong>Primeiro decida se deve fragmentar, não qual algoritmo usar.</strong></p>
+<p>Para documentos curtos e autocontidos — perguntas frequentes, políticas<br />
+de uma página, fichas de produto — recuperação no nível do documento é<br />
+mais simples e evita fragmentar unidades de sentido.</p>
+<table>
+<thead>
+<tr>
+<th>Estratégia</th>
+<th>Adequada para</th>
+<th>Risco</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sem fragmentação</td>
+<td>Documentos curtos e atômicos</td>
+<td>Falha com documentos longos</td>
+</tr>
+<tr>
+<td>Tamanho fixo</td>
+<td>Acervo homogêneo</td>
+<td>Corta no meio de frases</td>
+</tr>
+<tr>
+<td>Por parágrafo</td>
+<td>Prosa em geral</td>
+<td>Tamanhos irregulares</td>
+</tr>
+<tr>
+<td>Semântica</td>
+<td>Acervo heterogêneo</td>
+<td>Ingestão mais lenta</td>
+</tr>
+<tr>
+<td>Pai e filho</td>
+<td>Documentos hierárquicos</td>
+<td>Mais complexa de depurar</td>
+</tr>
+</tbody>
+</table>
+<p>Pai e filho funciona bem para documentos com estrutura formal:<br />
+recupera-se a cláusula, mas o contexto do documento inteiro fica<br />
+disponível.</p>
+<hr />
+<h2 id="busca-hibrida">Busca híbrida</h2>
+<p>Duas famílias de busca com forças complementares:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Vetorial</th>
+<th>Por palavra-chave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acha</td>
+<td>Por significado</td>
+<td>Por termo exato</td>
+</tr>
+<tr>
+<td>Boa em</td>
+<td>Paráfrase, sinônimo</td>
+<td>Códigos, identificadores, nomes</td>
+</tr>
+<tr>
+<td>Fraca em</td>
+<td>Termos exatos e raros</td>
+<td>Sinônimos</td>
+</tr>
+</tbody>
+</table>
+<p><strong>A combinação supera consistentemente qualquer uma isolada.</strong> Dados de<br />
+produção publicados por grandes fornecedores mostram ganho relevante da<br />
+busca híbrida sobre vetorial pura.</p>
+<p>Combine os resultados com fusão de postos recíprocos — uma técnica<br />
+simples que não exige normalizar as pontuações entre os dois sistemas.</p>
+<p>Isso importa especialmente em contexto corporativo, onde identificadores,<br />
+códigos de erro e números de referência são comuns e quebram busca<br />
+vetorial pura.</p>
+<hr />
+<h2 id="modos-de-falha">Modos de falha</h2>
+<h3 id="na-recuperacao">Na recuperação</h3>
+<table>
+<thead>
+<tr>
+<th>Falha</th>
+<th>Exemplo</th>
+<th>Mitigação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Descasamento semântico</td>
+<td>Pergunta usa termo diferente do documento</td>
+<td>Híbrida, reescrita de consulta</td>
+</tr>
+<tr>
+<td>Fragmentação</td>
+<td>Resposta atravessa dois trechos</td>
+<td>Sobreposição, pai e filho</td>
+</tr>
+<tr>
+<td>Corte muito curto</td>
+<td>Relevante está na posição 6, você pega 3</td>
+<td>Aumentar e reordenar</td>
+</tr>
+<tr>
+<td>Índice desatualizado</td>
+<td>Documento mudou, embedding não</td>
+<td>Reindexação automática</td>
+</tr>
+<tr>
+<td>Contaminação</td>
+<td>Trecho irrelevante confunde a geração</td>
+<td>Limiar de similaridade</td>
+</tr>
+</tbody>
+</table>
+<h3 id="na-geracao">Na geração</h3>
+<table>
+<thead>
+<tr>
+<th>Falha</th>
+<th>Mitigação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alucina apesar do contexto</td>
+<td>Instrução de ancoragem explícita</td>
+</tr>
+<tr>
+<td>Copia literalmente</td>
+<td>Instrução de síntese</td>
+</tr>
+<tr>
+<td>Excesso de contexto</td>
+<td>Reordenar e reduzir a quantidade</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Teste cada um deles.</strong> Um sistema de RAG que nunca foi submetido a<br />
+esses testes não está pronto, independentemente de parecer funcionar.</p>
+<hr />
+<h2 id="padroes-avancados">Padrões avançados</h2>
+<table>
+<thead>
+<tr>
+<th>Padrão</th>
+<th>Quando usar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reescrita de consulta</td>
+<td>Perguntas vagas ou conversacionais</td>
+</tr>
+<tr>
+<td>Reordenação</td>
+<td>Quando a precisão do topo importa</td>
+</tr>
+<tr>
+<td>Documento hipotético</td>
+<td>Perguntas curtas sobre documentos longos</td>
+</tr>
+<tr>
+<td>Múltiplas consultas</td>
+<td>Perguntas com várias facetas</td>
+</tr>
+</tbody>
+</table>
+<p>Adicione um de cada vez e meça. Adicionar todos de uma vez impede saber<br />
+o que ajudou.</p>
+<hr />
+<h2 id="controle-de-acesso">Controle de acesso</h2>
+<p>Em ambiente corporativo, o erro mais grave é a recuperação usar as<br />
+permissões do sistema em vez das do usuário que perguntou.</p>
+<p>Resultado: alguém recebe informação de um documento a que não deveria<br />
+ter acesso — e o sistema fez isso de forma invisível.</p>
+<p>Duas abordagens:<br />
+- <strong>Filtro na indexação</strong> — espaços separados por grupo de permissão<br />
+- <strong>Filtro na consulta</strong> — filtragem por metadados conforme o usuário</p>
+<p><strong>Nunca dependa apenas do prompt</strong> ("não responda sobre X"). Isso é<br />
+contornável e não é controle de acesso.</p>
+<hr />
+<h2 id="projeto">Projeto</h2>
+<p><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a> — RAG com decisão documentada, busca híbrida, teste<br />
+de modos de falha e avaliação quantitativa.</p>
+<hr />
+<h2 id="autoavaliacao">Autoavaliação</h2>
+<ol>
+<li>Percorra o quadro de decisão para: "queremos um assistente sobre<br />
+   nossas políticas internas".</li>
+<li>Quando <strong>não</strong> fragmentar?</li>
+<li>Por que busca híbrida supera vetorial pura em contexto corporativo?</li>
+<li>Cite cinco modos de falha de recuperação e uma mitigação para cada.</li>
+<li>Como garantir que a recuperação respeita permissões do usuário?</li>
+</ol>
+<hr />
+<h2 id="erros-comuns">Erros comuns</h2>
+<ul>
+<li>Implementar RAG sem verificar se era necessário</li>
+<li>Fragmentar por reflexo</li>
+<li>Só busca vetorial</li>
+<li>Não testar modos de falha</li>
+<li>Usar permissões do sistema em vez das do usuário</li>
+<li>Não exigir citação de fonte</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Module_05_AI_Limitations.html">&larr; Módulo 5 — Limitações e Modos de Falha</a><a class="pager-link next" href="Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

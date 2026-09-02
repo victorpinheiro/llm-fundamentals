@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P8 — Múltiplos Agentes (com evidência) · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Projetos</summary>
+<ul>
+<li><a href="P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a class="active" aria-current="page" href="P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="p8-multiplos-agentes-com-evidencia">P8 — Múltiplos Agentes (com evidência)</h1>
+<p><strong>Módulo:</strong> <a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a> · <strong>Tempo:</strong> 16–20h · <strong>Degrau 4</strong></p>
+<hr />
+<h2 id="pre-condicao-a-parte-mais-importante">Pré-condição — a parte mais importante</h2>
+<p>Você só implementa se <strong>mediu</strong> que o agente único foi insuficiente.</p>
+<p>Responda com números do P7:</p>
+<ul>
+<li><input type="checkbox"> Há subtarefas com capacidades fundamentalmente diferentes?</li>
+<li><input type="checkbox"> Paralelismo reduziria o tempo total de forma substancial? Quanto?</li>
+<li><input type="checkbox"> O contexto combinado estoura a janela? Com que tamanho?</li>
+</ul>
+<p><strong>Se nenhuma resposta tem número, volte ao P7.</strong></p>
+<hr />
+<h2 id="resultado-valido-nao-implementar">Resultado válido: não implementar</h2>
+<p>Se a medição mostrar que o agente único atende, o entregável deste<br />
+projeto é o documento explicando isso, com os números.</p>
+<p>Isso não é falhar no projeto. É o julgamento que a função exige.<br />
+Boa parte dos sistemas multi-agente em produção não deveria existir.</p>
+<hr />
+<h2 id="se-justificar">Se justificar</h2>
+<pre><code>Entrada → Orquestrador → [Especialista A ‖ Especialista B] → Crítico → Saída
+</code></pre>
+<p>Regras:<br />
+- Cada especialista recebe apenas suas ferramentas<br />
+- Orquestrador só roteia<br />
+- Crítico usa critério categórico<br />
+- Orçamento de tokens por execução<br />
+- Sanitização entre agentes</p>
+<hr />
+<h2 id="comparacao-obrigatoria">Comparação obrigatória</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Agente único (P7)</th>
+<th>Múltiplos (P8)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Latência p95</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Custo por execução</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Qualidade</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Linhas de código</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Tempo para depurar uma falha</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>A última linha é a mais reveladora e a mais esquecida.</p>
+<hr />
+<h2 id="passo-a-passo">Passo a passo</h2>
+<h3>Passo 1 — Avaliar se múltiplos agentes se justificam</h3>
+<p>Antes de escrever qualquer código, preencha o documento de decisão com números reais do P7.
+Use este template como ponto de partida para <code>docs/decisao.md</code>:</p>
+<pre><code># Documento de Decisão: Agente Único vs. Múltiplos Agentes
+
+## Pergunta 1 — Há subtarefas com capacidades fundamentalmente diferentes?
+[Liste as subtarefas do seu agente P7 e as ferramentas que cada uma usa.
+Se todas usam o mesmo conjunto de ferramentas, a resposta é não.]
+
+## Pergunta 2 — Paralelismo reduziria o tempo total de forma substancial?
+[Meça a latência das subtarefas individualmente. Se são sequenciais por
+natureza (saída de uma alimenta a próxima), paralelismo não ajuda.]
+
+## Pergunta 3 — O contexto combinado estoura a janela?
+[Some o tamanho médio dos contextos. Se cabe na janela com folga, não
+há necessidade de separar agentes para economizar contexto.]
+
+## Conclusão
+[Agente único é suficiente / Múltiplos agentes se justificam porque ___]
+</code></pre>
+<p><strong>Exemplo de conclusão "não implementar":</strong></p>
+<pre><code>Meu agente P7 executa todas as tarefas em média 3.2s a $0.004/chamada.
+As subtarefas (busca, análise, resposta) usam as mesmas ferramentas.
+Paralelismo economizaria ~1s mas adicionaria complexidade de orquestração.
+Contexto em 2k tokens, bem dentro da janela de 128k.
+Conclusão: agente único é suficiente. O ganho não justifica a complexidade.
+</code></pre>
+<p>Isso <em>é</em> o entregável. Não precisa ir ao Passo 2.</p>
+
+<h3>Passo 2 — Projetar o orquestrador (se justificado)</h3>
+<p>Se a análise mostrou justificativa, projete a arquitetura usando o padrão
+<strong>Orquestrador-Especialista-Crítico</strong>:</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    ORQUESTRADOR                         │
+│  - Recebe a requisição do usuário                       │
+│  - Decide qual(is) especialista(s) acionar              │
+│  - Agrega os resultados                                 │
+│  - Controla orçamento de tokens                         │
+└──────────┬──────────────────────┬───────────────────────┘
+           │                      │
+     ┌─────▼─────┐         ┌─────▼─────┐
+     │ ESPEC. A  │         │ ESPEC. B  │
+     │           │         │           │
+     │ tools: [  │         │ tools: [  │
+     │  busca,   │         │  cálculo, │
+     │  leitura  │         │  gráfico  │
+     │ ]         │         │ ]         │
+     └─────┬─────┘         └─────┬─────┘
+           │                      │
+           └──────────┬───────────┘
+                ┌─────▼─────┐
+                │  CRÍTICO  │
+                │           │
+                │ Avalia o  │
+                │ resultado │
+                │ combinado │
+                │ com pass/ │
+                │ fail      │
+                └───────────┘
+</code></pre>
+<p>Cada componente tem uma responsabilidade clara:</p>
+<ul>
+<li><strong>Orquestrador:</strong> recebe a requisição, decide quais especialistas chamar, agrega resultados. Não executa tarefas diretamente.</li>
+<li><strong>Especialistas:</strong> cada um tem seu próprio system prompt e acesso apenas às suas ferramentas. Vê apenas o contexto necessário para sua tarefa.</li>
+<li><strong>Crítico:</strong> avalia o resultado combinado com critérios categóricos (pass/fail), não subjetivos. Exemplo: "A resposta cita pelo menos uma fonte?" em vez de "A resposta é boa?".</li>
+</ul>
+
+<h3>Passo 3 — Implementar com código</h3>
+
+<h4>Trilha A — OpenAI Agents SDK</h4>
+<pre><code class="language-python">from agents import Agent, Runner
+import asyncio
+
+# --- Especialistas (cada um com ferramentas isoladas) ---
+especialista_busca = Agent(
+    name="Buscador",
+    instructions="Você busca informações relevantes. Retorne apenas fatos.",
+    tools=[ferramenta_busca],  # Só recebe as ferramentas que precisa
+)
+
+especialista_analise = Agent(
+    name="Analista",
+    instructions="Você analisa dados e produz conclusões estruturadas.",
+    tools=[ferramenta_calculo],
+)
+
+# --- Crítico ---
+critico = Agent(
+    name="Critico",
+    instructions="""Avalie o resultado combinado com estes critérios:
+1. FONTES: A resposta cita pelo menos uma fonte verificável? (pass/fail)
+2. COERÊNCIA: A conclusão segue logicamente dos dados? (pass/fail)
+3. COMPLETUDE: Todas as partes da pergunta foram respondidas? (pass/fail)
+
+Responda APENAS com: APROVADO (todos pass) ou REPROVADO (qualquer fail).
+Se REPROVADO, diga qual critério falhou e por quê.""",
+)
+
+# --- Orquestrador ---
+orquestrador = Agent(
+    name="Orquestrador",
+    instructions="Coordene os especialistas para responder à pergunta do usuário.",
+    handoffs=[especialista_busca, especialista_analise, critico],
+)
+
+async def executar(pergunta: str):
+    resultado = await Runner.run(orquestrador, input=pergunta)
+    return resultado.final_output
+</code></pre>
+
+<h4>Trilha B — Google ADK</h4>
+<pre><code class="language-python">from google.adk.agents import Agent, SequentialAgent, ParallelAgent
+from google.adk.tools import FunctionTool
+
+# --- Ferramentas isoladas por especialista ---
+def buscar_documentos(query: str) -> str:
+    """Busca documentos relevantes para a query."""
+    # implementação da busca
+    return resultados
+
+def analisar_dados(dados: str) -> str:
+    """Analisa dados e retorna conclusões estruturadas."""
+    # implementação da análise
+    return conclusoes
+
+# --- Especialistas ---
+especialista_busca = Agent(
+    model="gemini-2.0-flash",
+    name="buscador",
+    instruction="Você busca informações relevantes. Retorne apenas fatos.",
+    tools=[FunctionTool(buscar_documentos)],
+)
+
+especialista_analise = Agent(
+    model="gemini-2.0-flash",
+    name="analista",
+    instruction="Você analisa dados e produz conclusões estruturadas.",
+    tools=[FunctionTool(analisar_dados)],
+)
+
+# --- Execução paralela dos especialistas ---
+especialistas_paralelos = ParallelAgent(
+    name="especialistas",
+    sub_agents=[especialista_busca, especialista_analise],
+)
+
+# --- Crítico ---
+critico = Agent(
+    model="gemini-2.0-flash",
+    name="critico",
+    instruction="""Avalie o resultado combinado com estes critérios:
+1. FONTES: A resposta cita pelo menos uma fonte verificável? (pass/fail)
+2. COERÊNCIA: A conclusão segue logicamente dos dados? (pass/fail)
+3. COMPLETUDE: Todas as partes da pergunta foram respondidas? (pass/fail)
+
+Responda APENAS com: APROVADO (todos pass) ou REPROVADO (qualquer fail).""",
+)
+
+# --- Pipeline completo ---
+pipeline = SequentialAgent(
+    name="orquestrador",
+    sub_agents=[especialistas_paralelos, critico],
+)
+</code></pre>
+
+<h3>Passo 4 — Implementar sanitização entre agentes</h3>
+<p><strong>Sanitização</strong> significa validar e limpar os dados que um agente passa para outro,
+para evitar que saída malformada ou injetada de um especialista comprometa o próximo.</p>
+<pre><code class="language-python">import re
+from pydantic import BaseModel, field_validator
+
+class ResultadoEspecialista(BaseModel):
+    """Valida a saída de um especialista antes de passar ao próximo."""
+    conteudo: str
+    fontes: list[str]
+    confianca: float
+
+    @field_validator("conteudo")
+    @classmethod
+    def limpar_conteudo(cls, v: str) -> str:
+        # Remove possíveis instruções injetadas
+        v = re.sub(r"(?i)(ignore previous|system prompt|you are now)", "[REMOVIDO]", v)
+        # Limita tamanho para não estourar contexto do próximo agente
+        if len(v) > 5000:
+            v = v[:5000] + "\n[TRUNCADO]"
+        return v
+
+    @field_validator("confianca")
+    @classmethod
+    def validar_confianca(cls, v: float) -> float:
+        if not 0.0 <= v <= 1.0:
+            raise ValueError(f"Confiança deve estar entre 0 e 1, recebeu {v}")
+        return v
+
+def sanitizar_entre_agentes(saida_bruta: str) -> ResultadoEspecialista:
+    """Valida saída antes de passá-la ao próximo agente."""
+    try:
+        resultado = ResultadoEspecialista.model_validate_json(saida_bruta)
+        return resultado
+    except Exception as e:
+        raise ValueError(f"Saída do especialista não passou na validação: {e}")
+</code></pre>
+
+<h3>Passo 5 — Preencher a tabela de comparação P7 vs P8</h3>
+<p>Para medir corretamente cada métrica:</p>
+<pre><code class="language-python">import time
+import numpy as np
+
+# --- Coletar latências em N execuções ---
+latencias_p7 = []
+latencias_p8 = []
+custos_p7 = []
+custos_p8 = []
+
+casos_teste = carregar_casos_teste()  # Seus 40+ casos do P3
+
+for caso in casos_teste:
+    # Medir P7 (agente único)
+    inicio = time.perf_counter()
+    resultado_p7 = executar_agente_p7(caso["input"])
+    latencias_p7.append(time.perf_counter() - inicio)
+    custos_p7.append(calcular_custo(resultado_p7))
+
+    # Medir P8 (múltiplos agentes)
+    inicio = time.perf_counter()
+    resultado_p8 = executar_agente_p8(caso["input"])
+    latencias_p8.append(time.perf_counter() - inicio)
+    custos_p8.append(calcular_custo(resultado_p8))
+
+# --- Calcular p95 ---
+p95_p7 = np.percentile(latencias_p7, 95)
+p95_p8 = np.percentile(latencias_p8, 95)
+
+print(f"Latência p95 — P7: {p95_p7:.2f}s | P8: {p95_p8:.2f}s")
+print(f"Custo médio  — P7: ${np.mean(custos_p7):.4f} | P8: ${np.mean(custos_p8):.4f}")
+</code></pre>
+<p>O <strong>p95</strong> (percentil 95) significa: 95% das execuções terminaram em menos que esse tempo.
+Ordene as latências, pegue o valor na posição <code>0.95 * len(latencias)</code>. Isso captura os casos
+lentos sem ser distorcido por outliers extremos como o máximo seria.</p>
+
+<h3>Passo 6 — Escrever a conclusão honesta</h3>
+<p>A conclusão deve responder: "Valeu a pena?" com números. Template:</p>
+<pre><code># Conclusão
+
+## O que mudou de P7 para P8
+- Latência p95: X.Xs → Y.Ys (melhoria/piora de Z%)
+- Custo por execução: $X → $Y (melhoria/piora de Z%)
+- Qualidade (score médio de avaliação): X → Y
+
+## O que ficou mais complexo
+- Linhas de código: N → M
+- Tempo para depurar uma falha: descreva um caso real
+- Componentes para manter: 1 → K
+
+## Veredicto
+[Multi-agente se justificou / não se justificou] porque [razão com números].
+Se fosse começar de novo, [manteria a decisão / faria diferente porque ___].
+</code></pre>
+<hr />
+<h2 id="quando-vale-a-pena">Quando múltiplos agentes valem a pena</h2>
+<p>Use este framework para a decisão. A barra é alta de propósito.</p>
+<table>
+<thead>
+<tr>
+<th>Cenário</th>
+<th>Vale a pena?</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Subtarefas usam modelos diferentes (ex: um barato para triagem, um caro para análise)</td>
+<td>Provavelmente sim</td>
+<td>Economia real de custo mensurável</td>
+</tr>
+<tr>
+<td>Subtarefas podem rodar em paralelo e latência importa</td>
+<td>Provavelmente sim</td>
+<td>Ganho de tempo multiplicativo, não marginal</td>
+</tr>
+<tr>
+<td>Contexto combinado estoura a janela do modelo</td>
+<td>Sim</td>
+<td>Sem alternativa: precisa separar para funcionar</td>
+</tr>
+<tr>
+<td>Subtarefas precisam de ferramentas com riscos diferentes (ex: leitura vs. escrita)</td>
+<td>Provavelmente sim</td>
+<td>Isolamento de ferramentas reduz superfície de ataque</td>
+</tr>
+<tr>
+<td>"Quero que cada agente tenha personalidade"</td>
+<td>Não</td>
+<td>System prompt resolve. Não precisa de agentes separados</td>
+</tr>
+<tr>
+<td>"Parece mais organizado"</td>
+<td>Não</td>
+<td>Organização vem de código limpo, não de agentes</td>
+</tr>
+<tr>
+<td>Tudo cabe em um contexto e roda em tempo aceitável</td>
+<td>Não</td>
+<td>Complexidade adicionada sem ganho mensurável</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Regra prática:</strong> se você não consegue apontar um número que melhora (latência, custo, qualidade),
+não implemente múltiplos agentes.</p>
+<hr />
+<h2 id="links-de-referencia">Links de referência</h2>
+<ul>
+<li><a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — Multi-agent</a> — padrões de handoff e orquestração</li>
+<li><a href="https://google.github.io/adk-docs/agents/multi-agents/">Google ADK — Multi-agent systems</a> — SequentialAgent, ParallelAgent, LoopAgent</li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/agentic-systems#multi-agent-orchestration">Anthropic — Multi-agent orchestration</a> — padrões orquestrador-subagente</li>
+<li><a href="https://docs.pydantic.dev/latest/">Pydantic — Documentação</a> — validação de dados entre agentes</li>
+</ul>
+<hr />
+<h2 id="extensao-opcional">Extensão opcional</h2>
+<p>Implemente um servidor de ferramentas seguindo um protocolo aberto<br />
+padronizado, em vez de integração sob medida.<br />
+Ver <a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a>.</p>
+<hr />
+<h2 id="entregavel">Entregável</h2>
+<pre><code>p8_multi/
+├── orquestrador.py
+├── agentes/
+├── comparacao/
+│   └── p7_vs_p8.md
+├── testes/
+└── docs/
+    └── decisao.md          # com números
+</code></pre>
+<hr />
+<h2 id="definition-of-done">Definition of Done</h2>
+<ul>
+<li><input type="checkbox"> Documento de decisão com números do P7</li>
+<li><input type="checkbox"> Comparação preenchida</li>
+<li><input type="checkbox"> Se implementado: paralelismo funcionando</li>
+<li><input type="checkbox"> Crítico com critério categórico</li>
+<li><input type="checkbox"> Sanitização entre agentes testada</li>
+<li><input type="checkbox"> Conclusão honesta escrita</li>
+</ul>
+<p>→ <a href="P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></p>
+</article>
+<nav class="pager"><a class="pager-link prev" href="P7_Agent.html">&larr; P7 — Agente com Ferramentas</a><a class="pager-link next" href="P9_Capstone.html">P9 — Projeto Final: Engajamento Completo &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

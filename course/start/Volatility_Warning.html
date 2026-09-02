@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aviso de Volatilidade · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group" open>
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="Setup_Guide.html">Guia de Setup</a></li>
+<li><a class="active" aria-current="page" href="Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="aviso-de-volatilidade">Aviso de Volatilidade</h1>
+<p><strong>Leia antes de confiar em qualquer nome de produto deste curso.</strong></p>
+<hr />
+<h2 id="o-problema">O problema</h2>
+<p>A camada de ferramentas de IA muda rápido. Entre a redação de um material<br />
+e sua leitura, é comum que:</p>
+<ul>
+<li>Modelos tenham sido lançados, renomeados ou desligados</li>
+<li>SDKs tenham mudado assinaturas de função</li>
+<li>Produtos inteiros tenham sido renomeados ou consolidados</li>
+<li>URLs de documentação tenham migrado</li>
+</ul>
+<p>Isso não é hipotético. Um exemplo real e recente na Trilha B:</p>
+<blockquote>
+<p>A plataforma do Google que por anos se chamou <strong>Vertex AI</strong> foi renomeada<br />
+para <strong>Gemini Enterprise Agent Platform</strong> em abril de 2026. Junto com ela,<br />
+"Agent Engine" virou "Agent Runtime", "Vertex AI Search" virou<br />
+"Agent Search", e "Agentspace" deixou de existir como nome.</p>
+</blockquote>
+<p>Quem estudasse por material anterior a essa data aprenderia nomes que já<br />
+não aparecem no console.</p>
+<hr />
+<h2 id="como-este-curso-lida-com-isso">Como este curso lida com isso</h2>
+<p><strong>Separando o que é estável do que não é.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Estabilidade</th>
+<th>Onde está</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Conceitos (tokens, RAG, agentes, avaliação)</td>
+<td>Alta — anos</td>
+<td><code>01_Modules/</code>, <code>02_Concepts/</code></td>
+</tr>
+<tr>
+<td>Padrões de arquitetura</td>
+<td>Alta</td>
+<td><code>02_Concepts/</code></td>
+</tr>
+<tr>
+<td>Nomes de produto e serviço</td>
+<td><strong>Baixa — meses</strong></td>
+<td><code>03_Tracks/</code></td>
+</tr>
+<tr>
+<td>Versões de modelo</td>
+<td><strong>Muito baixa — semanas</strong></td>
+<td><code>03_Tracks/</code></td>
+</tr>
+<tr>
+<td>Assinaturas de API</td>
+<td>Baixa</td>
+<td>Documentação oficial (não reproduzidas aqui)</td>
+</tr>
+</tbody>
+</table>
+<p>Os módulos conceituais devem envelhecer bem. Os arquivos de trilha vão<br />
+precisar de atualização.</p>
+<hr />
+<h2 id="sua-responsabilidade-ao-estudar">Sua responsabilidade ao estudar</h2>
+<ol>
+<li><strong>Confirme nomes e versões na documentação oficial</strong> antes de começar<br />
+   cada módulo de implementação.</li>
+<li><strong>Desconfie de tutoriais de terceiros</strong> sem data visível. Blogs<br />
+   frequentemente propagam nomes obsoletos por meses.</li>
+<li><strong>Prefira a documentação do fornecedor</strong> a qualquer outra fonte,<br />
+   inclusive este curso.</li>
+<li><strong>Quando encontrar divergência</strong>, a documentação oficial vence.</li>
+</ol>
+<hr />
+<h2 id="sinais-de-material-desatualizado">Sinais de material desatualizado</h2>
+<ul>
+<li>Nomes de produto que não aparecem na documentação atual</li>
+<li>Exemplos de código que quebram com a versão instalada do SDK</li>
+<li>Modelos citados que retornam erro 404</li>
+<li>Ausência de data de publicação ou revisão</li>
+</ul>
+<hr />
+<h2 id="registro-de-revisao-deste-curso">Registro de revisão deste curso</h2>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>O que foi verificado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agosto de 2026</td>
+<td>Nomenclatura da Trilha B, versões de ADK, linha de modelos</td>
+</tr>
+</tbody>
+</table>
+<p>Se você está lendo isto muito depois dessa data, trate a Trilha B como<br />
+ponto de partida para investigação, não como verdade.</p>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Setup_Guide.html">&larr; Guia de Setup</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

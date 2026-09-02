@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 3 — Avaliação e Testes · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a class="active" aria-current="page" href="Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="modulo-3-avaliacao-e-testes">Módulo 3 — Avaliação e Testes</h1>
+<p><strong>Projeto:</strong> <a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a> · <strong>Conceito:</strong> <a href="../concepts/Evaluation.html">Referência — Avaliação</a></p>
+<hr />
+<h2 id="objetivo">Objetivo</h2>
+<p>Construir um pipeline de avaliação que roda em integração contínua e<br />
+falha quando a qualidade cai. Sair de "parece que funciona" para<br />
+"aqui estão os números".</p>
+<hr />
+<h2 id="por-que-importa">Por que importa</h2>
+<p>Esta é a competência que mais diferencia um engenheiro de IA experiente<br />
+de um iniciante — e a mais frequentemente pulada.</p>
+<p>Sem avaliação você não consegue: saber se uma mudança de prompt melhorou,<br />
+detectar regressão após atualização de modelo, ou dar a um stakeholder<br />
+qualquer garantia sobre o sistema.</p>
+<p>Numa conversa com uma área de risco ou conformidade, é a avaliação que<br />
+permite aprovar o projeto. "Confie em mim" não é aprovável.</p>
+<hr />
+<h2 id="conceitos">Conceitos</h2>
+<h3 id="por-que-testar-ia-e-diferente">Por que testar IA é diferente</h3>
+<table>
+<thead>
+<tr>
+<th>Software tradicional</th>
+<th>Sistema de IA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Saída determinística</td>
+<td>Varia entre execuções</td>
+</tr>
+<tr>
+<td><code>assert x == y</code> funciona</td>
+<td>Comparação exata é inútil</td>
+</tr>
+<tr>
+<td>Correto é objetivo</td>
+<td>Frequentemente subjetivo</td>
+</tr>
+<tr>
+<td>Quebra de forma ruidosa</td>
+<td>Degrada silenciosamente</td>
+</tr>
+</tbody>
+</table>
+<p>Mesmo com temperatura zero, uma atualização do modelo pelo provedor pode<br />
+mudar as saídas sem aviso e sem que seu código tenha mudado.</p>
+<h3 id="conjunto-de-referencia">Conjunto de referência</h3>
+<p>Casos de teste com respostas acordadas. É o alicerce de tudo.</p>
+<p>Composição recomendada para um conjunto inicial de 40 casos:</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Quantidade</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caminho feliz</td>
+<td>15</td>
+<td>Funcionamento básico</td>
+</tr>
+<tr>
+<td>Ambíguo</td>
+<td>15</td>
+<td>Casos realmente difíceis</td>
+</tr>
+<tr>
+<td>Borda</td>
+<td>7</td>
+<td>Entrada vazia, idioma inesperado, tamanho extremo</td>
+</tr>
+<tr>
+<td>Adversarial</td>
+<td>3</td>
+<td>Tentativas de injeção de prompt</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Versione o conjunto junto com o código.</strong> Ele evolui: toda vez que<br />
+descobrir um novo modo de falha, adicione um caso.</p>
+<h3 id="modelo-como-avaliador">Modelo como avaliador</h3>
+<p>Usar um modelo forte para julgar a saída de outro. Resolve o problema de<br />
+avaliar qualidade semântica, que métricas de correspondência exata não<br />
+capturam.</p>
+<p><strong>Regra importante:</strong> use critérios categóricos, não escalas numéricas.</p>
+<pre><code>Bom:  &quot;Aprovado ou Reprovado&quot;
+Bom:  &quot;Bom / Neutro / Ruim&quot;
+Ruim: &quot;Nota de 1 a 10&quot;
+</code></pre>
+<p>Modelos produzem resultados inconsistentes em escalas contínuas —<br />
+pequenas mudanças na redação do prompt de avaliação deslocam as notas.<br />
+Julgamentos binários ou de três classes são bem mais reprodutíveis.</p>
+<h3 id="niveis-de-teste">Níveis de teste</h3>
+<table>
+<thead>
+<tr>
+<th>Nível</th>
+<th>Verifica</th>
+<th>Quando roda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unidade</td>
+<td>Formato, restrições, uma chamada</td>
+<td>Toda mudança de prompt</td>
+</tr>
+<tr>
+<td>Integração</td>
+<td>Pipeline completo</td>
+<td>Mudança de arquitetura</td>
+</tr>
+<tr>
+<td>Regressão</td>
+<td>Casos que passavam continuam passando</td>
+<td>Todo release</td>
+</tr>
+<tr>
+<td>Adversarial</td>
+<td>Injeção, jailbreak, borda</td>
+<td>Antes de produção</td>
+</tr>
+</tbody>
+</table>
+<h3 id="metricas-para-sistemas-de-recuperacao">Métricas para sistemas de recuperação</h3>
+<p>Quando houver RAG (Módulo 6), meça separadamente:</p>
+<ul>
+<li><strong>Precisão de recuperação</strong> — os trechos recuperados são relevantes?</li>
+<li><strong>Cobertura de recuperação</strong> — todos os relevantes foram recuperados?</li>
+<li><strong>Fidelidade</strong> — a resposta se sustenta no contexto recuperado?</li>
+<li><strong>Relevância da resposta</strong> — responde à pergunta feita?</li>
+</ul>
+<p>Separar isso importa: se a resposta está ruim, você precisa saber se o<br />
+problema é a recuperação ou a geração. São correções diferentes.</p>
+<h3 id="geracao-sintetica-de-casos">Geração sintética de casos</h3>
+<p>Algumas ferramentas geram pares de pergunta e resposta a partir do seu<br />
+próprio acervo de documentos. Isso resolve o problema mais comum na<br />
+prática: não existir conjunto anotado.</p>
+<p>Casos sintéticos não substituem casos reais curados, mas dão um ponto<br />
+de partida quando não há nenhum.</p>
+<hr />
+<h2 id="integracao-continua">Integração contínua</h2>
+<p>O objetivo final deste módulo é um pipeline que:</p>
+<ol>
+<li>Roda a avaliação a cada alteração</li>
+<li>Compara com a linha de base</li>
+<li><strong>Falha</strong> se a qualidade cair abaixo do limite</li>
+<li>Reporta os números no pull request</li>
+</ol>
+<p>Ferramentas de avaliação modernas integram com frameworks de teste<br />
+padrão, então isso é a mesma disciplina de CI que você já conhece.</p>
+<hr />
+<h2 id="projeto">Projeto</h2>
+<p><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a> — conjunto de referência, avaliação<br />
+automatizada, portão de regressão em CI.</p>
+<hr />
+<h2 id="autoavaliacao">Autoavaliação</h2>
+<ol>
+<li>Por que <code>assert saida == esperado</code> não funciona aqui?</li>
+<li>Por que critérios categóricos superam escalas de 1 a 10?</li>
+<li>A resposta do seu RAG está ruim. Como descobrir se o problema é<br />
+   recuperação ou geração?</li>
+<li>Que casos você inclui num conjunto de 40 e em que proporção?</li>
+<li>Seu sistema passou de 91% para 87% após mudar de modelo. O que fazer?</li>
+</ol>
+<hr />
+<h2 id="erros-comuns">Erros comuns</h2>
+<ul>
+<li>Adiar avaliação para o final do projeto</li>
+<li>Conjunto só com casos fáceis</li>
+<li>Notas de 1 a 10</li>
+<li>Não versionar o conjunto de referência</li>
+<li>Avaliar recuperação e geração juntas, sem separar</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Module_02_Prompt_Engineering.html">&larr; Módulo 2 — Engenharia de Prompt e Saída Estruturada</a><a class="pager-link next" href="Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

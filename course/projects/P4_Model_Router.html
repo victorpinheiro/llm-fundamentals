@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P4 — Roteador de Modelos · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Projetos</summary>
+<ul>
+<li><a href="P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a class="active" aria-current="page" href="P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="p4-roteador-de-modelos">P4 — Roteador de Modelos</h1>
+<p><strong>Módulo:</strong> <a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a> · <strong>Tempo:</strong> 10–14h · <strong>Degrau 1</strong></p>
+<hr />
+<h2 id="objetivo">Objetivo</h2>
+<p>Reduzir custo com roteamento por complexidade — ou concluir com dados<br />
+que não compensa.</p>
+<hr />
+<h2 id="arquitetura">Arquitetura</h2>
+<pre><code>entrada → classificador (modelo mais barato)
+        → simples  → modelo pequeno
+        → média    → modelo intermediário
+        → complexa → modelo grande
+</code></pre>
+<hr />
+<h2 id="passo-a-passo">Passo a passo</h2>
+
+<h3>Passo 1 — Defina as camadas de modelo</h3>
+<p>Escolha três modelos com faixas de custo distintas. Exemplos por trilha:</p>
+<table>
+<thead>
+<tr><th>Camada</th><th>Trilha A (OpenAI + Anthropic)</th><th>Trilha B (Google Cloud)</th></tr>
+</thead>
+<tbody>
+<tr><td>Pequeno (barato)</td><td><code>gpt-4o-mini</code></td><td><code>gemini-2.0-flash-lite</code></td></tr>
+<tr><td>Intermediário</td><td><code>claude-3-5-haiku</code></td><td><code>gemini-2.0-flash</code></td></tr>
+<tr><td>Grande (caro)</td><td><code>claude-sonnet-4</code> ou <code>gpt-4o</code></td><td><code>gemini-2.5-pro</code></td></tr>
+</tbody>
+</table>
+<p>Anote o custo por milhão de tokens (input e output) de cada um. Você vai precisar disso no Passo 4.</p>
+
+<h3>Passo 2 — Construa o classificador de complexidade</h3>
+<p>O classificador usa o modelo mais barato para decidir qual camada deve responder.
+Crie <code>classificador_complexidade.py</code>:</p>
+<pre><code>"""classificador_complexidade.py — classifica a complexidade de uma pergunta."""
+import os
+from openai import OpenAI          # Trilha A
+# from google import genai          # Trilha B — descomente e ajuste
+
+client = OpenAI()  # usa OPENAI_API_KEY do ambiente
+
+PROMPT_CLASSIFICADOR = """\
+Você é um roteador de complexidade. Dada a pergunta do usuário, classifique-a
+em exatamente uma categoria:
+
+- SIMPLES: pergunta factual curta, tradução direta, formatação.
+- MEDIA: resumo de texto médio, comparação entre dois itens, explicação conceitual.
+- COMPLEXA: análise multi-etapa, raciocínio lógico, geração longa ou criativa.
+
+Responda APENAS com uma palavra: SIMPLES, MEDIA ou COMPLEXA.
+"""
+
+def classificar(pergunta: str) -> str:
+    """Retorna 'SIMPLES', 'MEDIA' ou 'COMPLEXA'."""
+    resposta = client.chat.completions.create(
+        model="gpt-4o-mini",           # modelo mais barato
+        messages=[
+            {"role": "system", "content": PROMPT_CLASSIFICADOR},
+            {"role": "user", "content": pergunta},
+        ],
+        temperature=0,
+        max_tokens=10,
+    )
+    categoria = resposta.choices[0].message.content.strip().upper()
+    if categoria not in ("SIMPLES", "MEDIA", "COMPLEXA"):
+        return "COMPLEXA"              # fallback seguro
+    return categoria
+
+# Trilha B — versão com Vertex AI:
+# from google import genai
+# vertex_client = genai.Client(vertexai=True, project="SEU_PROJETO", location="us-central1")
+#
+# def classificar(pergunta: str) -> str:
+#     resp = vertex_client.models.generate_content(
+#         model="gemini-2.0-flash-lite",
+#         contents=f"{PROMPT_CLASSIFICADOR}\n\nPergunta: {pergunta}",
+#     )
+#     categoria = resp.text.strip().upper()
+#     return categoria if categoria in ("SIMPLES", "MEDIA", "COMPLEXA") else "COMPLEXA"
+</code></pre>
+
+<h3>Passo 3 — Construa o roteador</h3>
+<p>O roteador conecta o classificador aos modelos. Crie <code>roteador.py</code>:</p>
+<pre><code>"""roteador.py — roteia perguntas para o modelo adequado à complexidade."""
+import time
+from classificador_complexidade import classificar
+
+# === Trilha A ===
+from openai import OpenAI
+import anthropic
+
+openai_client = OpenAI()
+anthropic_client = anthropic.Anthropic()
+
+MODELOS = {
+    "SIMPLES":  {"provider": "openai",    "model": "gpt-4o-mini"},
+    "MEDIA":    {"provider": "anthropic",  "model": "claude-3-5-haiku-20241022"},
+    "COMPLEXA": {"provider": "anthropic",  "model": "claude-sonnet-4-20250514"},
+}
+
+# === Trilha B (descomente e ajuste) ===
+# from google import genai
+# vertex_client = genai.Client(vertexai=True, project="SEU_PROJETO", location="us-central1")
+# MODELOS = {
+#     "SIMPLES":  {"provider": "vertex", "model": "gemini-2.0-flash-lite"},
+#     "MEDIA":    {"provider": "vertex", "model": "gemini-2.0-flash"},
+#     "COMPLEXA": {"provider": "vertex", "model": "gemini-2.5-pro"},
+# }
+
+# Custo por milhão de tokens (input / output) — preencha com valores atuais
+CUSTO_POR_MILHAO = {
+    "gpt-4o-mini":                  {"input": 0.15,  "output": 0.60},
+    "claude-3-5-haiku-20241022":    {"input": 0.80,  "output": 4.00},
+    "claude-sonnet-4-20250514":     {"input": 3.00,  "output": 15.00},
+}
+
+def chamar_modelo(pergunta: str, provider: str, model: str) -> dict:
+    """Chama o modelo e retorna resposta + metadados."""
+    if provider == "openai":
+        resp = openai_client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": pergunta}],
+        )
+        return {
+            "texto": resp.choices[0].message.content,
+            "tokens_input": resp.usage.prompt_tokens,
+            "tokens_output": resp.usage.completion_tokens,
+        }
+    elif provider == "anthropic":
+        resp = anthropic_client.messages.create(
+            model=model,
+            max_tokens=1024,
+            messages=[{"role": "user", "content": pergunta}],
+        )
+        return {
+            "texto": resp.content[0].text,
+            "tokens_input": resp.usage.input_tokens,
+            "tokens_output": resp.usage.output_tokens,
+        }
+    # Trilha B:
+    # elif provider == "vertex":
+    #     resp = vertex_client.models.generate_content(model=model, contents=pergunta)
+    #     return {
+    #         "texto": resp.text,
+    #         "tokens_input": resp.usage_metadata.prompt_token_count,
+    #         "tokens_output": resp.usage_metadata.candidates_token_count,
+    #     }
+
+def calcular_custo(model: str, tokens_input: int, tokens_output: int) -> float:
+    tabela = CUSTO_POR_MILHAO.get(model, {"input": 0, "output": 0})
+    return (tokens_input * tabela["input"] + tokens_output * tabela["output"]) / 1_000_000
+
+def rotear(pergunta: str) -> dict:
+    """Classifica, roteia e retorna resposta com metadados completos."""
+    complexidade = classificar(pergunta)
+    config = MODELOS[complexidade]
+
+    inicio = time.time()
+    resultado = chamar_modelo(pergunta, config["provider"], config["model"])
+    latencia = time.time() - inicio
+
+    custo = calcular_custo(
+        config["model"], resultado["tokens_input"], resultado["tokens_output"]
+    )
+
+    return {
+        "pergunta": pergunta,
+        "complexidade": complexidade,
+        "modelo": config["model"],
+        "resposta": resultado["texto"],
+        "tokens_input": resultado["tokens_input"],
+        "tokens_output": resultado["tokens_output"],
+        "custo_usd": custo,
+        "latencia_s": round(latencia, 3),
+    }
+
+if __name__ == "__main__":
+    r = rotear("Qual a capital da França?")
+    print(f"[{r['complexidade']}] {r['modelo']} — ${r['custo_usd']:.6f} — {r['latencia_s']}s")
+    print(r["resposta"][:200])
+</code></pre>
+
+<h3>Passo 4 — Construa o script de comparação</h3>
+<p>Crie <code>comparar.py</code> para rodar os 50 casos do P2 em três modos e coletar métricas:</p>
+<pre><code>"""comparar.py — compara sempre-grande vs sempre-pequeno vs roteador."""
+import json, statistics
+from roteador import rotear, chamar_modelo, calcular_custo, MODELOS
+import time
+
+# Carregue os 50 casos de teste do P2
+with open("../p2_prompt/casos_teste.json") as f:
+    casos = json.load(f)
+
+def rodar_modo(nome: str, model_override: str | None = None):
+    """Roda todos os casos num modo e coleta métricas."""
+    resultados = []
+    for caso in casos:
+        pergunta = caso["input"]
+        inicio = time.time()
+
+        if model_override:
+            # Modo fixo: sempre o mesmo modelo
+            config = MODELOS[model_override]
+            resp = chamar_modelo(pergunta, config["provider"], config["model"])
+            custo = calcular_custo(config["model"], resp["tokens_input"], resp["tokens_output"])
+            modelo_usado = config["model"]
+        else:
+            # Modo roteador
+            r = rotear(pergunta)
+            resp = {"texto": r["resposta"], "tokens_input": r["tokens_input"],
+                    "tokens_output": r["tokens_output"]}
+            custo = r["custo_usd"]
+            modelo_usado = r["modelo"]
+
+        latencia = time.time() - inicio
+        resultados.append({
+            "custo": custo,
+            "latencia": latencia,
+            "modelo": modelo_usado,
+            # Adicione aqui sua métrica de qualidade (ex: score do avaliador do P3)
+        })
+
+    custos = [r["custo"] for r in resultados]
+    latencias = [r["latencia"] for r in resultados]
+    return {
+        "modo": nome,
+        "custo_total": sum(custos),
+        "custo_medio": statistics.mean(custos),
+        "latencia_p50": statistics.median(latencias),
+        "latencia_p95": sorted(latencias)[int(len(latencias) * 0.95)],
+        "resultados": resultados,
+    }
+
+# Rodar as três configurações
+grande  = rodar_modo("Sempre grande",  "COMPLEXA")
+pequeno = rodar_modo("Sempre pequeno", "SIMPLES")
+router  = rodar_modo("Roteador")
+
+# Exibir comparação
+print(f"{'Modo':<20} {'Custo total':>12} {'p95 latência':>14}")
+print("-" * 50)
+for m in [grande, pequeno, router]:
+    print(f"{m['modo']:<20} ${m['custo_total']:>10.6f} {m['latencia_p95']:>12.3f}s")
+
+# Projeção mensal (exemplo: 10.000 chamadas/mês)
+CHAMADAS_MES = 10_000
+fator = CHAMADAS_MES / len(casos)
+print(f"\nProjeção mensal ({CHAMADAS_MES:,} chamadas):")
+for m in [grande, pequeno, router]:
+    print(f"  {m['modo']}: ${m['custo_total'] * fator:.2f}/mês")
+
+# Salvar resultados
+with open("resultados/analise_custo.json", "w") as f:
+    json.dump({"grande": grande, "pequeno": pequeno, "roteador": router}, f, indent=2)
+</code></pre>
+
+<h3>Passo 5 — Teste cache de contexto</h3>
+<p>Cache de contexto é quando o provedor reutiliza prefixos repetidos de prompt
+para cobrar menos. Se o seu prompt de sistema é sempre o mesmo, os tokens
+dele podem ser cacheados automaticamente.</p>
+
+<p><strong>OpenAI</strong> — o cache é automático para prompts longos (a partir de 1024 tokens).
+Verifique no campo <code>usage.prompt_tokens_details.cached_tokens</code> da resposta.
+Não precisa mudar código.</p>
+
+<p><strong>Anthropic</strong> — use <code>cache_control</code> para marcar blocos que devem ser cacheados:</p>
+<pre><code># Cache de contexto com Anthropic
+resp = anthropic_client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=1024,
+    system=[
+        {
+            "type": "text",
+            "text": "Seu prompt de sistema longo aqui...",
+            "cache_control": {"type": "ephemeral"},  # marca para cache
+        }
+    ],
+    messages=[{"role": "user", "content": pergunta}],
+)
+# Tokens cacheados aparecem em resp.usage.cache_read_input_tokens
+print(f"Tokens cacheados: {resp.usage.cache_read_input_tokens}")
+print(f"Tokens criados no cache: {resp.usage.cache_creation_input_tokens}")
+</code></pre>
+
+<p><strong>Vertex AI (Trilha B)</strong> — use a API de context caching para prompts muito longos (32k+ tokens):</p>
+<pre><code># Cache de contexto com Vertex AI
+from google import genai
+from google.genai.types import Content, Part
+
+client = genai.Client(vertexai=True, project="SEU_PROJETO", location="us-central1")
+
+# Cria o cache (válido por 1 hora por padrão)
+cache = client.caches.create(
+    model="gemini-2.5-pro",
+    contents=[Content(parts=[Part(text="Seu contexto longo aqui...")])],
+    config={"display_name": "cache-p4", "ttl": "3600s"},
+)
+
+# Usa o cache nas chamadas seguintes
+resp = client.models.generate_content(
+    model="gemini-2.5-pro",
+    contents="Pergunta do usuário",
+    config={"cached_content": cache.name},
+)
+</code></pre>
+<p>Compare o custo com e sem cache para o mesmo conjunto de perguntas e registre a diferença.</p>
+
+<h3>Passo 6 — Preencha a tabela, projete e conclua</h3>
+<p>Use os resultados do <code>comparar.py</code> para preencher a tabela de comparação abaixo.
+Calcule a projeção mensal com o volume real esperado (ou use 10.000 chamadas como referência).
+Escreva uma conclusão honesta: o roteador compensa ou não? Por quê?</p>
+
+<hr />
+<h2 id="quando-roteamento-nao-vale-a-pena">Quando roteamento não vale a pena</h2>
+<p>Nem sempre um roteador compensa. Calcule antes de construir:</p>
+<p><strong>Exemplo com números reais:</strong> suponha 10.000 chamadas/mês, prompt médio de 500 tokens
+de input e 200 de output.</p>
+<table>
+<thead>
+<tr><th>Cenário</th><th>Modelo</th><th>Custo mensal</th></tr>
+</thead>
+<tbody>
+<tr><td>Tudo no grande</td><td><code>claude-sonnet-4</code> ($3/M in, $15/M out)</td><td>$15.00 + $3.00 = <strong>$18.00</strong></td></tr>
+<tr><td>Tudo no pequeno</td><td><code>gpt-4o-mini</code> ($0.15/M in, $0.60/M out)</td><td>$0.75 + $1.20 = <strong>$1.95</strong></td></tr>
+<tr><td>Roteador (70% pequeno, 30% grande)</td><td>mix</td><td>~<strong>$6.76</strong></td></tr>
+</tbody>
+</table>
+<p>Se a qualidade do modelo pequeno já é suficiente para o seu caso, a economia do roteador
+($6.76 vs $1.95) não justifica a complexidade extra. O roteador só compensa quando:</p>
+<ul>
+<li>O modelo grande é <strong>significativamente melhor</strong> para os casos complexos</li>
+<li>A distribuição de complexidade é <strong>mista</strong> (nem tudo simples, nem tudo complexo)</li>
+<li>O classificador é <strong>preciso o bastante</strong> (erros de classificação desperdiçam dinheiro ou qualidade)</li>
+<li>O volume mensal é <strong>alto o suficiente</strong> para que a diferença de custo importe</li>
+</ul>
+
+<hr />
+<h2 id="comparacao-obrigatoria">Comparação obrigatória</h2>
+<p>Execute os 50 casos do P2 em três configurações:</p>
+<table>
+<thead>
+<tr>
+<th>Configuração</th>
+<th>Custo</th>
+<th>Qualidade</th>
+<th>p95</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sempre modelo grande</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Sempre modelo pequeno</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Roteador</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Meta:</strong> roteador com qualidade próxima da configuração grande a<br />
+fração do custo.</p>
+<hr />
+<h2 id="conclusao-honesta">Conclusão honesta</h2>
+<p>Se o roteador não superar as linhas de base de forma relevante,<br />
+<strong>reporte isso</strong>. Situações em que não compensa:</p>
+<ul>
+<li>Distribuição concentrada numa só categoria</li>
+<li>Classificador impreciso</li>
+<li>Latência adicional relevante</li>
+<li>Economia marginal</li>
+</ul>
+<p>Concluir "medi e não compensa" é um resultado válido e demonstra<br />
+julgamento.</p>
+<hr />
+<h2 id="links-de-referencia">Links de referência</h2>
+<ul>
+<li><a href="https://openai.com/api/pricing/" target="_blank" rel="noopener">OpenAI — Pricing</a></li>
+<li><a href="https://www.anthropic.com/pricing" target="_blank" rel="noopener">Anthropic — Pricing</a></li>
+<li><a href="https://cloud.google.com/vertex-ai/generative-ai/pricing" target="_blank" rel="noopener">Google Cloud — Vertex AI Pricing</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching" target="_blank" rel="noopener">Anthropic — Prompt Caching</a></li>
+<li><a href="https://platform.openai.com/docs/guides/prompt-caching" target="_blank" rel="noopener">OpenAI — Prompt Caching</a></li>
+<li><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview" target="_blank" rel="noopener">Vertex AI — Context Caching</a></li>
+</ul>
+<hr />
+<h2 id="entregavel">Entregável</h2>
+<pre><code>p4_roteador/
+├── roteador.py
+├── classificador_complexidade.py
+├── comparar.py
+├── resultados/
+│   └── analise_custo.md
+└── testes/
+</code></pre>
+<hr />
+<h2 id="definition-of-done">Definition of Done</h2>
+<ul>
+<li><input type="checkbox"> Roteador com três camadas</li>
+<li><input type="checkbox"> Comparação nas três configurações</li>
+<li><input type="checkbox"> Análise de custo com projeção mensal</li>
+<li><input type="checkbox"> Conclusão justificada por números</li>
+<li><input type="checkbox"> Cache de contexto testado</li>
+</ul>
+<p>→ <a href="P5_RAG_System.html">P5 — Sistema de Recuperação</a></p>
+</article>
+<nav class="pager"><a class="pager-link prev" href="P3_Evaluation_Pipeline.html">&larr; P3 — Pipeline de Avaliação em CI</a><a class="pager-link next" href="P5_RAG_System.html">P5 — Sistema de Recuperação &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

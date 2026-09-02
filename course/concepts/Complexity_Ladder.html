@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Escada de Complexidade · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Conceitos</summary>
+<ul>
+<li><a href="LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="RAG.html">Referência — Recuperação</a></li>
+<li><a href="Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="Agents.html">Referência — Agentes</a></li>
+<li><a class="active" aria-current="page" href="Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="Security.html">Referência — Segurança</a></li>
+<li><a href="Observability.html">Referência — Observabilidade</a></li>
+<li><a href="Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="a-escada-de-complexidade">A Escada de Complexidade</h1>
+<p>O princípio organizador de todo o curso.</p>
+<hr />
+<h2 id="os-degraus">Os degraus</h2>
+<pre><code>1. Uma chamada de modelo + prompt bem construído + saída estruturada
+2. Falta conhecimento?          → adicione recuperação (RAG)
+3. Exige múltiplas etapas?      → adicione ferramentas a um agente
+4. Exige especialização real?   → múltiplos agentes
+5. Exige estilo consistente
+   em escala?                   → ajuste fino do modelo
+</code></pre>
+<hr />
+<h2 id="a-regra">A regra</h2>
+<p><strong>Suba um degrau apenas com evidência medida de que o anterior é<br />
+insuficiente.</strong></p>
+<p>Evidência medida significa: você construiu o degrau anterior, avaliou<br />
+com um conjunto de referência, e tem números mostrando que não atende<br />
+ao requisito.</p>
+<p>Não significa: "acho que não vai dar conta" ou "esse caso parece<br />
+complexo".</p>
+<hr />
+<h2 id="por-que-existe">Por que existe</h2>
+<p>O erro mais comum de quem constrói sistemas de IA é começar no degrau<br />
+mais alto. As razões são compreensíveis:</p>
+<ul>
+<li>Agentes são mais interessantes de construir</li>
+<li>Arquitetura complexa parece mais competente</li>
+<li>Conteúdo técnico dá mais destaque ao que é sofisticado</li>
+<li>Ninguém se empolga com "uma chamada de API com prompt bom"</li>
+</ul>
+<p>O resultado é sistema difícil de depurar, caro de operar e mais frágil<br />
+que a alternativa simples que resolveria.</p>
+<hr />
+<h2 id="o-que-cada-degrau-custa">O que cada degrau custa</h2>
+<table>
+<thead>
+<tr>
+<th>Degrau</th>
+<th>Latência</th>
+<th>Custo</th>
+<th>Depuração</th>
+<th>Superfícies de falha</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Baixa</td>
+<td>Baixo</td>
+<td>Fácil</td>
+<td>Poucas</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Média</td>
+<td>Médio</td>
+<td>Média</td>
+<td>+ recuperação</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Alta</td>
+<td>Alto</td>
+<td>Difícil</td>
+<td>+ ferramentas, laço</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Muito alta</td>
+<td>Muito alto</td>
+<td>Muito difícil</td>
+<td>+ coordenação</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Baixa na inferência</td>
+<td>Alto no treino</td>
+<td>Difícil</td>
+<td>+ versionamento de modelo</td>
+</tr>
+</tbody>
+</table>
+<p>Note que o degrau 5 tem latência baixa — ajuste fino pode ser a escolha<br />
+certa para casos de altíssimo volume com formato muito consistente.<br />
+Mas continua sendo o último recurso, e não resolve falta de conhecimento.</p>
+<hr />
+<h2 id="aplicando-na-pratica">Aplicando na prática</h2>
+<p>Ao receber um problema, pergunte na ordem:</p>
+<ol>
+<li>Uma chamada bem construída resolve? Teste antes de assumir que não.</li>
+<li>O que falta é conhecimento que o modelo não tem? Então recuperação.</li>
+<li>A sequência de passos é imprevisível? Então ferramentas.</li>
+<li>As subtarefas exigem capacidades realmente diferentes, e você mediu<br />
+   que um agente não dá conta? Então múltiplos agentes.</li>
+<li>Você precisa de consistência de formato em volume muito alto, e o<br />
+   prompt já foi esgotado? Então ajuste fino.</li>
+</ol>
+<p>Pare no primeiro degrau que resolve.</p>
+<hr />
+<h2 id="como-isso-aparece-numa-avaliacao-tecnica">Como isso aparece numa avaliação técnica</h2>
+<p>Descrever a arquitetura mais sofisticada impressiona menos do que<br />
+demonstrar que você começou simples e subiu com base em medição.</p>
+<p>A segunda postura demonstra julgamento de engenharia. A primeira<br />
+demonstra familiaridade com ferramentas.</p>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Agents.html">&larr; Referência — Agentes</a><a class="pager-link next" href="Security.html">Referência — Segurança &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

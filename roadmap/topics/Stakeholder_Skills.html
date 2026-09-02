@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stakeholder Skills — Discovery &amp; Tradução · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../../course/start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../../course/start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../../course/start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../../course/start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../../course/start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../../course/modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../../course/modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../../course/modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../../course/modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../../course/modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../../course/modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../../course/modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../../course/modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../../course/modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../../course/modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../../course/modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../../course/concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../../course/concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../../course/concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../../course/concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../../course/concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../../course/concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../../course/concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../../course/concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../../course/concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../../course/concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../../course/concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../../course/concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilhas</summary>
+<ul>
+<li><a href="../../course/tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="../../course/tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../../course/tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="../../course/tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../../course/projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../../course/projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../../course/projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../../course/projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../../course/projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../../course/projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../../course/projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../../course/projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../../course/projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../../course/projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../../course/resources/Glossary.html">Glossário</a></li>
+<li><a href="../../course/resources/Links.html">Links de Referência</a></li>
+<li><a href="../../course/resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../../course/resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../../course/resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="Security_First.html">Security-First Design</a></li>
+<li><a href="Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a class="active" aria-current="page" href="Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="stakeholder-skills-discovery-traducao">Stakeholder Skills — Discovery &amp; Tradução</h1>
+<p><strong>Fase:</strong> 3 | <strong>Semanas:</strong> 22–23</p>
+<blockquote>
+<p>Perfil da função: <em>"You are great at understanding and translating non-technical issues into<br />
+technical requirements. You can confidently navigate stakeholder conversations,<br />
+present complex concepts simply."</em></p>
+</blockquote>
+<p>Neste contexto, "cliente" = times internos como Legal, Support e Operations da sua empresa.<br />
+A vantagem: você tem acesso a eles hoje. Use.</p>
+<hr />
+<h2 id="as-6-perguntas-de-discovery-pdf-use-exatamente-estas">As 6 Perguntas de Discovery (PDF) — use exatamente estas</h2>
+<p><strong>1. Problem framing</strong></p>
+<blockquote>
+<p>"Qual é o processo atual e onde ele quebra?"</p>
+</blockquote>
+<p>Extrai a dor real, não a solução assumida. As pessoas chegam pedindo "um chatbot"<br />
+quando o problema é que a documentação está desorganizada.</p>
+<p><strong>2. Data audit</strong></p>
+<blockquote>
+<p>"Que dados vocês têm? Onde ficam? Estruturados? Qual a frescura necessária?"</p>
+</blockquote>
+<p>Determina se RAG é viável e como é o corpus.</p>
+<p><strong>3. Quality requirements</strong></p>
+<blockquote>
+<p>"Quanto custa uma resposta errada? O que é aceitável vs inaceitável?"</p>
+</blockquote>
+<p>Define o quality floor. Para Legal, uma resposta errada custa caro —<br />
+isso muda o desenho inteiro.</p>
+<p><strong>4. Latency and scale</strong></p>
+<blockquote>
+<p>"Quantos requests por dia? Qual tempo de resposta aceitável?"</p>
+</blockquote>
+<p>Informa escolha de modelo e arquitetura. Pode desqualificar agentes.</p>
+<p><strong>5. Constraints</strong></p>
+<blockquote>
+<p>"Requisitos de data residency, compliance ou segurança?"</p>
+</blockquote>
+<p>No sua empresa a resposta nunca é "nenhum". Descubra cedo.</p>
+<p><strong>6. Success definition</strong></p>
+<blockquote>
+<p>"Como medimos sucesso em 30 dias? E em 90?"</p>
+</blockquote>
+<p>Sem métrica de sucesso, o projeto não termina — ele só é abandonado.</p>
+<hr />
+<h2 id="architecture-selection-cheat-sheet-pdf-mapeado-a-sua-empresa">Architecture Selection Cheat Sheet (PDF) — mapeado à sua empresa</h2>
+<table>
+<thead>
+<tr>
+<th>Necessidade</th>
+<th>Abordagem</th>
+<th>Cuidado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q&amp;A sobre docs internos (Confluence)</td>
+<td>RAG hybrid + grounding</td>
+<td>Qualidade do chunk; permissões; freshness</td>
+</tr>
+<tr>
+<td>Suporte automatizado (Support)</td>
+<td>RAG + guardrails + escalation</td>
+<td>Casos que deveriam escalar e não escalam</td>
+</tr>
+<tr>
+<td>Contract review (Legal)</td>
+<td>LLM + structured output + revisão humana</td>
+<td>Field hallucination; nunca 100% automático</td>
+</tr>
+<tr>
+<td>Extração de dados</td>
+<td>LLM + JSON schema + validação</td>
+<td>Schema drift entre versões do modelo</td>
+</tr>
+<tr>
+<td>Análise multi-passo</td>
+<td>Agent com tools</td>
+<td>Tool misuse, drift, custo</td>
+</tr>
+<tr>
+<td>Classificação / roteamento</td>
+<td>Modelo pequeno + structured output + temp=0</td>
+<td><strong>Over-engineering — geralmente 3-shot resolve</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="o-erro-mais-comum-de-fde-pdf">O erro mais comum de engenharia de IA aplicada (PDF)</h2>
+<blockquote>
+<p><em>"Jumping to a complex architecture before exhausting the simplest approach.<br />
+Always start with: single model + good system prompt + structured output."</em></p>
+</blockquote>
+<p>Na entrevista desse contexto, saber dizer "eu comecei com o mais simples e só<br />
+adicionei complexidade quando medi que era necessário" vale mais do que<br />
+descrever a arquitetura mais sofisticada.</p>
+<hr />
+<h2 id="handover-o-que-o-perfil-da-funcao-pede-explicitamente">Handover — o que o perfil da função pede explicitamente</h2>
+<blockquote>
+<p><em>"You create long-term high-quality documentation and runbooks.<br />
+You hand ownership back to the function/team before moving on."</em></p>
+</blockquote>
+<p>Um projeto de engenharia de IA aplicada não termina no deploy. Termina quando outro time consegue<br />
+operar sem você. O runbook faz parte do entregável, não é extra.</p>
+<hr />
+<h2 id="checklist">Checklist</h2>
+<ul>
+<li><input type="checkbox"> Conduzi discovery real com as 6 perguntas (com pessoa real da sua empresa)</li>
+<li><input type="checkbox"> Identifiquei a dor real, diferente da solução pedida</li>
+<li><input type="checkbox"> Recomendei a arquitetura mais simples que resolve</li>
+<li><input type="checkbox"> Defini métrica de sucesso antes de construir</li>
+<li><input type="checkbox"> Escrevi runbook que outro time consegue seguir</li>
+<li><input type="checkbox"> Executei um handover de verdade</li>
+</ul>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Monitoring_Observability.html">&larr; Monitoring &amp; Observability</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

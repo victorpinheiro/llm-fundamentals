@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trilha B — Plataforma Corporativa do Google Cloud · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Trilhas</summary>
+<ul>
+<li><a href="Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a class="active" aria-current="page" href="Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="trilha-b-plataforma-corporativa-do-google-cloud">Trilha B — Plataforma Corporativa do Google Cloud</h1>
+<blockquote>
+<p>⚠️ <strong>Verificado em agosto de 2026.</strong> Esta plataforma passou por<br />
+renomeação ampla recentemente e os modelos mudam a cada poucas semanas.<br />
+<strong>Confirme tudo na documentação oficial antes de estudar.</strong><br />
+Ver <a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a>.</p>
+</blockquote>
+<hr />
+<h2 id="a-renomeacao-que-voce-precisa-conhecer">A renomeação que você precisa conhecer</h2>
+<p>Em abril de 2026 a plataforma foi reorganizada e renomeada. Se você<br />
+encontrar material anterior a essa data — e a maior parte do conteúdo de<br />
+terceiros ainda é anterior — os nomes não vão bater.</p>
+<table>
+<thead>
+<tr>
+<th>Nome anterior</th>
+<th>Nome atual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vertex AI</td>
+<td>Gemini Enterprise Agent Platform</td>
+</tr>
+<tr>
+<td>Vertex AI Agent Engine</td>
+<td>Agent Runtime</td>
+</tr>
+<tr>
+<td>Vertex AI Search</td>
+<td>Agent Search</td>
+</tr>
+<tr>
+<td>Vertex AI Studio</td>
+<td>Agent Studio</td>
+</tr>
+<tr>
+<td>Agent Builder</td>
+<td>absorvido pela plataforma</td>
+</tr>
+<tr>
+<td>Agentspace</td>
+<td>absorvido pela aplicação corporativa</td>
+</tr>
+</tbody>
+</table>
+<p><strong>O endpoint da API não mudou.</strong> Código existente continua funcionando —<br />
+a renomeação foi de produto e console, não de interface programática.</p>
+<p>Dois nomes parecidos que confundem:<br />
+- <strong>Gemini Enterprise</strong> — a aplicação para usuário final<br />
+- <strong>Gemini Enterprise Agent Platform</strong> — a plataforma de desenvolvimento</p>
+<p>Esta trilha trata da segunda.</p>
+<hr />
+<h2 id="organizacao-da-plataforma">Organização da plataforma</h2>
+<p>Quatro pilares:</p>
+<table>
+<thead>
+<tr>
+<th>Pilar</th>
+<th>O que cobre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Construir</td>
+<td>Kit de desenvolvimento, estúdio, catálogo de agentes prontos</td>
+</tr>
+<tr>
+<td>Escalar</td>
+<td>Runtime gerenciado, sessões, memória</td>
+</tr>
+<tr>
+<td>Governar</td>
+<td>Identidade de agente, registro, gateway, políticas</td>
+</tr>
+<tr>
+<td>Otimizar</td>
+<td>Avaliação, ajuste, monitoramento</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="autenticacao-a-diferenca-que-importa">Autenticação — a diferença que importa</h2>
+<p><strong>Não use chave de API nesta trilha.</strong></p>
+<p>A plataforma usa credenciais padrão da aplicação, contas de serviço e<br />
+gestão de identidade e acesso. Em ambiente corporativo, chave de API não<br />
+passa em revisão de segurança: não é rastreável a um princípio, não<br />
+expira bem e não se integra à política da organização.</p>
+<p>Há também um mecanismo mais recente de <strong>identidade por agente</strong>, em que<br />
+cada agente recebe uma identidade própria baseada em certificado, com<br />
+privilégio mínimo ligado ao ciclo de vida do agente. É mais seguro que<br />
+compartilhar uma conta de serviço entre agentes.</p>
+<p>Localmente:</p>
+<pre><code class="language-bash">gcloud auth application-default login
+</code></pre>
+<p>Em produção, a identidade vem do ambiente de execução.</p>
+<hr />
+<h2 id="modelos">Modelos</h2>
+<p>A família de modelos tem duas linhas principais: uma de maior capacidade<br />
+e uma de melhor equilíbrio entre custo e velocidade.</p>
+<p><strong>Situação em agosto de 2026, e o motivo de você precisar verificar:</strong></p>
+<ul>
+<li>A linha de maior capacidade estava em versão prévia, sem<br />
+  disponibilidade geral confirmada</li>
+<li>A linha equilibrada avançou várias versões em poucos meses</li>
+<li>Uma geração anterior permanecia como opção estável, com retirada<br />
+  já anunciada</li>
+<li>Gerações mais antigas foram desligadas e retornam erro</li>
+</ul>
+<p>Há também bastante conteúdo de terceiros citando versões que nunca<br />
+chegaram a ficar disponíveis de forma geral. <strong>Confie apenas na<br />
+documentação de modelos do fornecedor.</strong></p>
+<p>Escolha por camada, conforme o <a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a>, e confirme<br />
+o identificador exato do modelo na hora de implementar.</p>
+<hr />
+<h2 id="kit-de-desenvolvimento-de-agentes">Kit de desenvolvimento de agentes</h2>
+<p>O kit manteve o nome ao longo da renomeação da plataforma. É código<br />
+aberto, funciona com modelos de vários fornecedores e existe em várias<br />
+linguagens.</p>
+<p><strong>Ponto crítico:</strong> houve uma reescrita significativa em 2026. A versão<br />
+nova mudou o modelo de execução — de uma hierarquia de agentes para um<br />
+motor baseado em grafo. Isso trouxe mudanças incompatíveis:</p>
+<ul>
+<li>A classe base de agente passou a herdar de uma nova classe de nó</li>
+<li>Sobrescrever certos métodos de execução deixou de funcionar; o caminho<br />
+  correto passou a ser por retornos de chamada</li>
+<li>Eventos precisam ser emitidos de forma diferente</li>
+<li>O esquema de evento ganhou campos novos, o que exige atenção se você<br />
+  mantém armazenamento de sessão próprio</li>
+<li>Surgiu uma interface para delegação estruturada entre agentes</li>
+</ul>
+<p>A linha anterior continuava mantida em paralelo. <strong>Verifique qual versão<br />
+você está instalando e leia o guia de migração</strong> antes de seguir<br />
+qualquer tutorial — material de 2025 descreve o modelo antigo.</p>
+<p>A documentação migrou para um domínio próprio; o endereço anterior<br />
+continua oficial e aponta para o novo.</p>
+<hr />
+<h2 id="deploy">Deploy</h2>
+<p>O runtime gerenciado aceita várias formas de implantação: a partir de um<br />
+objeto em memória, de arquivos locais, de uma imagem de contêiner, ou<br />
+diretamente de um repositório.</p>
+<p>Também há caminho documentado para implantar em serviço de contêineres<br />
+gerenciado ou em Kubernetes — relevante se sua organização já opera<br />
+nesse modelo.</p>
+<p><strong>Sessões e estado:</strong><br />
+- Serviço gerenciado da plataforma<br />
+- Ou banco relacional próprio, tipicamente Postgres<br />
+- Integrações de comunidade para cache em memória</p>
+<p>Note a distinção: os serviços de sessão em banco relacional e na<br />
+plataforma são oficiais; integrações com outros armazenamentos são<br />
+mantidas pela comunidade, não pelo fornecedor. Isso importa para decidir<br />
+o que colocar em produção.</p>
+<hr />
+<h2 id="recuperacao-gerenciada">Recuperação gerenciada</h2>
+<p>Antes de construir RAG do zero nesta trilha, avalie o que já existe:</p>
+<table>
+<thead>
+<tr>
+<th>Serviço</th>
+<th>Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Motor de RAG gerenciado</td>
+<td>Orquestração completa de recuperação</td>
+</tr>
+<tr>
+<td>Busca vetorial</td>
+<td>Índice de embeddings</td>
+</tr>
+<tr>
+<td>Busca corporativa</td>
+<td>Busca sobre acervo próprio</td>
+</tr>
+<tr>
+<td>Ancoragem em busca web</td>
+<td>Conhecimento do mundo</td>
+</tr>
+</tbody>
+</table>
+<p>Isso é a escada de complexidade aplicada: se o serviço gerenciado resolve,<br />
+construir do zero é trabalho desperdiçado. Se não resolve, documente por<br />
+que — essa justificativa é parte do projeto.</p>
+<hr />
+<h2 id="governanca">Governança</h2>
+<p>O diferencial da plataforma em ambiente corporativo:</p>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identidade de agente</td>
+<td>Princípio próprio por agente</td>
+</tr>
+<tr>
+<td>Registro de agentes</td>
+<td>Catálogo central de agentes e ferramentas</td>
+</tr>
+<tr>
+<td>Gateway</td>
+<td>Ponto único de aplicação de política</td>
+</tr>
+<tr>
+<td>Proteção de modelo</td>
+<td>Defesa contra injeção e vazamento</td>
+</tr>
+<tr>
+<td>Detecção de anomalia</td>
+<td>Comportamento fora do padrão</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Chaves gerenciadas pelo cliente, perímetro de serviço e residência de<br />
+dados</strong> são suportados — com uma restrição relevante: criptografia com<br />
+chave própria exige região específica e não funciona na configuração<br />
+global, porque a chave precisa de fronteira geográfica definida.</p>
+<p>Esse tipo de detalhe é exatamente o que aparece tarde e invalida<br />
+arquitetura. Descubra na descoberta.</p>
+<hr />
+<h2 id="vantagens-e-limitacoes">Vantagens e limitações</h2>
+<p><strong>Vantagens:</strong> caminho curto para produção corporativa; governança,<br />
+identidade e conformidade vêm da plataforma; runtime gerenciado.</p>
+<p><strong>Limitações:</strong> mais abstração; nomes proprietários que mudam;<br />
+dependência de fornecedor; necessidade constante de verificar versões.</p>
+<hr />
+<h2 id="documentacao">Documentação</h2>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>O que procurar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Visão geral da plataforma, autenticação, modelos</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Esquema de resposta, chamada de função</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Preços, cache, modelos por camada</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Serviços de recuperação e ancoragem</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Registro e gateway de agentes</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Kit de desenvolvimento — <strong>confira a versão</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Protocolos de interoperabilidade</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Identidade, chaves gerenciadas, perímetro</td>
+</tr>
+</tbody>
+</table>
+</article>
+<nav class="pager"><a class="pager-link prev" href="Track_A_Guide.html">&larr; Trilha A — OpenAI e Anthropic</a><a class="pager-link next" href="Track_Comparison.html">Comparação das Trilhas &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>

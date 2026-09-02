@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trilha A — OpenAI e Anthropic · LLM na Prática</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰ Menu</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="../../index.html">LLM na Prática</a>
+<nav class="sidebar-nav">
+<a class="nav-toplink" href="../../index.html">Início</a>
+<details class="nav-group">
+<summary>Comece Aqui</summary>
+<ul>
+<li><a href="../start/How_To_Use_This_Course.html">Como Usar Este Curso</a></li>
+<li><a href="../start/Prerequisites.html">Pré-requisitos</a></li>
+<li><a href="../start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a></li>
+<li><a href="../start/Setup_Guide.html">Guia de Setup</a></li>
+<li><a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Módulos (01–11)</summary>
+<ul>
+<li><a href="../modules/Module_01_LLM_Fundamentals.html">Módulo 1 — Fundamentos de Modelos de Linguagem</a></li>
+<li><a href="../modules/Module_02_Prompt_Engineering.html">Módulo 2 — Engenharia de Prompt e Saída Estruturada</a></li>
+<li><a href="../modules/Module_03_Evaluation.html">Módulo 3 — Avaliação e Testes</a></li>
+<li><a href="../modules/Module_04_Model_Selection.html">Módulo 4 — Seleção de Modelo e Custo</a></li>
+<li><a href="../modules/Module_05_AI_Limitations.html">Módulo 5 — Limitações e Modos de Falha</a></li>
+<li><a href="../modules/Module_06_RAG.html">Módulo 6 — Geração Aumentada por Recuperação</a></li>
+<li><a href="../modules/Module_07_Enterprise_Integrations.html">Módulo 7 — Integrações Corporativas</a></li>
+<li><a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a></li>
+<li><a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></li>
+<li><a href="../modules/Module_10_Production.html">Módulo 10 — Produção: Observabilidade e Segurança</a></li>
+<li><a href="../modules/Module_11_FDE_Practice.html">Módulo 11 — Entrega de Sistemas de IA</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Conceitos</summary>
+<ul>
+<li><a href="../concepts/LLM_Fundamentals.html">Referência — Fundamentos de Modelos</a></li>
+<li><a href="../concepts/Prompt_Engineering.html">Referência — Engenharia de Prompt</a></li>
+<li><a href="../concepts/Evaluation.html">Referência — Avaliação</a></li>
+<li><a href="../concepts/Model_Selection.html">Referência — Seleção de Modelo</a></li>
+<li><a href="../concepts/AI_Limitations.html">Referência — Limitações</a></li>
+<li><a href="../concepts/RAG.html">Referência — Recuperação</a></li>
+<li><a href="../concepts/Enterprise_Integration.html">Referência — Integrações</a></li>
+<li><a href="../concepts/Agents.html">Referência — Agentes</a></li>
+<li><a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a></li>
+<li><a href="../concepts/Security.html">Referência — Segurança</a></li>
+<li><a href="../concepts/Observability.html">Referência — Observabilidade</a></li>
+<li><a href="../concepts/Stakeholder_Skills.html">Referência — Trabalho com Stakeholders</a></li>
+</ul>
+</details>
+<details class="nav-group" open>
+<summary>Trilhas</summary>
+<ul>
+<li><a class="active" aria-current="page" href="Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
+<li><a href="Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="Track_Comparison.html">Comparação das Trilhas</a></li>
+<li><a href="Protocols.html">Protocolos de Interoperabilidade</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos</summary>
+<ul>
+<li><a href="../projects/P0_Environment.html">P0 — Ambiente e Primeira Chamada</a></li>
+<li><a href="../projects/P1_First_Integration.html">P1 — Primeira Integração com Saída Estruturada</a></li>
+<li><a href="../projects/P2_Prompt_Iteration.html">P2 — Iteração Medida de Prompt</a></li>
+<li><a href="../projects/P3_Evaluation_Pipeline.html">P3 — Pipeline de Avaliação em CI</a></li>
+<li><a href="../projects/P4_Model_Router.html">P4 — Roteador de Modelos</a></li>
+<li><a href="../projects/P5_RAG_System.html">P5 — Sistema de Recuperação</a></li>
+<li><a href="../projects/P6_Enterprise_Integration.html">P6 — Integração Corporativa</a></li>
+<li><a href="../projects/P7_Agent.html">P7 — Agente com Ferramentas</a></li>
+<li><a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a></li>
+<li><a href="../projects/P9_Capstone.html">P9 — Projeto Final: Engajamento Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos</summary>
+<ul>
+<li><a href="../resources/Glossary.html">Glossário</a></li>
+<li><a href="../resources/Links.html">Links de Referência</a></li>
+<li><a href="../resources/Weekly_Checklist.html">Checklist Semanal</a></li>
+<li><a href="../resources/Learning_Journal.html">Diário de Aprendizado</a></li>
+<li><a href="../resources/Teaching_Notes.html">Notas para Quem For Ministrar</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Trilha Avançada: Google Cloud</summary>
+<ul>
+<li><a href="../../roadmap/index.html">Trilha Avançada — Google Cloud / Vertex AI &amp; ADK na Prática</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Fases (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/phases/Phase_1_Overview.html">Fase 1 — Vertex AI, Prompting &amp; Evaluation (Semanas 1–8)</a></li>
+<li><a href="../../roadmap/phases/Phase_2_Overview.html">Fase 2 — RAG, Integrações &amp; ADK Agents (Semanas 9–17)</a></li>
+<li><a href="../../roadmap/phases/Phase_3_Overview.html">Fase 3 — Produção, Stakeholders &amp; Capstone (Semanas 18–24)</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Tópicos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/topics/Vertex_AI_Platform.html">Google Vertex AI — Plataforma de Referência</a></li>
+<li><a href="../../roadmap/topics/Google_ADK.html">Google ADK — Agent Development Kit</a></li>
+<li><a href="../../roadmap/topics/Enterprise_Integrations.html">Enterprise Integrations — Slack, Atlassian, Zoom</a></li>
+<li><a href="../../roadmap/topics/LLM_Fundamentals.html">LLM Fundamentals</a></li>
+<li><a href="../../roadmap/topics/Prompt_Engineering.html">Prompt Engineering</a></li>
+<li><a href="../../roadmap/topics/Evaluation_Frameworks.html">Evaluation &amp; Testing</a></li>
+<li><a href="../../roadmap/topics/Model_Selection.html">Model Selection &amp; Cost/Latency Tradeoffs</a></li>
+<li><a href="../../roadmap/topics/RAG_Architecture.html">RAG — Architecture, Patterns &amp; Failure Modes</a></li>
+<li><a href="../../roadmap/topics/Agents_and_Tools.html">Agent Orchestration</a></li>
+<li><a href="../../roadmap/topics/Security_First.html">Security-First Design</a></li>
+<li><a href="../../roadmap/topics/Monitoring_Observability.html">Monitoring &amp; Observability</a></li>
+<li><a href="../../roadmap/topics/Stakeholder_Skills.html">Stakeholder Skills — Discovery &amp; Tradução</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Projetos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/projects/Project_1_Vertex_Foundations.html">P1 — Vertex AI Foundations</a></li>
+<li><a href="../../roadmap/projects/Project_2_Prompt_Engineering.html">P2 — Prompt Engineering + Structured Output</a></li>
+<li><a href="../../roadmap/projects/Project_3_Evaluation_Pipeline.html">P3 — Evaluation Pipeline (CI-ready)</a></li>
+<li><a href="../../roadmap/projects/Project_4_Model_Routing.html">P4 — Model Router</a></li>
+<li><a href="../../roadmap/projects/Project_5_RAG_Legal.html">P5 — RAG sobre Documentação (caso Legal)</a></li>
+<li><a href="../../roadmap/projects/Project_6_Enterprise_Integrations.html">P6 — Enterprise Integrations (Slack + Atlassian)</a></li>
+<li><a href="../../roadmap/projects/Project_7_ADK_Agent.html">P7 — Agente com Google ADK</a></li>
+<li><a href="../../roadmap/projects/Project_8_Multi_Agent.html">P8 — Multi-Agent (só com evidência)</a></li>
+<li><a href="../../roadmap/projects/Project_9_Capstone.html">P9 — Capstone: Engagement Completo</a></li>
+</ul>
+</details>
+<details class="nav-group">
+<summary>Recursos (Trilha Avançada)</summary>
+<ul>
+<li><a href="../../roadmap/resources/Links.html">Links de Referência</a></li>
+</ul>
+</details>
+</nav>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<main class="content" id="main-content">
+<article class="markdown-body">
+<h1 id="trilha-a-openai-e-anthropic">Trilha A — OpenAI e Anthropic</h1>
+<p><strong>Leia <a href="../start/Volatility_Warning.html">Aviso de Volatilidade</a> antes.</strong> Nomes de modelo mudam com frequência;<br />
+confirme na documentação oficial.</p>
+<hr />
+<h2 id="filosofia-desta-trilha">Filosofia desta trilha</h2>
+<p>Construir com SDKs diretos, sem camada de abstração. Você vê cada peça:<br />
+como a autenticação funciona, como o contexto é montado, como o laço do<br />
+agente executa.</p>
+<p>É o caminho mais lento em linhas de código e o mais rápido em compreensão.</p>
+<hr />
+<h2 id="setup">Setup</h2>
+<pre><code class="language-bash">pip install openai anthropic pydantic python-dotenv
+</code></pre>
+<p>Autenticação por chave de API em variável de ambiente.<br />
+<strong>Configure limite de gasto no painel de cada provedor antes de começar.</strong></p>
+<hr />
+<h2 id="camadas-de-modelo">Camadas de modelo</h2>
+<p>Os dois provedores organizam a oferta em camadas equivalentes:</p>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Característica</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Maior</td>
+<td>Melhor qualidade, mais caro e lento</td>
+<td>Análise complexa, alto risco</td>
+</tr>
+<tr>
+<td>Intermediária</td>
+<td>Equilíbrio</td>
+<td>Maioria dos casos</td>
+</tr>
+<tr>
+<td>Menor</td>
+<td>Rápido e barato</td>
+<td>Classificação, roteamento</td>
+</tr>
+<tr>
+<td>Raciocínio</td>
+<td>Otimizado para lógica</td>
+<td>Código, matemática, planejamento</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Não decore nomes de modelo.</strong> Consulte a documentação de modelos do<br />
+provedor no momento em que for implementar e escolha pela camada.</p>
+<hr />
+<h2 id="saida-estruturada">Saída estruturada</h2>
+<p>Ambos suportam nativamente, com mecanismos diferentes:</p>
+<ul>
+<li>Um usa um modo dedicado de saída em esquema</li>
+<li>Outro usa o mecanismo de ferramentas para forçar formato</li>
+</ul>
+<p>Aprenda os dois. A diferença de abordagem ensina algo sobre como cada<br />
+provedor pensa o problema.</p>
+<p>Combine sempre com validação por modelo de dados no seu código.<br />
+O provedor garante formato; você garante semântica.</p>
+<hr />
+<h2 id="uso-de-ferramentas">Uso de ferramentas</h2>
+<p>Os dois suportam chamada de função com esquema declarado. O fluxo é o<br />
+mesmo em ambos:</p>
+<ol>
+<li>Você declara as ferramentas disponíveis</li>
+<li>O modelo indica qual quer chamar e com quais argumentos</li>
+<li>Você executa e devolve o resultado</li>
+<li>O modelo continua a partir dali</li>
+</ol>
+<p><strong>Você controla o laço.</strong> Isso é a essência de um agente construído à<br />
+mão, e é o que o Módulo 8 pede que você faça antes de usar framework.</p>
+<hr />
+<h2 id="cache-de-contexto">Cache de contexto</h2>
+<p>Ambos oferecem alguma forma de reaproveitamento da porção estável do<br />
+contexto, com regras próprias sobre tamanho mínimo e duração.</p>
+<p>Vale bastante quando o prompt de sistema é grande ou quando você reenvia<br />
+os mesmos documentos recuperados em várias chamadas.</p>
+<hr />
+<h2 id="componentes-que-voce-monta">Componentes que você monta</h2>
+<p>Nesta trilha não há plataforma gerenciada, então você escolhe cada peça:</p>
+<table>
+<thead>
+<tr>
+<th>Necessidade</th>
+<th>Opções</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Banco vetorial</td>
+<td>Extensão vetorial do Postgres, alternativas dedicadas</td>
+</tr>
+<tr>
+<td>Busca por palavra-chave</td>
+<td>Recurso nativo do Postgres ou motor de busca</td>
+</tr>
+<tr>
+<td>Orquestração de agente</td>
+<td>Código próprio ou framework de grafo</td>
+</tr>
+<tr>
+<td>Avaliação</td>
+<td>Bibliotecas integradas a framework de teste</td>
+</tr>
+<tr>
+<td>Observabilidade</td>
+<td>Plataformas de rastreamento de chamadas</td>
+</tr>
+<tr>
+<td>Deploy</td>
+<td>Qualquer lugar</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recomendação para o curso:</strong> Postgres com extensão vetorial resolve<br />
+armazenamento vetorial e busca textual num só sistema. Menos peças<br />
+móveis, menos coisas para depurar enquanto você aprende o resto.</p>
+<hr />
+<h2 id="frameworks-de-orquestracao">Frameworks de orquestração</h2>
+<p>Existem frameworks maduros para orquestrar agentes com máquinas de estado.</p>
+<p><strong>Use depois de construir na mão.</strong> Frameworks escondem o funcionamento —<br />
+excelente para produtividade, ruim para aprendizado inicial. Quando você<br />
+já sabe o que está sendo abstraído, a abstração vira ganho puro.</p>
+<hr />
+<h2 id="vantagens-e-limitacoes">Vantagens e limitações</h2>
+<p><strong>Vantagens:</strong> portabilidade entre nuvens, compreensão profunda,<br />
+independência de fornecedor de plataforma, começo imediato.</p>
+<p><strong>Limitações:</strong> você monta e opera mais coisas; governança corporativa<br />
+(identidade, auditoria, residência de dados) fica por sua conta.</p>
+<hr />
+<h2 id="documentacao">Documentação</h2>
+<p>Consulte sempre a documentação oficial de cada provedor. Os pontos que<br />
+você vai precisar em cada módulo:</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>O que procurar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Referência de API, modelos disponíveis, preços</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Saída estruturada, engenharia de prompt</td>
+</tr>
+<tr>
+<td>3</td>
+<td>(bibliotecas de avaliação, não do provedor)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Tabela de preços, cache de contexto</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Modelos de embedding</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Chamada de função e uso de ferramentas</td>
+</tr>
+</tbody>
+</table>
+</article>
+<nav class="pager"><a class="pager-link next" href="Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud &rarr;</a></nav>
+<footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
+</main>
+</div>
+<script src="../../assets/script.js"></script>
+</body>
+</html>
