@@ -654,6 +654,26 @@ if __name__ == "__main__":
 <p>Para este projeto, use ChromaDB. Migrar para outro depois é trocar apenas a camada de indexação e busca.</p>
 
 <hr />
+<h2 id="como-executar">Como executar</h2>
+<p>Depois de completar os passos acima, execute o pipeline nesta ordem:</p>
+<ol>
+<li><strong>Indexar os documentos</strong> — lê o corpus, fragmenta, gera embeddings e grava no ChromaDB:
+<pre><code>python ingestion.py</code></pre>
+<p>Execute apenas uma vez (ou sempre que o corpus mudar).</p>
+</li>
+<li><strong>Fazer uma consulta RAG</strong> — recupera trechos relevantes e gera a resposta com citação:
+<pre><code>python rag.py</code></pre>
+<p><code>rag.py</code> importa <code>retriever.py</code> automaticamente; não é preciso chamá-lo separadamente.</p>
+</li>
+</ol>
+<p>Se quiser testar apenas a recuperação (sem geração), você pode importar diretamente:</p>
+<pre><code>from retriever import retrieve
+results = retrieve("your question here")
+for r in results:
+    print(r["metadata"]["source"], r["text"][:80])
+</code></pre>
+
+<hr />
 <h2 id="links-de-referencia">Links de referência</h2>
 <ul>
 <li><a href="https://docs.trychroma.com/" target="_blank" rel="noopener">ChromaDB — Documentação</a></li>

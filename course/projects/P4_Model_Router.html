@@ -770,6 +770,27 @@ fração do custo.</p>
 <p>Concluir "medi e não compensa" é um resultado válido e demonstra<br />
 julgamento.</p>
 <hr />
+<h2 id="como-executar">Como executar</h2>
+<p>Resumo dos arquivos criados e a ordem de execução:</p>
+<table>
+<thead>
+<tr><th>Arquivo</th><th>Finalidade</th></tr>
+</thead>
+<tbody>
+<tr><td><code>complexity_classifier.py</code></td><td>Classifies each question as SIMPLE, MEDIUM or COMPLEX</td></tr>
+<tr><td><code>router.py</code></td><td>Routes questions to the appropriate model tier based on classification</td></tr>
+<tr><td><code>compare.py</code></td><td>Runs the 50 test cases in three modes and compares cost, quality and latency</td></tr>
+</tbody>
+</table>
+<pre><code># 1. Run the router with a sample ticket
+python router.py
+
+# 2. Run the comparative analysis (always-large vs always-small vs router)
+python compare.py</code></pre>
+<p><strong>Nota:</strong> <code>router.py</code> importa <code>complexity_classifier.py</code>, então ambos devem
+estar no mesmo diretório. <code>compare.py</code> espera que o arquivo
+<code>../p2_prompt/test_cases.json</code> exista (gerado no P2).</p>
+<hr />
 <h2 id="links-de-referencia">Links de referência</h2>
 <ul>
 <li><a href="https://openai.com/api/pricing/" target="_blank" rel="noopener">OpenAI — Pricing</a></li>

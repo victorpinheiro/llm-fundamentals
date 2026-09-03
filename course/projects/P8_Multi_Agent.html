@@ -607,6 +607,72 @@ If starting over, [I would keep the decision / do it differently because ___].
 <p><strong>Regra prática:</strong> se você não consegue apontar um número que melhora (latência, custo, qualidade),
 não implemente múltiplos agentes.</p>
 <hr />
+<h2 id="como-executar">Como executar</h2>
+<p>O projeto define agentes e um orquestrador, mas sem um ponto de entrada o código não roda.
+Adicione um bloco <code>if __name__</code> ao seu <code>orchestrator.py</code> para poder executar o sistema
+direto pelo terminal.</p>
+
+<h3>Trilha A — OpenAI Agents SDK</h3>
+<pre><code class="language-python"># At the end of p8_multi/orchestrator.py
+if __name__ == "__main__":
+    import asyncio
+    import sys
+
+    question = " ".join(sys.argv[1:]) or "What are the main causes of climate change?"
+    answer = asyncio.run(execute(question))
+    print(answer)
+</code></pre>
+<pre><code class="language-bash"># Run from the project root
+python -m p8_multi.orchestrator "Summarize the latest earnings report"
+</code></pre>
+
+<h3>Trilha B — Google ADK</h3>
+<p>O ADK usa o runner do framework. Adicione ao final de <code>orchestrator.py</code>:</p>
+<pre><code class="language-python"># At the end of p8_multi/orchestrator.py
+if __name__ == "__main__":
+    import sys
+    from google.adk.runners import Runner
+    from google.adk.sessions import InMemorySessionService
+
+    session_service = InMemorySessionService()
+    runner = Runner(agent=pipeline, app_name="p8_multi", session_service=session_service)
+
+    session = session_service.create_session(app_name="p8_multi", user_id="dev")
+    question = " ".join(sys.argv[1:]) or "What are the main causes of climate change?"
+
+    from google.genai import types
+    response = runner.run(
+        user_id="dev",
+        session_id=session.id,
+        new_message=types.Content(parts=[types.Part(text=question)], role="user"),
+    )
+
+    for event in response:
+        if event.is_final_response():
+            print(event.content.parts[0].text)
+</code></pre>
+<pre><code class="language-bash">python -m p8_multi.orchestrator "Summarize the latest earnings report"
+</code></pre>
+
+<h3>Trilha C — Provedores gratuitos</h3>
+<pre><code class="language-python"># At the end of p8_multi/orchestrator_free.py
+if __name__ == "__main__":
+    import sys
+
+    question = " ".join(sys.argv[1:]) or "What are the main causes of climate change?"
+    result = run_multi_agent(question)
+    print(result)
+</code></pre>
+<pre><code class="language-bash"># With Groq (cloud)
+GROQ_API_KEY=your-key python -m p8_multi.orchestrator_free "Summarize the latest earnings report"
+
+# With Ollama (local — no key needed)
+python -m p8_multi.orchestrator_free "Summarize the latest earnings report"
+</code></pre>
+
+<p><strong>Dica:</strong> certifique-se de que o diretório <code>p8_multi/</code> tem um <code>__init__.py</code>
+(pode ser vazio) para que o Python reconheça o pacote ao usar <code>python -m</code>.</p>
+<hr />
 <h2 id="links-de-referencia">Links de referência</h2>
 <ul>
 <li><a href="https://openai.github.io/openai-agents-python/multi_agent/">OpenAI Agents SDK — Multi-agent</a> — padrões de handoff e orquestração</li>

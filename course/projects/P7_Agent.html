@@ -1006,6 +1006,52 @@ def test_tool_injection():
 </ul>
 
 <hr />
+<h2 id="como-executar">Como executar</h2>
+<p>Cada arquivo do projeto tem um bloco <code>if __name__</code> e pode ser executado diretamente.
+A partir da raiz do projeto:</p>
+<ol>
+<li><strong>Laço manual (Etapa 1)</strong> — execute o arquivo da sua trilha:
+<pre><code class="language-bash"># Track A — Anthropic
+python -m p7_agent.manual.loop_anthropic
+
+# Track A — OpenAI
+python -m p7_agent.manual.loop_openai
+
+# Track B — Vertex AI
+python -m p7_agent.manual.loop_vertex
+
+# Track C — Gemini AI Studio (free)
+python -m p7_agent.manual.loop_gemini
+
+# Track C — Groq (free)
+python -m p7_agent.manual.loop_groq
+
+# Track C — Ollama (local, free)
+python -m p7_agent.manual.loop_ollama
+</code></pre></li>
+<li><strong>Framework (Etapa 2)</strong> — execute o arquivo correspondente:
+<pre><code class="language-bash"># Track A — OpenAI Agents SDK
+python -m p7_agent.framework.agent_openai_sdk
+
+# Track A — LangGraph
+python -m p7_agent.framework.agent_langgraph
+
+# Track B — Google ADK
+adk run p7_agent/framework/
+
+# Track C — LangGraph + Groq
+python -m p7_agent.framework.agent_langgraph_groq
+</code></pre></li>
+<li><strong>Testes de modos de falha:</strong>
+<pre><code class="language-bash">pytest p7_agent/tests/test_failure_modes.py -v
+</code></pre></li>
+</ol>
+<p><strong>Pré-requisito:</strong> a variável de ambiente do provedor escolhido deve estar configurada
+(<code>ANTHROPIC_API_KEY</code>, <code>OPENAI_API_KEY</code>, <code>GEMINI_API_KEY</code>, <code>GROQ_API_KEY</code>, ou
+<code>gcloud auth application-default login</code> para Vertex AI). Veja
+<a href="../start/Setup_Guide.html">Guia de Setup</a> se ainda não configurou.</p>
+
+<hr />
 <h2 id="links-uteis">Links</h2>
 <ul>
 <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use" target="_blank" rel="noopener">Anthropic — Tool Use</a></li>

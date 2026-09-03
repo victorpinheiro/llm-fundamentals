@@ -693,6 +693,49 @@ def call_llm(question: str, context: str) -> str:
 is identical across all tracks. Only the LLM generation call changes.</p>
 
 <hr />
+<h2 id="como-executar">Como executar</h2>
+
+<h3>1. Instalar dependências</h3>
+<p>No diretório <code>p6_integration/</code>, instale os pacotes necessários:</p>
+<pre><code class="language-bash">pip install fastapi uvicorn httpx python-dotenv
+</code></pre>
+<p>Se você vai usar o rastreador do GitHub (Passo 4), <code>httpx</code> já cobre.
+Para a alternativa Discord, adicione <code>discord.py</code>; para Teams, <code>botbuilder-core</code>.</p>
+
+<h3>2. Configurar variáveis de ambiente</h3>
+<p>Crie um arquivo <code>.env</code> na raiz do projeto (nunca comite esse arquivo):</p>
+<pre><code class="language-bash"># .env
+SLACK_SIGNING_SECRET=your_signing_secret_here
+SLACK_BOT_TOKEN=xoxb-your-bot-token-here
+GITHUB_TOKEN=ghp_your_github_token_here
+GITHUB_REPO=your_user/your_repo
+</code></pre>
+<p>Se preferir, exporte as variáveis diretamente no terminal:</p>
+<pre><code class="language-bash">export SLACK_SIGNING_SECRET="your_signing_secret_here"
+export SLACK_BOT_TOKEN="xoxb-your-bot-token-here"
+</code></pre>
+
+<h3>3. Subir o servidor</h3>
+<pre><code class="language-bash">uvicorn p6_integration.messaging.app:app --port 8000 --reload
+</code></pre>
+<p>O flag <code>--reload</code> reinicia o servidor quando você salva qualquer arquivo — ideal para
+desenvolvimento. Em produção, remova-o.</p>
+<p>Se tudo estiver correto, você verá:</p>
+<pre><code>INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process
+</code></pre>
+
+<h3>4. Expor para o Slack com ngrok</h3>
+<p>O Slack precisa de uma URL pública para enviar eventos. Em outro terminal:</p>
+<pre><code class="language-bash">ngrok http 8000
+</code></pre>
+<p>Copie a URL HTTPS gerada (ex.: <code>https://a1b2c3d4.ngrok-free.app</code>) e substitua
+<code>SEU_DOMINIO</code> no manifest do Slack (Passo 1). Lembre-se de atualizar o manifest
+toda vez que reiniciar o ngrok, pois a URL muda.</p>
+<p><strong>Dica:</strong> o <a href="https://api.slack.com/tools/cli" target="_blank" rel="noopener">Slack CLI</a>
+(<code>slack run</code>) é uma alternativa ao ngrok que mantém a URL estável.</p>
+
+<hr />
 <h2 id="links-uteis">Links</h2>
 <ul>
 <li><a href="https://api.slack.com/apps" target="_blank" rel="noopener">Criar Slack App</a></li>

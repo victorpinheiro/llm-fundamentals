@@ -601,8 +601,19 @@ from providers.openai_provider import classify
 # from providers.groq_provider import classify
 
 # Track C — Ollama
-# from providers.ollama_provider import classify</code></pre>
-<p>Isso permite que <code>compare.py</code> e o código do Passo 6 importem de <code>classifier</code> sem saber qual provider está por trás.</p>
+# from providers.ollama_provider import classify
+
+
+if __name__ == "__main__":
+    import json
+
+    test_ticket = "The save button doesn't work on the edit screen"
+    result = classify(test_ticket)
+    print(json.dumps(result.model_dump(), indent=2, ensure_ascii=False))
+    print(f"\nModel: {result._meta.model}")
+    print(f"Latency: {result._meta.latency_ms:.0f}ms")
+    print(f"Cost: ${result._meta.cost_usd:.6f}")</code></pre>
+<p>Execute com <code>python classifier.py</code> para testar. Isso permite que <code>compare.py</code> e o código do Passo 6 importem de <code>classifier</code> sem saber qual provider está por trás.</p>
 
 <h3 id="passo-4-instrumentacao">Passo 4 — Entenda a instrumentação</h3>
 <p>Toda chamada a LLM em produção precisa registrar três números: <strong>latência</strong>, <strong>tokens</strong> e <strong>custo</strong>. No código acima, isso já está implementado no objeto <code>InstrumentationMeta</code>. A fórmula de custo é simples:</p>
@@ -771,6 +782,38 @@ def classify_safe(text: str, classify_fn=classify) -> TicketClassification | dic
    "expected_category": "security", "expected_urgency": 5}
 ]</code></pre>
 <p>Adicione mais 12 casos seguindo a mesma lógica. Inclua a classificação esperada em cada caso — no P3 você vai automatizar a comparação entre esperado e real.</p>
+
+<hr />
+
+<h2 id="como-executar">Como executar</h2>
+<p>Resumo dos arquivos criados e a ordem de execução:</p>
+<pre><code># 1. Instale as dependências (exemplo com pip)
+pip install pydantic openai          # Track A — OpenAI
+pip install pydantic anthropic       # Track A — Anthropic
+pip install pydantic google-cloud-aiplatform  # Track B — Vertex AI
+pip install pydantic google-genai    # Track C — Gemini
+pip install pydantic openai          # Track C — Groq (uses openai SDK)
+pip install pydantic openai          # Track C — Ollama (uses openai SDK)
+
+# 2. Configure your API key (example for OpenAI)
+export OPENAI_API_KEY="sk-..."
+
+# 3. Run the classifier with a single ticket
+python classifier.py
+
+# 4. Run the comparative analysis across providers
+python compare.py</code></pre>
+
+<table>
+<thead><tr><th>File</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>schemas.py</code></td><td>Pydantic model <code>TicketClassification</code> — shared across all providers</td></tr>
+<tr><td><code>providers/*.py</code></td><td>One <code>classify(text)</code> function per provider (OpenAI, Anthropic, Vertex, Gemini, Groq, Ollama)</td></tr>
+<tr><td><code>classifier.py</code></td><td>Single entry point — import the provider you want and run</td></tr>
+<tr><td><code>compare.py</code></td><td>Runs the same test cases through multiple providers and compares results</td></tr>
+<tr><td><code>test_cases.json</code></td><td>20 test tickets with expected category and urgency</td></tr>
+</tbody>
+</table>
 
 <hr />
 

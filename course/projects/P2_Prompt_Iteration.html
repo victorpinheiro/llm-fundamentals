@@ -681,6 +681,24 @@ def classify(system_prompt: str, ticket: str) -> dict:
 
 <hr />
 
+<h2 id="como-executar">Como executar</h2>
+<p>Resumo dos arquivos criados e a ordem de execução:</p>
+<pre><code># 1. Make sure P1 is working (classifier.py + providers/)
+
+# 2. Run the evaluation script to compare prompt versions
+python evaluate.py</code></pre>
+
+<table>
+<thead><tr><th>File</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>prompts/v1.txt</code>, <code>v2.txt</code>, <code>v3.txt</code></td><td>Prompt versions with increasing specificity</td></tr>
+<tr><td><code>evaluate.py</code></td><td>Runs test cases against each prompt version and compares accuracy</td></tr>
+<tr><td><code>test_cases.json</code></td><td>Shared test cases from P1 (or expanded)</td></tr>
+</tbody>
+</table>
+
+<hr />
+
 <h2 id="links-de-referencia">Links de referência</h2>
 <ul>
 <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">Anthropic — Prompt Engineering Guide</a></li>
