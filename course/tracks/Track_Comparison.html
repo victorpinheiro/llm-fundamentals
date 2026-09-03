@@ -62,6 +62,7 @@
 <ul>
 <li><a href="Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a class="active" aria-current="page" href="Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -155,56 +156,66 @@ técnica ou entrevista.</p>
 <table>
 <thead>
 <tr>
-<th>Dimensão</th>
+<th>Dimensao</th>
 <th>Trilha A</th>
 <th>Trilha B</th>
+<th>Trilha C</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Autenticação</td>
+<td>Autenticacao</td>
 <td>Chave de API</td>
-<td>Conta de serviço, identidade de agente</td>
+<td>Conta de servico, identidade de agente</td>
+<td>Chave de API (Gemini/Groq) ou local (Ollama)</td>
 </tr>
 <tr>
 <td>Curva inicial</td>
-<td>Mais suave</td>
-<td>Mais íngreme</td>
+<td>Suave</td>
+<td>Mais ingreme</td>
+<td><strong>A mais suave</strong></td>
 </tr>
 <tr>
-<td>Compreensão dos mecanismos</td>
-<td>Alta — você monta tudo</td>
-<td>Média — plataforma abstrai</td>
+<td>Compreensao dos mecanismos</td>
+<td>Alta — voce monta tudo</td>
+<td>Media — plataforma abstrai</td>
+<td>Alta — mesmo nivel da Trilha A</td>
 </tr>
 <tr>
-<td>Caminho para produção corporativa</td>
-<td>Você constrói</td>
+<td>Caminho para producao corporativa</td>
+<td>Voce constroi</td>
 <td>Plataforma entrega</td>
+<td>Voce constroi (migre para A ou B em producao)</td>
 </tr>
 <tr>
-<td>Governança e conformidade</td>
+<td>Governanca e conformidade</td>
 <td>Por sua conta</td>
 <td>Nativa</td>
+<td>Por sua conta</td>
 </tr>
 <tr>
-<td>Dependência de fornecedor</td>
+<td>Dependencia de fornecedor</td>
 <td>Baixa</td>
 <td>Alta</td>
-</tr>
-<tr>
-<td>Estabilidade de nomenclatura</td>
-<td>Alta</td>
-<td><strong>Baixa — renomeação recente</strong></td>
+<td>Minima — tres provedores intercambiaveis</td>
 </tr>
 <tr>
 <td>Custo inicial</td>
 <td>Baixo</td>
 <td>Baixo com camada gratuita</td>
+<td><strong>Zero — nenhum cartao de credito</strong></td>
 </tr>
 <tr>
 <td>Portabilidade</td>
 <td>Alta</td>
 <td>Baixa</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>Limites de uso</td>
+<td>Conforme plano pago</td>
+<td>Conforme plano pago</td>
+<td>RPM e req/dia limitados (cloud), ilimitado (Ollama)</td>
 </tr>
 </tbody>
 </table>
@@ -230,21 +241,25 @@ conceitos e a disciplina de avaliação."</p>
 <p>Isso demonstra julgamento. Defender um fornecedor por preferência<br />
 demonstra o contrário.</p>
 <hr />
-<h2 id="recomendacao-por-situacao">Recomendação por situação</h2>
+<h2 id="recomendacao-por-situacao">Recomendacao por situacao</h2>
 <table>
 <thead>
 <tr>
-<th>Situação</th>
+<th>Situacao</th>
 <th>Trilha</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Aprendendo do zero</td>
-<td>A</td>
+<td>Aprendendo do zero, sem orcamento</td>
+<td><strong>C</strong></td>
 </tr>
 <tr>
-<td>Organização já em Google Cloud</td>
+<td>Aprendendo do zero, com orcamento</td>
+<td>A ou C</td>
+</tr>
+<tr>
+<td>Organizacao ja em Google Cloud</td>
 <td>B</td>
 </tr>
 <tr>
@@ -253,15 +268,19 @@ demonstra o contrário.</p>
 </tr>
 <tr>
 <td>Setor regulado</td>
-<td>B, ou A com infraestrutura própria</td>
+<td>B, ou A com infraestrutura propria</td>
+</tr>
+<tr>
+<td>Privacidade total / uso offline</td>
+<td>C (Ollama)</td>
 </tr>
 <tr>
 <td>Consultoria multi-cliente</td>
-<td>Ambas</td>
+<td>A + B</td>
 </tr>
 <tr>
 <td>Sem contexto definido</td>
-<td>A</td>
+<td><strong>C</strong> — custo zero, conceitos transferem</td>
 </tr>
 </tbody>
 </table>

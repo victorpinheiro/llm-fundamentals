@@ -62,6 +62,7 @@
 <ul>
 <li><a href="course/tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="course/tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="course/tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="course/tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="course/tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -150,7 +151,7 @@
 <section class="hero">
 <span class="badge">Curso completo · autoguiado · gratuito</span>
 <h1>LLM na Prática</h1>
-<p class="lead">Um curso completo e autoguiado para engenheiros de software que querem ir além do "sei chamar a API de um LLM" — aprendendo a projetar, avaliar, integrar e entregar sistemas de IA confiáveis em produção.</p>
+<p class="lead">Um curso completo, autoguiado e <strong>100% gratuito</strong> — incluindo as APIs — para engenheiros de software que querem ir além do "sei chamar a API de um LLM", aprendendo a projetar, avaliar, integrar e entregar sistemas de IA confiáveis em produção. Nenhum cartão de crédito é necessário.</p>
 <div class="cta-row">
 <a class="btn btn-primary" href="course/start/How_To_Use_This_Course.html">Começar o curso &rarr;</a>
 <a class="btn btn-secondary" href="roadmap/index.html">Ver a Trilha Avançada (Google Cloud)</a>
@@ -182,24 +183,31 @@ para documentação oficial em vez de reproduzi-la. Veja <a href="course/start/V
 <li>Conduzir descoberta com stakeholders não técnicos e fazer handover</li>
 </ul>
 
-<h2>Duas trilhas de implementação</h2>
-<p>O curso separa <strong>conceitos</strong> (estáveis) de
-<strong>implementação</strong> (volátil). Os 11 módulos e todo o material de
-conceitos valem para as duas trilhas — cada projeto prático tem instruções
-específicas por trilha.</p>
+<h2>Tres trilhas de implementacao</h2>
+<p>O curso separa <strong>conceitos</strong> (estaveis) de
+<strong>implementacao</strong> (volatil). Os 11 modulos e todo o material de
+conceitos valem para todos os provedores — cada projeto pratico tem instrucoes
+especificas por trilha.</p>
+<ul>
+<li><strong>Trilha A</strong> — OpenAI e Anthropic (SDKs diretos, pagos)</li>
+<li><strong>Trilha B</strong> — Google Cloud / Vertex AI (plataforma corporativa, paga)</li>
+<li><strong>Trilha C</strong> — Provedores Gratuitos (Gemini AI Studio, Groq, Ollama — <strong>custo zero, nenhum cartao de credito</strong>)</li>
+</ul>
+<p>A <strong>Trilha C</strong> e a porta de entrada recomendada para quem esta comecando:</p>
 <table>
-<thead><tr><th></th><th>Trilha A</th><th>Trilha B</th></tr></thead>
+<thead><tr><th></th><th>Google Gemini (AI Studio)</th><th>Groq</th><th>Ollama</th></tr></thead>
 <tbody>
-<tr><td>Provedores</td><td>OpenAI · Anthropic</td><td>Google Cloud</td></tr>
-<tr><td>Plataforma</td><td>APIs diretas</td><td>Gemini Enterprise Agent Platform</td></tr>
-<tr><td>Framework de agentes</td><td>LangGraph / código próprio</td><td>Agent Development Kit (ADK)</td></tr>
-<tr><td>Melhor para</td><td>Independência de nuvem, aprendizado do básico</td><td>Ambientes GCP, requisitos corporativos</td></tr>
+<tr><td>Tipo</td><td>Cloud gratuito</td><td>Cloud gratuito</td><td>Local gratuito</td></tr>
+<tr><td>Modelos</td><td>Gemini 3 Flash, 3.1 Flash-Lite</td><td>Llama 3.3 70B, Llama 3.1 8B</td><td>Llama 3.2 3B, Llama 3.1 8B, Qwen, Gemma</td></tr>
+<tr><td>Limites</td><td>1.500 req/dia, 15 RPM</td><td>30 RPM, 14.400 req/dia</td><td>Ilimitado (hardware local)</td></tr>
+<tr><td>Saida estruturada</td><td>Nativa</td><td>Via API compativel com OpenAI</td><td>Via API compativel com OpenAI</td></tr>
+<tr><td>Melhor para</td><td>Provedor principal, mais recursos</td><td>Velocidade, alternativa cloud</td><td>Privacidade, uso offline</td></tr>
 </tbody>
 </table>
-<p>Você pode fazer uma trilha, a outra, ou ambas. Veja <a href="course/start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a>
-para decidir. Depois de terminar a Trilha B, ou se seu ambiente de trabalho já é
-Google Cloud, veja também a <a href="roadmap/index.html">Trilha Avançada: Google Cloud / Vertex AI &amp; ADK na Prática</a>,
-uma seção complementar deste curso com 9 semanas de aprofundamento prático em
+<p>Voce pode usar um provedor, dois ou os tres. Veja <a href="course/start/Choosing_Your_Track.html">Escolhendo Sua Trilha</a>
+para decidir. Para aprofundamento em ambiente corporativo Google Cloud, veja tambem a
+<a href="roadmap/index.html">Trilha Avancada: Google Cloud / Vertex AI &amp; ADK na Pratica</a>,
+uma secao complementar deste curso com 9 semanas de aprofundamento pratico em
 Vertex AI e ADK.</p>
 
 <h2>Como o curso está organizado</h2>
@@ -207,7 +215,7 @@ Vertex AI e ADK.</p>
 <a class="card" href="course/start/How_To_Use_This_Course.html"><h3>Comece Aqui</h3><p>Como usar o curso, pré-requisitos, escolha de trilha e setup do ambiente.</p></a>
 <a class="card" href="course/modules/Module_01_LLM_Fundamentals.html"><h3>11 Módulos</h3><p>O currículo principal, na ordem: fundamentos, prompting, avaliação, RAG, agentes, produção.</p></a>
 <a class="card" href="course/concepts/LLM_Fundamentals.html"><h3>Conceitos</h3><p>Referência aprofundada por tema, para consulta durante os projetos.</p></a>
-<a class="card" href="course/tracks/Track_Comparison.html"><h3>Trilhas</h3><p>Guias específicos de implementação para a Trilha A e a Trilha B.</p></a>
+<a class="card" href="course/tracks/Track_Comparison.html"><h3>Trilhas</h3><p>Guias de implementacao para as Trilhas A, B e C (gratuita).</p></a>
 <a class="card" href="course/projects/P0_Environment.html"><h3>10 Projetos</h3><p>Do ambiente inicial (P0) ao capstone (P9) — projetos cumulativos e práticos.</p></a>
 <a class="card" href="course/resources/Glossary.html"><h3>Recursos</h3><p>Glossário, links, checklist semanal, diário de aprendizado e notas para instrutores.</p></a>
 </div>

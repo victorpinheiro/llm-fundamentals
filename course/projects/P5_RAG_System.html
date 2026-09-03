@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -291,6 +292,44 @@ def gerar_embeddings(textos: list[str]) -> list[list[float]]:
     return [e.values for e in resultado.embeddings]
 </code></pre>
 
+<h4>Track C — Gemini (AI Studio)</h4>
+<p>Google Gemini offers free embeddings via AI Studio with the <code>text-embedding-004</code> model.
+Install the SDK: <code>pip install google-genai</code></p>
+<pre><code>import os
+from google import genai
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+def generate_embeddings(texts: list[str]) -> list[list[float]]:
+    """Generate embeddings with Gemini AI Studio (free)."""
+    result = client.models.embed_content(
+        model="text-embedding-004",
+        contents=texts,
+    )
+    return [e.values for e in result.embeddings]
+</code></pre>
+
+<h4>Track C — Groq</h4>
+<p>Groq does not offer an embeddings API. For embeddings, pair Groq (used for generation)
+with a free embedding source such as Gemini <code>text-embedding-004</code> above, or Ollama
+<code>nomic-embed-text</code> below. Use Groq only for the generation step in the RAG pipeline.</p>
+
+<h4>Track C — Ollama</h4>
+<p>Ollama runs locally and offers embeddings via the <code>nomic-embed-text</code> model.
+Pull the model first: <code>ollama pull nomic-embed-text</code></p>
+<pre><code>import ollama
+
+def generate_embeddings(texts: list[str]) -> list[list[float]]:
+    """Generate embeddings with Ollama nomic-embed-text (local, free)."""
+    embeddings = []
+    for text in texts:
+        response = ollama.embeddings(model="nomic-embed-text", prompt=text)
+        embeddings.append(response["embedding"])
+    return embeddings
+</code></pre>
+<p><strong>Note:</strong> Ollama processes one text at a time. For large corpora, this is slower
+than batched APIs but has zero cost and no rate limits.</p>
+
 <h3>Passo 4 — Configure o vector store com ChromaDB</h3>
 <p>ChromaDB é a opção mais simples para aprendizado: instale com <code>pip install chromadb</code>,
 sem servidor, sem configuração. Os dados ficam num diretório local.</p>
@@ -465,6 +504,44 @@ def perguntar(pergunta: str, top_k: int = 5) -> dict:
     # )
     # resposta = resp.text
 
+    # === Track C — Gemini (AI Studio) ===
+    # from google import genai
+    # client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    # MODELO = "gemini-2.0-flash"
+    # resp = client.models.generate_content(
+    #     model=MODELO,
+    #     contents=f"{PROMPT_SISTEMA}\n\n{prompt_usuario}",
+    # )
+    # resposta = resp.text
+
+    # === Track C — Groq ===
+    # from openai import OpenAI
+    # client = OpenAI(api_key=os.getenv("GROQ_API_KEY"), base_url="https://api.groq.com/openai/v1")
+    # MODELO = "llama-3.3-70b-versatile"
+    # resp = client.chat.completions.create(
+    #     model=MODELO,
+    #     messages=[
+    #         {"role": "system", "content": PROMPT_SISTEMA},
+    #         {"role": "user", "content": prompt_usuario},
+    #     ],
+    #     temperature=0,
+    # )
+    # resposta = resp.choices[0].message.content
+
+    # === Track C — Ollama ===
+    # from openai import OpenAI
+    # client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+    # MODELO = "llama3.2"
+    # resp = client.chat.completions.create(
+    #     model=MODELO,
+    #     messages=[
+    #         {"role": "system", "content": PROMPT_SISTEMA},
+    #         {"role": "user", "content": prompt_usuario},
+    #     ],
+    #     temperature=0,
+    # )
+    # resposta = resp.choices[0].message.content
+
     # 4. Extrair fontes citadas
     fontes = list(set(c["metadata"]["fonte"] for c in chunks))
 
@@ -587,6 +664,9 @@ if __name__ == "__main__":
 <li><a href="https://docs.trychroma.com/" target="_blank" rel="noopener">ChromaDB — Documentação</a></li>
 <li><a href="https://platform.openai.com/docs/guides/embeddings" target="_blank" rel="noopener">OpenAI — Embeddings Guide</a></li>
 <li><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings" target="_blank" rel="noopener">Vertex AI — Text Embeddings</a></li>
+<li><a href="https://ai.google.dev/gemini-api/docs/embeddings" target="_blank" rel="noopener">Gemini AI Studio — Embeddings (free)</a></li>
+<li><a href="https://console.groq.com/docs/overview" target="_blank" rel="noopener">Groq — API Documentation</a></li>
+<li><a href="https://ollama.com/" target="_blank" rel="noopener">Ollama — Local LLM</a></li>
 <li><a href="https://pypi.org/project/rank-bm25/" target="_blank" rel="noopener">rank_bm25 — PyPI</a></li>
 <li><a href="https://python.langchain.com/docs/how_to/recursive_text_splitter/" target="_blank" rel="noopener">LangChain — RecursiveCharacterTextSplitter</a></li>
 </ul>

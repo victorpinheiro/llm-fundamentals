@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -525,6 +526,196 @@ def run_agent(user_message: str) -&gt; str:
     return "Limite de iterações atingido."
 </code></pre>
 
+<h4>Track C — Gemini AI Studio (function calling)</h4>
+<pre><code class="language-python">"""p7_agent/manual/loop_gemini.py — ReAct loop with Gemini AI Studio (free)"""
+import os, json
+from google import genai
+from google.genai import types
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+MODEL = "gemini-2.0-flash"
+MAX_ITERATIONS = 10
+
+# -- Tool declarations using Gemini types ----------------------------
+tool = types.Tool(function_declarations=[
+    types.FunctionDeclaration(
+        name="document_search",
+        description="Search the knowledge base (P5 RAG). Returns relevant excerpts with source.",
+        parameters=types.Schema(
+            type="OBJECT",
+            properties={
+                "query": types.Schema(type="STRING", description="Search query"),
+            },
+            required=["query"],
+        ),
+    ),
+    types.FunctionDeclaration(
+        name="task_search",
+        description="Search existing tasks in the tracker (P6).",
+        parameters=types.Schema(
+            type="OBJECT",
+            properties={
+                "query": types.Schema(type="STRING", description="Search terms"),
+            },
+            required=["query"],
+        ),
+    ),
+    types.FunctionDeclaration(
+        name="task_create",
+        description="Create a new task. IRREVERSIBLE - requires confirmation.",
+        parameters=types.Schema(
+            type="OBJECT",
+            properties={
+                "title": types.Schema(type="STRING"),
+                "body": types.Schema(type="STRING"),
+            },
+            required=["title", "body"],
+        ),
+    ),
+    types.FunctionDeclaration(
+        name="calculator",
+        description="Evaluate a math expression. Use for any calculation.",
+        parameters=types.Schema(
+            type="OBJECT",
+            properties={
+                "expression": types.Schema(type="STRING", description="Valid Python expression, e.g. '(150 * 0.3) + 45'"),
+            },
+            required=["expression"],
+        ),
+    ),
+])
+
+# execute_tool is the same function from the examples above
+
+def run_agent(user_message: str) -> str:
+    """ReAct loop using Gemini function calling."""
+    config = types.GenerateContentConfig(tools=[tool])
+    contents = [types.Content(role="user", parts=[types.Part.from_text(user_message)])]
+
+    for i in range(MAX_ITERATIONS):
+        response = client.models.generate_content(
+            model=MODEL, contents=contents, config=config,
+        )
+        candidate = response.candidates[0]
+
+        # Check for function calls
+        function_calls = [p for p in candidate.content.parts if p.function_call]
+        if not function_calls:
+            # No tool call -- this is the final answer
+            return candidate.content.parts[0].text
+
+        # Process each function call
+        contents.append(candidate.content)
+        for part in function_calls:
+            fc = part.function_call
+            print(f"  [{i+1}] Calling {fc.name}({json.dumps(dict(fc.args), ensure_ascii=False)[:80]})")
+            result = execute_tool(fc.name, dict(fc.args))
+            contents.append(types.Content(
+                role="user",
+                parts=[types.Part.from_function_response(
+                    name=fc.name, response={"result": result},
+                )],
+            ))
+
+    return "Iteration limit reached."
+</code></pre>
+
+<h4>Track C — Groq (function calling, OpenAI-compatible)</h4>
+<pre><code class="language-python">"""p7_agent/manual/loop_groq.py — ReAct loop with Groq (free, OpenAI-compatible)"""
+import os, json
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
+MODEL = "llama-3.3-70b-versatile"
+MAX_ITERATIONS = 10
+
+# Same OpenAI-format tools as the Track A OpenAI example (tools_openai)
+# Same execute_tool function
+
+def run_agent(user_message: str) -> str:
+    """ReAct loop using Groq (OpenAI-compatible, free)."""
+    messages = [{"role": "user", "content": user_message}]
+
+    for i in range(MAX_ITERATIONS):
+        response = client.chat.completions.create(
+            model=MODEL,
+            tools=tools_openai,    # Same tool definitions as OpenAI Track A
+            messages=messages,
+        )
+        msg = response.choices[0].message
+
+        if not msg.tool_calls:
+            return msg.content
+
+        messages.append(msg)
+
+        for tc in msg.tool_calls:
+            args = json.loads(tc.function.arguments)
+            print(f"  [{i+1}] Calling {tc.function.name}({json.dumps(args, ensure_ascii=False)[:80]})")
+            result = execute_tool(tc.function.name, args)
+            messages.append({
+                "role": "tool",
+                "tool_call_id": tc.id,
+                "content": result,
+            })
+
+    return "Iteration limit reached."
+</code></pre>
+
+<h4>Track C — Ollama (function calling, OpenAI-compatible)</h4>
+<pre><code class="language-python">"""p7_agent/manual/loop_ollama.py — ReAct loop with Ollama (local, free)"""
+import json
+from openai import OpenAI
+
+client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+MODEL = "llama3.2"
+MAX_ITERATIONS = 10
+
+# Same OpenAI-format tools as the Track A OpenAI example (tools_openai)
+# Same execute_tool function
+
+def run_agent(user_message: str) -> str:
+    """ReAct loop using Ollama (local, free).
+
+    Note: function calling quality varies by model. llama3.2 supports
+    tool use but may need simpler tool definitions than larger models.
+    If tool calls are unreliable, try llama3.1:8b or mistral.
+    """
+    messages = [{"role": "user", "content": user_message}]
+
+    for i in range(MAX_ITERATIONS):
+        response = client.chat.completions.create(
+            model=MODEL,
+            tools=tools_openai,    # Same tool definitions as OpenAI Track A
+            messages=messages,
+        )
+        msg = response.choices[0].message
+
+        if not msg.tool_calls:
+            return msg.content
+
+        messages.append(msg)
+
+        for tc in msg.tool_calls:
+            args = json.loads(tc.function.arguments)
+            print(f"  [{i+1}] Calling {tc.function.name}({json.dumps(args, ensure_ascii=False)[:80]})")
+            result = execute_tool(tc.function.name, args)
+            messages.append({
+                "role": "tool",
+                "tool_call_id": tc.id,
+                "content": result,
+            })
+
+    return "Iteration limit reached."
+</code></pre>
+<p><strong>Tip:</strong> Groq and Ollama use the exact same OpenAI-compatible format for function calling.
+The only differences are the client setup (API key + base URL) and the model name.
+If you already have the OpenAI Track A loop working, switching to Groq or Ollama is
+just changing three lines.</p>
+
 <h3 id="passo-2-ferramentas">Passo 2 — Definir as 4 ferramentas</h3>
 <p>As ferramentas já aparecem nos exemplos acima. O ponto importante para cada uma:</p>
 <pre><code class="language-python">"""p7_agente/ferramentas/tools.py — Implementação das 4 ferramentas"""
@@ -701,6 +892,42 @@ agent = Agent(
 <p>Documentação: <a href="https://google.github.io/adk-docs/" target="_blank" rel="noopener">Google ADK</a>.
 <strong>Atenção:</strong> confirme a versão antes de começar. O ADK passou por reescritas com breaking changes.</p>
 
+<h4>Track C — LangGraph with Groq (free)</h4>
+<pre><code class="language-python">"""p7_agent/framework/agent_langgraph_groq.py — LangGraph agent with Groq (free)"""
+from langgraph.prebuilt import create_react_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.tools import tool
+import os
+
+@tool
+def document_search(query: str) -> str:
+    """Search the knowledge base (P5 RAG)."""
+    from p5_rag.retriever import search
+    import json
+    return json.dumps([{"text": r["text"][:500]} for r in search(query)])
+
+@tool
+def calculator(expression: str) -> str:
+    """Evaluate a math expression."""
+    import json
+    return json.dumps({"result": eval(expression, {"__builtins__": {}})})
+
+# Groq is OpenAI-compatible, so ChatOpenAI works with a custom base_url
+model = ChatOpenAI(
+    model="llama-3.3-70b-versatile",
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
+agent = create_react_agent(model, [document_search, calculator])
+
+result = agent.invoke({"messages": [("user", "What is 15% of 3200?")]})
+print(result["messages"][-1].content)
+</code></pre>
+<p><strong>Note:</strong> LangGraph works with any OpenAI-compatible provider. For Ollama, use
+<code>ChatOpenAI(model="llama3.2", base_url="http://localhost:11434/v1", api_key="ollama")</code>.
+For Gemini, use <code>ChatGoogleGenerativeAI(model="gemini-2.0-flash")</code> from
+<code>langchain-google-genai</code>.</p>
+
 <h3 id="passo-5-testar-falhas">Passo 5 — Testar os 6 modos de falha</h3>
 <p>Cada modo de falha vira um teste. Exemplos concretos:</p>
 <pre><code class="language-python">"""p7_agente/testes/test_modos_falha.py"""
@@ -787,6 +1014,9 @@ def test_tool_injection():
 <li><a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">OpenAI Agents SDK</a></li>
 <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">LangGraph</a></li>
 <li><a href="https://google.github.io/adk-docs/" target="_blank" rel="noopener">Google ADK (Agent Development Kit)</a></li>
+<li><a href="https://ai.google.dev/gemini-api/docs/function-calling" target="_blank" rel="noopener">Gemini AI Studio — Function Calling (free)</a></li>
+<li><a href="https://console.groq.com/docs/tool-use" target="_blank" rel="noopener">Groq — Tool Use</a></li>
+<li><a href="https://ollama.com/blog/tool-support" target="_blank" rel="noopener">Ollama — Tool Support</a></li>
 <li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">ReAct: Synergizing Reasoning and Acting (paper original)</a></li>
 </ul>
 

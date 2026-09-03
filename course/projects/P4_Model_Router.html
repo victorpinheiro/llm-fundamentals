@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -164,28 +165,43 @@ que não compensa.</p>
 <h2 id="passo-a-passo">Passo a passo</h2>
 
 <h3>Passo 1 — Defina as camadas de modelo</h3>
-<p>Escolha três modelos com faixas de custo distintas. Exemplos por trilha:</p>
+<p>Escolha três modelos com capacidades distintas. Como todos os provedores abaixo oferecem
+tier gratuito, o roteamento aqui não é sobre custo monetário — é sobre <strong>limites de taxa</strong>
+(rate limits) e <strong>latência</strong>. Redirecionar perguntas simples para modelos menores preserva
+sua cota de requisições para o que realmente precisa de mais capacidade.</p>
 <table>
 <thead>
-<tr><th>Camada</th><th>Trilha A (OpenAI + Anthropic)</th><th>Trilha B (Google Cloud)</th></tr>
+<tr><th>Camada</th><th>Gemini (AI Studio)</th><th>Groq</th><th>Ollama (local)</th></tr>
 </thead>
 <tbody>
-<tr><td>Pequeno (barato)</td><td><code>gpt-4o-mini</code></td><td><code>gemini-2.0-flash-lite</code></td></tr>
-<tr><td>Intermediário</td><td><code>claude-3-5-haiku</code></td><td><code>gemini-2.0-flash</code></td></tr>
-<tr><td>Grande (caro)</td><td><code>claude-sonnet-4</code> ou <code>gpt-4o</code></td><td><code>gemini-2.5-pro</code></td></tr>
+<tr><td>Pequeno (rápido)</td><td><code>gemini-2.0-flash-lite</code></td><td><code>llama-3.1-8b-instant</code></td><td><code>llama3.2:3b</code></td></tr>
+<tr><td>Intermediário</td><td><code>gemini-2.0-flash</code></td><td><code>llama-3.3-70b-versatile</code></td><td><code>llama3.1:8b</code></td></tr>
+<tr><td>Grande (detalhado)</td><td><code>gemini-2.0-flash</code> (prompt mais detalhado)</td><td><code>llama-3.3-70b-versatile</code> (com CoT)</td><td><code>llama3.1:8b</code> (com CoT)</td></tr>
 </tbody>
 </table>
-<p>Anote o custo por milhão de tokens (input e output) de cada um. Você vai precisar disso no Passo 4.</p>
+<p><strong>Nota:</strong> como os modelos grandes gratuitos são os mesmos dos intermediários (Gemini Flash,
+Llama 70b), a diferença na camada "grande" vem da <strong>engenharia de prompt</strong>: prompt de sistema
+mais detalhado, instrução de Chain-of-Thought (CoT), ou aumento de <code>max_tokens</code>.
+Anote os limites de taxa de cada provedor — você vai precisar disso no Passo 4.</p>
 
 <h3>Passo 2 — Construa o classificador de complexidade</h3>
 <p>O classificador usa o modelo mais barato para decidir qual camada deve responder.
 Crie <code>classificador_complexidade.py</code>:</p>
 <pre><code>"""classificador_complexidade.py — classifica a complexidade de uma pergunta."""
 import os
-from openai import OpenAI          # Trilha A
-# from google import genai          # Trilha B — descomente e ajuste
 
-client = OpenAI()  # usa OPENAI_API_KEY do ambiente
+# === Opção 1: Gemini (gratuito via AI Studio — 1.500 req/dia) ===
+from google import genai
+
+gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+# === Opção 2: Groq (gratuito — 30 RPM) ===
+# from groq import Groq
+# groq_client = Groq()  # usa GROQ_API_KEY do ambiente
+
+# === Opção 3: Ollama (local — ilimitado) ===
+# from openai import OpenAI
+# ollama_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
 PROMPT_CLASSIFICADOR = """\
 Você é um roteador de complexidade. Dada a pergunta do usuário, classifique-a
@@ -200,103 +216,136 @@ Responda APENAS com uma palavra: SIMPLES, MEDIA ou COMPLEXA.
 
 def classificar(pergunta: str) -> str:
     """Retorna 'SIMPLES', 'MEDIA' ou 'COMPLEXA'."""
-    resposta = client.chat.completions.create(
-        model="gpt-4o-mini",           # modelo mais barato
-        messages=[
-            {"role": "system", "content": PROMPT_CLASSIFICADOR},
-            {"role": "user", "content": pergunta},
-        ],
-        temperature=0,
-        max_tokens=10,
+    # --- Gemini ---
+    resp = gemini_client.models.generate_content(
+        model="gemini-2.0-flash-lite",   # modelo mais rápido para classificação
+        contents=f"{PROMPT_CLASSIFICADOR}\n\nPergunta: {pergunta}",
     )
-    categoria = resposta.choices[0].message.content.strip().upper()
+    categoria = resp.text.strip().upper()
+
+    # --- Groq (descomente e comente o bloco Gemini acima) ---
+    # resp = groq_client.chat.completions.create(
+    #     model="llama-3.1-8b-instant",
+    #     messages=[
+    #         {"role": "system", "content": PROMPT_CLASSIFICADOR},
+    #         {"role": "user", "content": pergunta},
+    #     ],
+    #     temperature=0,
+    #     max_tokens=10,
+    # )
+    # categoria = resp.choices[0].message.content.strip().upper()
+
+    # --- Ollama (descomente e comente o bloco acima) ---
+    # resp = ollama_client.chat.completions.create(
+    #     model="llama3.2:3b",
+    #     messages=[
+    #         {"role": "system", "content": PROMPT_CLASSIFICADOR},
+    #         {"role": "user", "content": pergunta},
+    #     ],
+    #     temperature=0,
+    #     max_tokens=10,
+    # )
+    # categoria = resp.choices[0].message.content.strip().upper()
+
     if categoria not in ("SIMPLES", "MEDIA", "COMPLEXA"):
         return "COMPLEXA"              # fallback seguro
     return categoria
-
-# Trilha B — versão com Vertex AI:
-# from google import genai
-# vertex_client = genai.Client(vertexai=True, project="SEU_PROJETO", location="us-central1")
-#
-# def classificar(pergunta: str) -> str:
-#     resp = vertex_client.models.generate_content(
-#         model="gemini-2.0-flash-lite",
-#         contents=f"{PROMPT_CLASSIFICADOR}\n\nPergunta: {pergunta}",
-#     )
-#     categoria = resp.text.strip().upper()
-#     return categoria if categoria in ("SIMPLES", "MEDIA", "COMPLEXA") else "COMPLEXA"
 </code></pre>
 
 <h3>Passo 3 — Construa o roteador</h3>
 <p>O roteador conecta o classificador aos modelos. Crie <code>roteador.py</code>:</p>
 <pre><code>"""roteador.py — roteia perguntas para o modelo adequado à complexidade."""
-import time
+import os, time
 from classificador_complexidade import classificar
 
-# === Trilha A ===
-from openai import OpenAI
-import anthropic
+# === Gemini (gratuito via AI Studio) ===
+from google import genai
 
-openai_client = OpenAI()
-anthropic_client = anthropic.Anthropic()
+gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+# === Groq (gratuito — descomente para usar como alternativa) ===
+# from groq import Groq
+# groq_client = Groq()
+
+# === Ollama (local — descomente para usar como alternativa) ===
+# from openai import OpenAI
+# ollama_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+
+# Prompt de sistema mais detalhado para a camada "grande"
+PROMPT_SISTEMA_DETALHADO = """\
+Você é um assistente especialista. Responda com raciocínio passo a passo
+(Chain-of-Thought). Primeiro analise a pergunta, depois apresente sua
+resposta estruturada com evidências.
+"""
 
 MODELOS = {
-    "SIMPLES":  {"provider": "openai",    "model": "gpt-4o-mini"},
-    "MEDIA":    {"provider": "anthropic",  "model": "claude-3-5-haiku-20241022"},
-    "COMPLEXA": {"provider": "anthropic",  "model": "claude-sonnet-4-20250514"},
+    "SIMPLES":  {"provider": "gemini", "model": "gemini-2.0-flash-lite", "system": None},
+    "MEDIA":    {"provider": "gemini", "model": "gemini-2.0-flash",      "system": None},
+    "COMPLEXA": {"provider": "gemini", "model": "gemini-2.0-flash",      "system": PROMPT_SISTEMA_DETALHADO},
 }
 
-# === Trilha B (descomente e ajuste) ===
-# from google import genai
-# vertex_client = genai.Client(vertexai=True, project="SEU_PROJETO", location="us-central1")
+# Alternativa com Groq:
 # MODELOS = {
-#     "SIMPLES":  {"provider": "vertex", "model": "gemini-2.0-flash-lite"},
-#     "MEDIA":    {"provider": "vertex", "model": "gemini-2.0-flash"},
-#     "COMPLEXA": {"provider": "vertex", "model": "gemini-2.5-pro"},
+#     "SIMPLES":  {"provider": "groq", "model": "llama-3.1-8b-instant",      "system": None},
+#     "MEDIA":    {"provider": "groq", "model": "llama-3.3-70b-versatile",    "system": None},
+#     "COMPLEXA": {"provider": "groq", "model": "llama-3.3-70b-versatile",    "system": PROMPT_SISTEMA_DETALHADO},
 # }
 
-# Custo por milhão de tokens (input / output) — preencha com valores atuais
-CUSTO_POR_MILHAO = {
-    "gpt-4o-mini":                  {"input": 0.15,  "output": 0.60},
-    "claude-3-5-haiku-20241022":    {"input": 0.80,  "output": 4.00},
-    "claude-sonnet-4-20250514":     {"input": 3.00,  "output": 15.00},
+# Alternativa com Ollama:
+# MODELOS = {
+#     "SIMPLES":  {"provider": "ollama", "model": "llama3.2:3b",   "system": None},
+#     "MEDIA":    {"provider": "ollama", "model": "llama3.1:8b",   "system": None},
+#     "COMPLEXA": {"provider": "ollama", "model": "llama3.1:8b",   "system": PROMPT_SISTEMA_DETALHADO},
+# }
+
+# Limites de taxa por provedor (req/dia ou req/min)
+RATE_LIMITS = {
+    "gemini": "1.500 req/dia (gratuito via AI Studio)",
+    "groq":   "30 req/min (gratuito)",
+    "ollama": "ilimitado (local)",
 }
 
-def chamar_modelo(pergunta: str, provider: str, model: str) -> dict:
+def chamar_modelo(pergunta: str, provider: str, model: str, system: str = None) -> dict:
     """Chama o modelo e retorna resposta + metadados."""
-    if provider == "openai":
-        resp = openai_client.chat.completions.create(
+    if provider == "gemini":
+        conteudo = f"{system}\n\n{pergunta}" if system else pergunta
+        resp = gemini_client.models.generate_content(
             model=model,
-            messages=[{"role": "user", "content": pergunta}],
+            contents=conteudo,
+        )
+        return {
+            "texto": resp.text,
+            "tokens_input": resp.usage_metadata.prompt_token_count,
+            "tokens_output": resp.usage_metadata.candidates_token_count,
+        }
+    elif provider == "groq":
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": pergunta})
+        resp = groq_client.chat.completions.create(
+            model=model,
+            messages=messages,
         )
         return {
             "texto": resp.choices[0].message.content,
             "tokens_input": resp.usage.prompt_tokens,
             "tokens_output": resp.usage.completion_tokens,
         }
-    elif provider == "anthropic":
-        resp = anthropic_client.messages.create(
+    elif provider == "ollama":
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": pergunta})
+        resp = ollama_client.chat.completions.create(
             model=model,
-            max_tokens=1024,
-            messages=[{"role": "user", "content": pergunta}],
+            messages=messages,
         )
         return {
-            "texto": resp.content[0].text,
-            "tokens_input": resp.usage.input_tokens,
-            "tokens_output": resp.usage.output_tokens,
+            "texto": resp.choices[0].message.content,
+            "tokens_input": resp.usage.prompt_tokens,
+            "tokens_output": resp.usage.completion_tokens,
         }
-    # Trilha B:
-    # elif provider == "vertex":
-    #     resp = vertex_client.models.generate_content(model=model, contents=pergunta)
-    #     return {
-    #         "texto": resp.text,
-    #         "tokens_input": resp.usage_metadata.prompt_token_count,
-    #         "tokens_output": resp.usage_metadata.candidates_token_count,
-    #     }
-
-def calcular_custo(model: str, tokens_input: int, tokens_output: int) -> float:
-    tabela = CUSTO_POR_MILHAO.get(model, {"input": 0, "output": 0})
-    return (tokens_input * tabela["input"] + tokens_output * tabela["output"]) / 1_000_000
 
 def rotear(pergunta: str) -> dict:
     """Classifica, roteia e retorna resposta com metadados completos."""
@@ -304,27 +353,25 @@ def rotear(pergunta: str) -> dict:
     config = MODELOS[complexidade]
 
     inicio = time.time()
-    resultado = chamar_modelo(pergunta, config["provider"], config["model"])
-    latencia = time.time() - inicio
-
-    custo = calcular_custo(
-        config["model"], resultado["tokens_input"], resultado["tokens_output"]
+    resultado = chamar_modelo(
+        pergunta, config["provider"], config["model"], config.get("system")
     )
+    latencia = time.time() - inicio
 
     return {
         "pergunta": pergunta,
         "complexidade": complexidade,
         "modelo": config["model"],
+        "provider": config["provider"],
         "resposta": resultado["texto"],
         "tokens_input": resultado["tokens_input"],
         "tokens_output": resultado["tokens_output"],
-        "custo_usd": custo,
         "latencia_s": round(latencia, 3),
     }
 
 if __name__ == "__main__":
     r = rotear("Qual a capital da França?")
-    print(f"[{r['complexidade']}] {r['modelo']} — ${r['custo_usd']:.6f} — {r['latencia_s']}s")
+    print(f"[{r['complexidade']}] {r['provider']}/{r['modelo']} — {r['latencia_s']}s")
     print(r["resposta"][:200])
 </code></pre>
 
@@ -451,6 +498,39 @@ resp = client.models.generate_content(
     config={"cached_content": cache.name},
 )
 </code></pre>
+
+<p><strong>Track C — Gemini (AI Studio, free tier)</strong> — context caching works via the same
+<code>google-genai</code> SDK. The API is identical to the Vertex AI example above, but you
+authenticate with an API key instead of a project:</p>
+<pre><code># Context caching with Gemini AI Studio (Track C)
+from google import genai
+from google.genai.types import Content, Part
+import os
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+# Create the cache (valid for 1 hour by default)
+cache = client.caches.create(
+    model="gemini-2.0-flash",
+    contents=[Content(parts=[Part(text="Your long system context here...")])],
+    config={"display_name": "cache-p4", "ttl": "3600s"},
+)
+
+# Use the cache in subsequent calls
+response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents="User question here",
+    config={"cached_content": cache.name},
+)
+print(response.text)
+</code></pre>
+
+<p><strong>Track C — Groq and Ollama</strong> — neither Groq nor Ollama currently supports context
+caching. For these providers, the optimization strategy is different: keep your system
+prompt short and concise, and rely on the fast inference speed (Groq) or unlimited local
+throughput (Ollama) to compensate. If you need caching benefits with free providers,
+use Gemini AI Studio as your primary provider.</p>
+
 <p>Compare o custo com e sem cache para o mesmo conjunto de perguntas e registre a diferença.</p>
 
 <h3>Passo 6 — Preencha a tabela, projete e conclua</h3>

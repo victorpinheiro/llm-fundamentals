@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Protocolos de Interoperabilidade · LLM na Prática</title>
+<title>Trilha C — Provedores Gratuitos · LLM na Prática</title>
 <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
@@ -62,9 +62,9 @@
 <ul>
 <li><a href="Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
-<li><a href="Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
+<li><a class="active" aria-current="page" href="Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="Track_Comparison.html">Comparação das Trilhas</a></li>
-<li><a class="active" aria-current="page" href="Protocols.html">Protocolos de Interoperabilidade</a></li>
+<li><a href="Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
 </details>
 <details class="nav-group">
@@ -148,64 +148,235 @@
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <main class="content" id="main-content">
 <article class="markdown-body">
-<h1 id="protocolos-de-interoperabilidade">Protocolos de Interoperabilidade</h1>
-<p><strong>Relevante a partir do <a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a></strong></p>
+<h1 id="trilha-c-provedores-gratuitos">Trilha C — Provedores Gratuitos</h1>
+<p><strong>Custo zero. Nenhum cartao de credito necessario.</strong></p>
 <hr />
-<h2 id="o-problema-que-resolvem">O problema que resolvem</h2>
-<p>Sem padrão, cada conexão é sob medida. Conectar cinco assistentes a<br />
-cinco sistemas exige vinte e cinco integrações. Com padrão, exige dez —<br />
-cinco de cada lado, contra uma interface comum.</p>
-<p>Dois protocolos ocupam camadas diferentes e complementares.</p>
+<h2 id="filosofia-desta-trilha">Filosofia desta trilha</h2>
+<p>Aprender todos os conceitos do curso sem gastar nada. Voce usa tres provedores
+gratuitos — dois na nuvem e um local — que juntos cobrem todos os projetos
+do curso, da primeira chamada de API ate agentes com ferramentas.</p>
+<p>Os conceitos sao identicos aos das Trilhas A e B. O que muda e o SDK,
+a autenticacao e os limites de uso.</p>
 <hr />
-<h2 id="camada-horizontal-entre-agentes">Camada horizontal: entre agentes</h2>
-<p>Permite que agentes descubram uns aos outros e deleguem trabalho, mesmo<br />
-entre organizações e fornecedores diferentes.</p>
-<p><strong>Conceito central:</strong> cada agente publica uma descrição do que sabe fazer.<br />
-Outros agentes leem essa descrição e decidem a quem delegar, sem<br />
-integração ponto a ponto prévia.</p>
-<p><strong>Trajetória:</strong> criado por um grande provedor de nuvem em 2025 com apoio<br />
-de dezenas de parceiros; doado a uma fundação aberta poucos meses depois;<br />
-alcançou versão estável em 2026, com adoção por mais de uma centena de<br />
-organizações e governança compartilhada entre empresas concorrentes.</p>
-<p>Existe também uma extensão voltada a pagamentos entre agentes, com<br />
-adesão significativa do setor financeiro.</p>
+<h2 id="os-tres-provedores">Os tres provedores</h2>
+<table>
+<thead>
+<tr>
+<th>Provedor</th>
+<th>Tipo</th>
+<th>Modelos principais</th>
+<th>Limites gratuitos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Google Gemini (AI Studio)</strong></td>
+<td>Cloud gratuito</td>
+<td>gemini-2.0-flash, gemini-2.0-flash-lite</td>
+<td>1.500 req/dia, 15 RPM, 1M TPM</td>
+</tr>
+<tr>
+<td><strong>Groq</strong></td>
+<td>Cloud gratuito</td>
+<td>llama-3.3-70b-versatile, llama-3.1-8b-instant</td>
+<td>30 RPM, 14.400 req/dia</td>
+</tr>
+<tr>
+<td><strong>Ollama</strong></td>
+<td>Local gratuito</td>
+<td>llama3.2, llama3.1, qwen2.5, gemma</td>
+<td>Ilimitado (depende do hardware)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recomendacao:</strong> comece com Gemini como provedor principal e Groq como
+alternativa. Use Ollama quando quiser privacidade total ou experimentar
+sem conexao.</p>
 <hr />
-<h2 id="camada-vertical-agente-e-ferramenta">Camada vertical: agente e ferramenta</h2>
-<p>Padroniza como um assistente acessa fontes de dados e ferramentas.</p>
-<p><strong>Conceito central:</strong> você implementa um servidor que expõe recursos e<br />
-ferramentas segundo o protocolo. Qualquer cliente compatível consegue<br />
-usar, sem código específico para aquele par.</p>
-<p><strong>Trajetória:</strong> criado por um laboratório de IA no final de 2024, aberto<br />
-desde o início, hoje também sob governança de fundação — a mesma que<br />
-abriga o protocolo entre agentes.</p>
-<hr />
-<h2 id="combinados">Combinados</h2>
-<pre><code>   Agente  ←── protocolo entre agentes ──→  Agente
-      │                                        │
-      ↓                                        ↓
- protocolo de ferramentas              protocolo de ferramentas
-      │                                        │
-      ↓                                        ↓
-  Banco, API, wiki                      Sistema externo
-</code></pre>
-<p>Não competem. Um resolve coordenação, outro resolve acesso.</p>
-<hr />
-<h2 id="por-que-importa-para-um-fde">Por que importa na prática</h2>
-<p>Boa parte do trabalho de quem entrega IA é integração. Protocolos padronizados<br />
-reduzem drasticamente o custo dessa integração e são cada vez mais<br />
-citados em descrições de vaga.</p>
-<p>Vale entender os dois conceitualmente e implementar ao menos um servidor<br />
-de ferramentas simples — o que o <a href="../projects/P8_Multi_Agent.html">P8 — Múltiplos Agentes (com evidência)</a> sugere como extensão.</p>
-<hr />
-<h2 id="avisos">Avisos</h2>
+<h2 id="setup">Setup</h2>
+<pre><code class="language-bash">pip install google-genai openai python-dotenv</code></pre>
+<p>O pacote <code>openai</code> serve para Groq e Ollama — ambos usam API compativel
+com OpenAI. Nao precisa do pacote <code>groq</code> (embora exista), porque o SDK
+OpenAI conecta direto alterando a <code>base_url</code>.</p>
+<h3 id="credenciais">Credenciais</h3>
+<pre><code># .env
+GEMINI_API_KEY=...sua-chave-aqui...
+GROQ_API_KEY=gsk_...sua-chave-aqui...</code></pre>
+<p>Obtenha as chaves gratuitamente em:</p>
 <ul>
-<li>Especificações evoluem; verifique a versão atual antes de implementar</li>
-<li>Um servidor de ferramentas expõe capacidade: <strong>modele a ameaça</strong></li>
-<li>Resultado de ferramenta continua sendo conteúdo não confiável, mesmo<br />
-  vindo por protocolo padronizado</li>
+<li><strong>Gemini:</strong> <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></li>
+<li><strong>Groq:</strong> <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a></li>
+<li><strong>Ollama:</strong> sem chave — instale de <a href="https://ollama.com" target="_blank">ollama.com</a> e execute <code>ollama pull llama3.2</code></li>
 </ul>
+<hr />
+<h2 id="primeira-chamada">Primeira chamada</h2>
+<h3>Gemini (AI Studio)</h3>
+<pre><code># hello_gemini.py
+import os
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents="Say 'Hello, world!' and explain in one sentence what an LLM is.",
+)
+
+print(response.text)
+print(f"\nTokens — input: {response.usage_metadata.prompt_token_count}, "
+      f"output: {response.usage_metadata.candidates_token_count}")</code></pre>
+
+<h3>Groq (OpenAI-compatible)</h3>
+<pre><code># hello_groq.py
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
+
+response = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Say 'Hello, world!' and explain in one sentence what an LLM is."},
+    ],
+    temperature=0,
+)
+
+print(response.choices[0].message.content)
+print(f"\nTokens used: {response.usage.total_tokens}")</code></pre>
+
+<h3>Ollama (local, OpenAI-compatible)</h3>
+<pre><code># hello_ollama.py
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama",  # required by SDK but not validated
+)
+
+response = client.chat.completions.create(
+    model="llama3.2",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Say 'Hello, world!' and explain in one sentence what an LLM is."},
+    ],
+    temperature=0,
+)
+
+print(response.choices[0].message.content)</code></pre>
+<hr />
+<h2 id="saida-estruturada">Saida estruturada</h2>
+<p>Os tres provedores suportam saida estruturada:</p>
+<ul>
+<li><strong>Gemini:</strong> suporte nativo via <code>response_schema</code> no SDK <code>google-genai</code></li>
+<li><strong>Groq:</strong> suporte via <code>response_format</code> (mesmo formato da OpenAI)</li>
+<li><strong>Ollama:</strong> suporte via <code>response_format</code> (mesmo formato da OpenAI)</li>
+</ul>
+<p>Exemplos completos no <a href="../projects/P1_First_Integration.html">P1 — Primeira Integracao com Saida Estruturada</a>.</p>
+<hr />
+<h2 id="uso-de-ferramentas">Uso de ferramentas (function calling)</h2>
+<p>Os tres suportam chamada de funcao:</p>
+<ul>
+<li><strong>Gemini:</strong> nativo, via parametro <code>tools</code> no SDK</li>
+<li><strong>Groq:</strong> compativel com o formato OpenAI de tool use</li>
+<li><strong>Ollama:</strong> compativel com o formato OpenAI de tool use (modelos que suportam: llama3.1+, qwen2.5+)</li>
+</ul>
+<p>O fluxo e o mesmo das Trilhas A e B:</p>
+<ol>
+<li>Declare as ferramentas disponiveis</li>
+<li>O modelo indica qual quer chamar</li>
+<li>Voce executa e devolve o resultado</li>
+<li>O modelo continua</li>
+</ol>
+<hr />
+<h2 id="limites-e-estrategias">Limites e estrategias</h2>
+<p>Provedores gratuitos tem limites de requisicoes por minuto (RPM) e por dia.
+Estrategias para lidar com isso:</p>
+<ul>
+<li><strong>Fallback entre provedores:</strong> se Gemini atingir o limite, tente Groq.
+Se Groq atingir, use Ollama local.</li>
+<li><strong>Rate limiting no codigo:</strong> adicione <code>time.sleep()</code> entre chamadas
+em loops de avaliacao.</li>
+<li><strong>Cache de respostas:</strong> salve respostas em arquivo para nao repetir
+chamadas identicas.</li>
+<li><strong>Ollama como fallback ilimitado:</strong> modelos menores locais nao tem limite
+e servem bem para desenvolvimento e testes.</li>
+</ul>
+<hr />
+<h2 id="camadas-de-modelo">Camadas de modelo</h2>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Gemini</th>
+<th>Groq</th>
+<th>Ollama</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Maior</td>
+<td>gemini-2.0-flash</td>
+<td>llama-3.3-70b-versatile</td>
+<td>llama3.1:70b (requer 40GB+ RAM)</td>
+</tr>
+<tr>
+<td>Intermediaria</td>
+<td>gemini-2.0-flash</td>
+<td>llama-3.1-8b-instant</td>
+<td>llama3.2 (3B)</td>
+</tr>
+<tr>
+<td>Menor</td>
+<td>gemini-2.0-flash-lite</td>
+<td>llama-3.1-8b-instant</td>
+<td>qwen2.5:1.5b, gemma:2b</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vantagens-e-limitacoes">Vantagens e limitacoes</h2>
+<p><strong>Vantagens:</strong> custo zero, sem cartao de credito, começo imediato,
+tres provedores com fallback entre eles, Ollama para privacidade e uso offline.</p>
+<p><strong>Limitacoes:</strong> limites de RPM e requisicoes diarias nos provedores cloud,
+modelos locais exigem hardware razoavel (8GB+ RAM para modelos pequenos),
+qualidade de modelos open-source pode ser inferior aos modelos pagos em
+tarefas complexas.</p>
+<hr />
+<h2 id="documentacao">Documentacao</h2>
+<table>
+<thead>
+<tr>
+<th>Provedor</th>
+<th>Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemini</td>
+<td><a href="https://ai.google.dev/gemini-api/docs" target="_blank">Gemini API Docs</a> · <a href="https://aistudio.google.com/apikey" target="_blank">Obter chave</a></td>
+</tr>
+<tr>
+<td>Groq</td>
+<td><a href="https://console.groq.com/docs/overview" target="_blank">Groq Docs</a> · <a href="https://console.groq.com/keys" target="_blank">Obter chave</a></td>
+</tr>
+<tr>
+<td>Ollama</td>
+<td><a href="https://ollama.com" target="_blank">Ollama</a> · <a href="https://github.com/ollama/ollama/blob/main/docs/openai.md" target="_blank">API OpenAI-compatible</a></td>
+</tr>
+</tbody>
+</table>
 </article>
-<nav class="pager"><a class="pager-link prev" href="Track_Comparison.html">&larr; Comparação das Trilhas</a></nav>
+<nav class="pager"><a class="pager-link prev" href="Track_B_Guide.html">&larr; Trilha B — Plataforma Corporativa do Google Cloud</a><a class="pager-link next" href="Track_Comparison.html">Comparação das Trilhas &rarr;</a></nav>
 <footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>
 </main>
 </div>

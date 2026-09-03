@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -297,7 +298,69 @@ Reaproveite o que construiu nos projetos anteriores.</p>
 <li>Meça após cada mudança — se os números não melhoraram, não suba de nível</li>
 <li>Faça commits frequentes com mensagens que incluam as métricas: <code>"nível 2: acurácia 62% → 78%"</code></li>
 </ul>
-<p>📄 código funcionando</p>
+<h3>Track C — Provider setup for the capstone</h3>
+<p>Track C students should use free providers throughout the capstone. Here is the
+provider setup code to use in <code>src/config.py</code>:</p>
+<pre><code class="language-python">"""src/config.py — Provider configuration for Track C (free providers)"""
+import os
+from openai import OpenAI
+
+# -- Choose your primary provider ------------------------------------
+# All three are free. Pick based on your needs:
+#   Gemini: best free embedding support, good for RAG-heavy projects
+#   Groq:   fastest inference, great for latency-sensitive scenarios
+#   Ollama: fully local, no API key needed, works offline
+
+PROVIDER = os.getenv("LLM_PROVIDER", "groq")  # "gemini", "groq", or "ollama"
+
+def get_client():
+    """Return the configured LLM client."""
+    if PROVIDER == "gemini":
+        from google import genai
+        return genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+    elif PROVIDER == "groq":
+        return OpenAI(
+            api_key=os.getenv("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1",
+        )
+
+    elif PROVIDER == "ollama":
+        return OpenAI(
+            base_url="http://localhost:11434/v1",
+            api_key="ollama",
+        )
+
+    raise ValueError(f"Unknown provider: {PROVIDER}")
+
+def get_model_name() -> str:
+    """Return the model name for the configured provider."""
+    models = {
+        "gemini": "gemini-2.0-flash",
+        "groq": "llama-3.3-70b-versatile",
+        "ollama": "llama3.2",
+    }
+    return models[PROVIDER]
+
+def get_cost_per_call() -> float:
+    """Return cost per API call. All Track C providers are free."""
+    return 0.0
+</code></pre>
+<p><strong>Capstone recommendations by scenario:</strong></p>
+<ul>
+<li><strong>Scenario A (document assistant):</strong> Use Gemini for both embeddings (<code>text-embedding-004</code>)
+and generation (<code>gemini-2.0-flash</code>) -- simplest setup, single provider, free embeddings</li>
+<li><strong>Scenario B (document processing):</strong> Groq for fast structured extraction, or Ollama if
+the documents contain sensitive data that cannot leave the local machine</li>
+<li><strong>Scenario C (triage and routing):</strong> Groq for speed (500+ tickets/week demands low latency),
+with Ollama as a local fallback if Groq rate limits are hit</li>
+</ul>
+<p><strong>Cost note:</strong> With Track C providers, the "cost per execution" column in your evaluation
+table will be $0.00. Focus your comparison on latency, quality, and reliability instead.
+For the alert on daily cost, replace it with a rate-limit alert
+(e.g., "requests per minute exceeds provider free-tier limit").</p>
+
+<p>📄 codigo funcionando</p>
 <hr />
 <h2 id="fase-4-avaliacao-e-observabilidade">Fase 4 — Avaliação e observabilidade</h2>
 <ul>

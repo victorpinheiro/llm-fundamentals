@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -510,6 +511,161 @@ def classificar(prompt_sistema: str, ticket: str) -> dict:
     return {"resultado": resultado, "latencia_ms": latencia_ms, "custo_usd": custo}
 
 # O restante (avaliar_versao e main) é idêntico à Trilha A.
+</code></pre>
+</details>
+
+<details>
+<summary><strong>Track C — Gemini (AI Studio)</strong></summary>
+<pre><code>"""avaliar.py — Track C version using Gemini (AI Studio, free tier)."""
+import json, time, os
+from pathlib import Path
+from google import genai
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+def load_prompt(version: str) -> str:
+    return Path(f"prompts/{version}.txt").read_text(encoding="utf-8")
+
+def load_cases() -> list[dict]:
+    return json.loads(Path("casos_teste.json").read_text(encoding="utf-8"))
+
+def classify(system_prompt: str, ticket: str) -> dict:
+    """Send the ticket to the model and return the parsed JSON."""
+    start_time = time.perf_counter()
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=f"{system_prompt}\n\nTicket:\n{ticket}",
+    )
+    latency_ms = (time.perf_counter() - start_time) * 1000
+    text = response.text.strip()
+    try:
+        result = json.loads(text)
+    except json.JSONDecodeError:
+        result = None
+    return {"resultado": result, "latencia_ms": latency_ms, "custo_usd": 0.0}
+
+def evaluate_version(version: str, cases: list[dict]) -> dict:
+    prompt = load_prompt(version)
+    total = len(cases)
+    valid, correct_cat, correct_urg, edge_ok, adv_ok = 0, 0, 0, 0, 0
+    latencies, costs = [], []
+    edge_total = sum(1 for c in cases if c["tipo"] == "borda")
+    adv_total = sum(1 for c in cases if c["tipo"] == "adversarial")
+
+    for case in cases:
+        r = classify(prompt, case["entrada"])
+        latencies.append(r["latencia_ms"])
+        costs.append(r["custo_usd"])
+
+        if r["resultado"] is None:
+            continue
+        valid += 1
+        if r["resultado"].get("categoria") == case["esperado_categoria"]:
+            correct_cat += 1
+        if abs(r["resultado"].get("urgencia", -99) - case["esperado_urgencia"]) <= 1:
+            correct_urg += 1
+        if case["tipo"] == "borda" and r["resultado"].get("categoria") == case["esperado_categoria"]:
+            edge_ok += 1
+        if case["tipo"] == "adversarial" and r["resultado"].get("categoria") == case["esperado_categoria"]:
+            adv_ok += 1
+
+    return {
+        "valid_output_%": round(valid / total * 100, 1),
+        "correct_category_%": round(correct_cat / total * 100, 1),
+        "urgency_+-1_%": round(correct_urg / total * 100, 1),
+        "edge_cases_handled": f"{edge_ok}/{edge_total}",
+        "adversarials_blocked": f"{adv_ok}/{adv_total}",
+        "avg_latency_ms": round(sum(latencies) / len(latencies), 0),
+        "avg_cost_usd": 0.0,
+    }
+
+if __name__ == "__main__":
+    cases = load_cases()
+    for v in ["v1", "v2", "v3"]:
+        print(f"\n=== {v.upper()} ===")
+        metrics = evaluate_version(v, cases)
+        for k, val in metrics.items():
+            print(f"  {k}: {val}")
+</code></pre>
+</details>
+
+<details>
+<summary><strong>Track C — Groq</strong></summary>
+<pre><code>"""avaliar.py — Track C version using Groq (free tier, OpenAI-compatible)."""
+import json, time, os
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
+
+def load_prompt(version: str) -> str:
+    return Path(f"prompts/{version}.txt").read_text(encoding="utf-8")
+
+def load_cases() -> list[dict]:
+    return json.loads(Path("casos_teste.json").read_text(encoding="utf-8"))
+
+def classify(system_prompt: str, ticket: str) -> dict:
+    start_time = time.perf_counter()
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": ticket},
+        ],
+        temperature=0,
+    )
+    latency_ms = (time.perf_counter() - start_time) * 1000
+    text = response.choices[0].message.content.strip()
+    try:
+        result = json.loads(text)
+    except json.JSONDecodeError:
+        result = None
+    return {"resultado": result, "latencia_ms": latency_ms, "custo_usd": 0.0}
+
+# The evaluate_version and main functions are identical to the Gemini version above.
+</code></pre>
+</details>
+
+<details>
+<summary><strong>Track C — Ollama</strong></summary>
+<pre><code>"""avaliar.py — Track C version using Ollama (local, OpenAI-compatible)."""
+import json, time
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama",
+)
+
+def load_prompt(version: str) -> str:
+    return Path(f"prompts/{version}.txt").read_text(encoding="utf-8")
+
+def load_cases() -> list[dict]:
+    return json.loads(Path("casos_teste.json").read_text(encoding="utf-8"))
+
+def classify(system_prompt: str, ticket: str) -> dict:
+    start_time = time.perf_counter()
+    response = client.chat.completions.create(
+        model="llama3.2",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": ticket},
+        ],
+        temperature=0,
+    )
+    latency_ms = (time.perf_counter() - start_time) * 1000
+    text = response.choices[0].message.content.strip()
+    try:
+        result = json.loads(text)
+    except json.JSONDecodeError:
+        result = None
+    return {"resultado": result, "latencia_ms": latency_ms, "custo_usd": 0.0}
+
+# The evaluate_version and main functions are identical to the Gemini version above.
 </code></pre>
 </details>
 

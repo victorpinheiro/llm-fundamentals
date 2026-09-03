@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -192,23 +193,42 @@ Governança, identidade e conformidade vêm da plataforma.</p>
 plataforma que passou por renomeação recente — ver <a href="Volatility_Warning.html">Aviso de Volatilidade</a>.</p>
 <p>Ver <a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a>.</p>
 <hr />
-<h2 id="fazendo-as-duas">Fazendo as duas</h2>
-<p>Recomendado se você tem tempo. A ordem que funciona melhor:</p>
-<ol>
-<li><strong>Faça a Trilha A primeiro</strong> nos módulos 1 a 5.<br />
-   Você aprende os mecanismos sem abstração.</li>
-<li><strong>Mude para a Trilha B</strong> a partir do módulo 6.<br />
-   Agora você reconhece o que a plataforma está abstraindo.</li>
-<li><strong>Nos projetos de agente (P7), faça as duas.</strong><br />
-   Construa o laço de raciocínio na mão, depois refaça com ADK.<br />
-   A comparação é o aprendizado.</li>
-</ol>
-<p>Esse percurso custa cerca de 4 semanas a mais e vale a pena: saber<br />
-posicionar duas plataformas é uma competência que aparece em entrevista.</p>
+<h2 id="trilha-c-provedores-gratuitos">Trilha C — Provedores Gratuitos</h2>
+<p><strong>Estude esta trilha se:</strong><br />
+- Nao quer gastar nada — nenhum cartao de credito necessario<br />
+- Esta aprendendo do zero e quer comecar imediatamente<br />
+- Quer experimentar modelos open-source (Llama, Qwen, Gemma)<br />
+- Precisa de privacidade total com execucao local (Ollama)</p>
+<p><strong>O que voce usa:</strong><br />
+- Google Gemini via AI Studio (gratuito, 1.500 req/dia)<br />
+- Groq (gratuito, API compativel com OpenAI, modelos Llama)<br />
+- Ollama (local, ilimitado, modelos open-source)<br />
+- Chave de API para Gemini e Groq, sem chave para Ollama</p>
+<p><strong>Vantagem:</strong> custo zero, começo em minutos, tres provedores com fallback
+entre eles. Ollama permite uso totalmente offline.</p>
+<p><strong>Desvantagem:</strong> limites de requisicoes por minuto nos provedores cloud,
+modelos open-source podem ser inferiores aos pagos em tarefas complexas,
+sem governanca corporativa.</p>
+<p>Ver <a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a>.</p>
 <hr />
-<h2 id="nao-escolha-por-hype">Não escolha por hype</h2>
-<p>Escolha por onde você vai trabalhar. Se não sabe, escolha a Trilha A —<br />
-os conceitos transferem e o custo de migrar depois é baixo.</p>
+<h2 id="fazendo-as-duas">Fazendo mais de uma trilha</h2>
+<p>Recomendado se voce tem tempo. Algumas combinacoes que funcionam:</p>
+<ul>
+<li><strong>Trilha C primeiro, depois A:</strong> comece sem gastar nada, aprenda os
+conceitos, depois migre para provedores pagos quando precisar de
+qualidade maxima. A migracao e simples porque os conceitos sao os mesmos.</li>
+<li><strong>Trilha C + A em paralelo:</strong> use Trilha C para desenvolvimento e testes
+(custo zero), e Trilha A para comparar qualidade nos projetos de avaliacao.</li>
+<li><strong>Trilha A nos modulos 1 a 5, Trilha B a partir do 6:</strong> aprende os
+mecanismos sem abstracao, depois reconhece o que a plataforma abstrai.</li>
+</ul>
+<p>Saber posicionar mais de uma plataforma e uma competencia que aparece em entrevista.</p>
+<hr />
+<h2 id="nao-escolha-por-hype">Nao escolha por hype</h2>
+<p>Escolha pelo seu contexto. Se nao quer gastar nada, comece pela Trilha C.
+Se sabe onde vai trabalhar, escolha a trilha desse stack. Se nao sabe,
+a Trilha C e a melhor porta de entrada — os conceitos transferem e o
+custo de migrar depois e baixo.</p>
 </article>
 <nav class="pager"><a class="pager-link prev" href="Prerequisites.html">&larr; Pré-requisitos</a><a class="pager-link next" href="Setup_Guide.html">Guia de Setup &rarr;</a></nav>
 <footer class="page-footer">LLM na Prática — Curso Completo · Material educacional livre. Adapte, redistribua, ministre.</footer>

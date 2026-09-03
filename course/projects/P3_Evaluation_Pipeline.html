@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -408,6 +409,184 @@ def resultados():
     return saidas
 
 # Os testes (test_saida_valida, test_acuracia_geral, etc.) são idênticos à Trilha A.
+</code></pre>
+</details>
+
+<details>
+<summary><strong>Track C — Gemini (AI Studio)</strong></summary>
+<pre><code>"""test_regressao.py — Track C version using Gemini (AI Studio, free tier)."""
+import json, os
+import pytest
+from pathlib import Path
+from google import genai
+
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+PROMPT = Path(__file__).parent.parent / "prompts" / "v2.txt"
+
+# Regression thresholds (adjust after the first run)
+THRESHOLD_ACCURACY = 0.85       # 85% correct categories
+THRESHOLD_VALID_OUTPUT = 1.0    # 100% valid JSON
+
+
+@pytest.fixture(scope="module")
+def results():
+    cases = json.loads(
+        (Path(__file__).parent.parent / "conjunto" / "casos.json")
+        .read_text(encoding="utf-8")
+    )
+    prompt = PROMPT.read_text(encoding="utf-8")
+    outputs = []
+
+    for case in cases:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=f"{prompt}\n\nTicket:\n{case['entrada']}",
+        )
+        text = response.text.strip()
+        try:
+            parsed = json.loads(text)
+        except json.JSONDecodeError:
+            parsed = None
+        outputs.append({"caso": case, "parsed": parsed})
+
+    return outputs
+
+
+def test_valid_output(results):
+    valid = sum(1 for r in results if r["parsed"] is not None)
+    rate = valid / len(results)
+    assert rate >= THRESHOLD_VALID_OUTPUT, f"Valid output: {rate:.0%} (min {THRESHOLD_VALID_OUTPUT:.0%})"
+
+
+def test_overall_accuracy(results):
+    correct = sum(
+        1 for r in results
+        if r["parsed"] and r["parsed"].get("categoria") == r["caso"]["esperado_categoria"]
+    )
+    rate = correct / len(results)
+    assert rate >= THRESHOLD_ACCURACY, f"Accuracy: {rate:.0%} (min {THRESHOLD_ACCURACY:.0%})"
+
+
+def test_adversarials_blocked(results):
+    for r in results:
+        if r["caso"]["dificuldade"] == "adversarial":
+            assert r["parsed"] is not None, f"Adversarial {r['caso']['id']}: invalid output"
+            assert r["parsed"].get("categoria") == r["caso"]["esperado_categoria"], (
+                f"Adversarial {r['caso']['id']}: wrong category "
+                f"(expected '{r['caso']['esperado_categoria']}', "
+                f"got '{r['parsed'].get('categoria')}')"
+            )
+
+
+def test_easy_cases_no_regression(results):
+    for r in results:
+        if r["caso"]["dificuldade"] == "facil":
+            assert r["parsed"] is not None, f"Easy {r['caso']['id']}: invalid output"
+            assert r["parsed"].get("categoria") == r["caso"]["esperado_categoria"], (
+                f"Easy {r['caso']['id']}: regressed - "
+                f"expected '{r['caso']['esperado_categoria']}', "
+                f"got '{r['parsed'].get('categoria')}'"
+            )
+</code></pre>
+</details>
+
+<details>
+<summary><strong>Track C — Groq</strong></summary>
+<pre><code>"""test_regressao.py — Track C version using Groq (free tier, OpenAI-compatible)."""
+import json, os
+import pytest
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ["GROQ_API_KEY"],
+    base_url="https://api.groq.com/openai/v1",
+)
+PROMPT = Path(__file__).parent.parent / "prompts" / "v2.txt"
+
+THRESHOLD_ACCURACY = 0.85
+THRESHOLD_VALID_OUTPUT = 1.0
+
+
+@pytest.fixture(scope="module")
+def results():
+    cases = json.loads(
+        (Path(__file__).parent.parent / "conjunto" / "casos.json")
+        .read_text(encoding="utf-8")
+    )
+    prompt = PROMPT.read_text(encoding="utf-8")
+    outputs = []
+
+    for case in cases:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": case["entrada"]},
+            ],
+            temperature=0,
+        )
+        text = response.choices[0].message.content.strip()
+        try:
+            parsed = json.loads(text)
+        except json.JSONDecodeError:
+            parsed = None
+        outputs.append({"caso": case, "parsed": parsed})
+
+    return outputs
+
+# The test functions (test_valid_output, test_overall_accuracy, etc.)
+# are identical to the Gemini version above.
+</code></pre>
+</details>
+
+<details>
+<summary><strong>Track C — Ollama</strong></summary>
+<pre><code>"""test_regressao.py — Track C version using Ollama (local, OpenAI-compatible)."""
+import json
+import pytest
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama",
+)
+PROMPT = Path(__file__).parent.parent / "prompts" / "v2.txt"
+
+THRESHOLD_ACCURACY = 0.85
+THRESHOLD_VALID_OUTPUT = 1.0
+
+
+@pytest.fixture(scope="module")
+def results():
+    cases = json.loads(
+        (Path(__file__).parent.parent / "conjunto" / "casos.json")
+        .read_text(encoding="utf-8")
+    )
+    prompt = PROMPT.read_text(encoding="utf-8")
+    outputs = []
+
+    for case in cases:
+        response = client.chat.completions.create(
+            model="llama3.2",
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": case["entrada"]},
+            ],
+            temperature=0,
+        )
+        text = response.choices[0].message.content.strip()
+        try:
+            parsed = json.loads(text)
+        except json.JSONDecodeError:
+            parsed = None
+        outputs.append({"caso": case, "parsed": parsed})
+
+    return outputs
+
+# The test functions (test_valid_output, test_overall_accuracy, etc.)
+# are identical to the Gemini version above.
 </code></pre>
 </details>
 

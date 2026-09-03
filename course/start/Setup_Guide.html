@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -205,6 +206,24 @@ pip install google-adk          # a partir do Módulo 8
 </code></pre>
 <p>⚠️ Confirme o nome e a versão atual dos pacotes na documentação oficial.<br />
 Ver <a href="Volatility_Warning.html">Aviso de Volatilidade</a>.</p>
+<hr />
+<h2 id="trilha-c-setup-especifico">Trilha C — setup especifico</h2>
+<pre><code class="language-bash">pip install google-genai openai</code></pre>
+<p>O pacote <code>openai</code> serve para Groq e Ollama — ambos usam API compativel
+com OpenAI. Basta mudar a <code>base_url</code>.</p>
+<h3 id="chaves-gratuitas">Chaves gratuitas</h3>
+<p>Obtenha as chaves gratuitamente (nenhum cartao de credito necessario):</p>
+<ul>
+<li><strong>Gemini:</strong> <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> — 1.500 req/dia gratis</li>
+<li><strong>Groq:</strong> <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> — 30 RPM gratis</li>
+</ul>
+<pre><code># .env
+GEMINI_API_KEY=...
+GROQ_API_KEY=gsk_...</code></pre>
+<h3 id="ollama-local">Ollama (local)</h3>
+<p>Instale o <a href="https://ollama.com" target="_blank">Ollama</a> e baixe um modelo:</p>
+<pre><code class="language-bash">ollama pull llama3.2</code></pre>
+<p>Ollama nao precisa de chave — roda na sua maquina em <code>http://localhost:11434</code>.</p>
 <hr />
 <h2 id="obsidian">Obsidian</h2>
 <p>Este curso é um vault Obsidian, mas funciona como markdown puro em<br />

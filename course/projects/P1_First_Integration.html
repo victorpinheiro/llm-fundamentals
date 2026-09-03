@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -432,6 +433,151 @@ def classificar(texto: str) -> ClassificacaoTicket:
         ),
     )
     return resultado</code></pre>
+
+<h4>Track C — Gemini (AI Studio)</h4>
+<pre><code># providers/gemini_provider.py
+import os
+import time
+import json
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from prompt import SYSTEM_PROMPT
+
+load_dotenv()
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+MODEL_NAME = "gemini-2.0-flash"
+
+
+def classificar(texto: str) -> ClassificacaoTicket:
+    start_time = time.time()
+
+    response = client.models.generate_content(
+        model=MODEL_NAME,
+        contents=f"{SYSTEM_PROMPT}\n\nTicket:\n{texto}",
+        config=types.GenerateContentConfig(
+            temperature=0,
+            response_mime_type="application/json",
+            response_schema=ClassificacaoTicket,
+        ),
+    )
+
+    latency_ms = (time.time() - start_time) * 1000
+    data = json.loads(response.text)
+    result = ClassificacaoTicket(**data)
+
+    result._meta = MetaInstrumentacao(
+        modelo=MODEL_NAME,
+        latencia_ms=round(latency_ms, 1),
+        tokens_entrada=response.usage_metadata.prompt_token_count,
+        tokens_saida=response.usage_metadata.candidates_token_count,
+        custo_usd=0.0,  # free tier
+    )
+    return result</code></pre>
+
+<h4>Track C — Groq</h4>
+<pre><code># providers/groq_provider.py
+import os
+import time
+import json
+from dotenv import load_dotenv
+from openai import OpenAI
+from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from prompt import SYSTEM_PROMPT
+
+load_dotenv()
+client = OpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
+
+MODEL_NAME = "llama-3.3-70b-versatile"
+
+
+def classificar(texto: str) -> ClassificacaoTicket:
+    start_time = time.time()
+
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": texto},
+        ],
+        temperature=0,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "ClassificacaoTicket",
+                "strict": True,
+                "schema": ClassificacaoTicket.model_json_schema(),
+            },
+        },
+    )
+
+    latency_ms = (time.time() - start_time) * 1000
+    data = json.loads(response.choices[0].message.content)
+    result = ClassificacaoTicket(**data)
+
+    result._meta = MetaInstrumentacao(
+        modelo=MODEL_NAME,
+        latencia_ms=round(latency_ms, 1),
+        tokens_entrada=response.usage.prompt_tokens,
+        tokens_saida=response.usage.completion_tokens,
+        custo_usd=0.0,  # free tier
+    )
+    return result</code></pre>
+
+<h4>Track C — Ollama</h4>
+<pre><code># providers/ollama_provider.py
+import time
+import json
+from openai import OpenAI
+from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from prompt import SYSTEM_PROMPT
+
+# Ollama runs locally — no API key needed
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama",
+)
+
+MODEL_NAME = "llama3.2"
+
+
+def classificar(texto: str) -> ClassificacaoTicket:
+    start_time = time.time()
+
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": texto},
+        ],
+        temperature=0,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "ClassificacaoTicket",
+                "strict": True,
+                "schema": ClassificacaoTicket.model_json_schema(),
+            },
+        },
+    )
+
+    latency_ms = (time.time() - start_time) * 1000
+    data = json.loads(response.choices[0].message.content)
+    result = ClassificacaoTicket(**data)
+
+    result._meta = MetaInstrumentacao(
+        modelo=MODEL_NAME,
+        latencia_ms=round(latency_ms, 1),
+        tokens_entrada=response.usage.prompt_tokens,
+        tokens_saida=response.usage.completion_tokens,
+        custo_usd=0.0,  # local, no cost
+    )
+    return result</code></pre>
 
 <h3 id="passo-4-instrumentacao">Passo 4 — Entenda a instrumentação</h3>
 <p>Toda chamada a LLM em produção precisa registrar três números: <strong>latência</strong>, <strong>tokens</strong> e <strong>custo</strong>. No código acima, isso já está implementado no objeto <code>MetaInstrumentacao</code>. A fórmula de custo é simples:</p>

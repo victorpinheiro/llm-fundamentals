@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -172,35 +173,35 @@ source .venv/bin/activate</code></pre>
 <p>Confirme que está ativo — o prompt do terminal deve mostrar <code>(.venv)</code> no início da linha.</p>
 
 <h3 id="passo-2-dependencias">2. Instale as dependências</h3>
-<p>Com o ambiente ativo, instale os pacotes necessários para a sua trilha:</p>
-<pre><code># Trilha A — OpenAI + Anthropic
-pip install openai anthropic python-dotenv
-
-# Trilha B — Google Cloud / Vertex AI
-pip install google-cloud-aiplatform python-dotenv</code></pre>
+<p>Com o ambiente ativo, instale os pacotes necessários:</p>
+<pre><code>pip install google-genai groq openai python-dotenv</code></pre>
+<p>O que cada pacote faz:</p>
+<ul>
+<li><code>google-genai</code> — SDK do Google Gemini (provedor principal, gratuito via AI Studio)</li>
+<li><code>groq</code> — SDK da Groq (alternativa gratuita, modelos Llama)</li>
+<li><code>openai</code> — SDK compatível com OpenAI, usado também para conectar ao Ollama (local)</li>
+<li><code>python-dotenv</code> — carrega variáveis do arquivo <code>.env</code></li>
+</ul>
 <p>Salve as dependências para reprodutibilidade:</p>
 <pre><code>pip freeze > requirements.txt</code></pre>
 
 <h3 id="passo-3-credenciais">3. Configure as credenciais</h3>
 <p>Crie um arquivo <code>.env</code> na raiz do projeto. <strong>Nunca comite este arquivo.</strong></p>
 
-<h4>Trilha A — OpenAI + Anthropic</h4>
 <pre><code># .env
-OPENAI_API_KEY=sk-proj-...sua-chave-aqui...
-ANTHROPIC_API_KEY=sk-ant-...sua-chave-aqui...</code></pre>
-<p>Obtenha suas chaves em:</p>
+GEMINI_API_KEY=...sua-chave-aqui...
+GROQ_API_KEY=gsk_...sua-chave-aqui...</code></pre>
+
+<p>Obtenha suas chaves gratuitamente em:</p>
 <ul>
-<li>OpenAI: <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></li>
-<li>Anthropic: <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com/settings/keys</a></li>
+<li><strong>Gemini (principal):</strong> <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> — 1.500 requisições/dia grátis, 15 RPM</li>
+<li><strong>Groq (alternativa):</strong> <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> — 30 RPM grátis</li>
 </ul>
 
-<h4>Trilha B — Google Cloud / Vertex AI</h4>
-<pre><code># .env
-GOOGLE_CLOUD_PROJECT=meu-projeto-id
-GOOGLE_CLOUD_LOCATION=us-central1</code></pre>
-<p>A Trilha B usa <strong>Application Default Credentials</strong> (ADC) — nunca chave de API. Configure com:</p>
-<pre><code>gcloud auth application-default login</code></pre>
-<p>Se ainda não tem o <code>gcloud</code> instalado, siga o <a href="https://cloud.google.com/sdk/docs/install" target="_blank">guia de instalação do Google Cloud CLI</a>.</p>
+<h4>Ollama (opcional — execução local)</h4>
+<p>Se quiser rodar modelos localmente sem depender de API externa, instale o <a href="https://ollama.com" target="_blank">Ollama</a> e baixe um modelo:</p>
+<pre><code>ollama pull llama3.2</code></pre>
+<p>Ollama não precisa de chave de API — roda na sua máquina em <code>http://localhost:11434</code>.</p>
 
 <h3 id="passo-4-gitignore">4. Proteja suas credenciais</h3>
 <p>Crie o <code>.gitignore</code> antes de qualquer <code>git add</code>:</p>
@@ -295,6 +296,72 @@ resposta = modelo.generate_content(
 print(resposta.text)
 print(f"\nTokens — entrada: {resposta.usage_metadata.prompt_token_count}, "
       f"saída: {resposta.usage_metadata.candidates_token_count}")</code></pre>
+
+<h4>Track C — Gemini (AI Studio)</h4>
+<pre><code># hello_gemini.py — Track C (Gemini via AI Studio, free tier)
+import os
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents="Say 'Hello, world!' and explain in one sentence what an LLM is.",
+)
+
+print(response.text)
+print(f"\nTokens — input: {response.usage_metadata.prompt_token_count}, "
+      f"output: {response.usage_metadata.candidates_token_count}")</code></pre>
+
+<h4>Track C — Groq</h4>
+<pre><code># hello_groq.py — Track C (Groq, free tier, OpenAI-compatible)
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
+
+response = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Say 'Hello, world!' and explain in one sentence what an LLM is."},
+    ],
+    temperature=0,
+)
+
+print(response.choices[0].message.content)
+print(f"\nTokens used: {response.usage.total_tokens}")</code></pre>
+
+<h4>Track C — Ollama</h4>
+<pre><code># hello_ollama.py — Track C (Ollama, local, OpenAI-compatible)
+from openai import OpenAI
+
+# Ollama runs locally — no API key needed
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama",
+)
+
+response = client.chat.completions.create(
+    model="llama3.2",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Say 'Hello, world!' and explain in one sentence what an LLM is."},
+    ],
+    temperature=0,
+)
+
+print(response.choices[0].message.content)
+print(f"\nTokens used: {response.usage.total_tokens}")</code></pre>
 
 <h3 id="passo-7-testar">7. Execute e valide</h3>
 <pre><code>python hello.py</code></pre>

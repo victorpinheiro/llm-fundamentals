@@ -62,6 +62,7 @@
 <ul>
 <li><a href="../tracks/Track_A_Guide.html">Trilha A — OpenAI e Anthropic</a></li>
 <li><a href="../tracks/Track_B_Guide.html">Trilha B — Plataforma Corporativa do Google Cloud</a></li>
+<li><a href="../tracks/Track_C_Guide.html">Trilha C — Provedores Gratuitos</a></li>
 <li><a href="../tracks/Track_Comparison.html">Comparação das Trilhas</a></li>
 <li><a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a></li>
 </ul>
@@ -381,6 +382,86 @@ pipeline = SequentialAgent(
 )
 </code></pre>
 
+<h4>Track C — Multi-agent with free providers</h4>
+<p>For Track C, the multi-agent pattern works the same way. Use LangGraph as the
+orchestration framework with any free provider as the LLM backend.</p>
+<pre><code class="language-python">"""p8_multi/orchestrator_free.py — Multi-agent with free providers"""
+import os
+from langgraph.prebuilt import create_react_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.tools import tool
+
+# -- Pick your free provider -------------------------------------------
+# Option 1: Groq (fast, cloud-based, free)
+model = ChatOpenAI(
+    model="llama-3.3-70b-versatile",
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
+
+# Option 2: Ollama (local, free, no API key needed)
+# model = ChatOpenAI(
+#     model="llama3.2",
+#     base_url="http://localhost:11434/v1",
+#     api_key="ollama",
+# )
+
+# Option 3: Gemini via langchain-google-genai
+# from langchain_google_genai import ChatGoogleGenerativeAI
+# model = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+
+# -- Specialists (each with isolated tools) ----------------------------
+@tool
+def search_documents(query: str) -> str:
+    """Search the knowledge base for relevant documents."""
+    from p5_rag.retriever import search
+    import json
+    return json.dumps([{"text": r["text"][:500], "source": r.get("url", "")} for r in search(query)])
+
+@tool
+def analyze_data(data: str) -> str:
+    """Analyze data and return structured conclusions."""
+    import json
+    return json.dumps({"analysis": f"Analysis of: {data[:200]}"})
+
+specialist_search = create_react_agent(model, [search_documents])
+specialist_analysis = create_react_agent(model, [analyze_data])
+
+# -- Orchestration with sequential calls -------------------------------
+def run_multi_agent(question: str) -> str:
+    """Run specialists sequentially and combine results."""
+    # Step 1: Search specialist gathers information
+    search_result = specialist_search.invoke(
+        {"messages": [("user", f"Find relevant information about: {question}")]}
+    )
+    search_output = search_result["messages"][-1].content
+
+    # Step 2: Analysis specialist processes the findings
+    analysis_result = specialist_analysis.invoke(
+        {"messages": [("user", f"Analyze these findings:\n{search_output}\n\nOriginal question: {question}")]}
+    )
+    analysis_output = analysis_result["messages"][-1].content
+
+    # Step 3: Critic evaluates (can use a simpler/cheaper model)
+    critic_response = model.invoke(
+        f"""Evaluate this result with these criteria:
+1. SOURCES: Does the answer cite at least one verifiable source? (pass/fail)
+2. COHERENCE: Does the conclusion follow logically from the data? (pass/fail)
+3. COMPLETENESS: Were all parts of the question answered? (pass/fail)
+
+Result to evaluate:
+{analysis_output}
+
+Reply ONLY with: APPROVED (all pass) or REJECTED (any fail).
+If REJECTED, state which criterion failed and why."""
+    )
+
+    return f"Answer: {analysis_output}\n\nCritic: {critic_response.content}"
+</code></pre>
+<p><strong>Cost note:</strong> With free providers, cost per execution is $0.00. The comparison
+table between P7 and P8 should show $0.00 for both — the decision to use multi-agent
+is driven entirely by latency, quality, and complexity trade-offs, not cost.</p>
+
 <h3>Passo 4 — Implementar sanitização entre agentes</h3>
 <p><strong>Sanitização</strong> significa validar e limpar os dados que um agente passa para outro,
 para evitar que saída malformada ou injetada de um especialista comprometa o próximo.</p>
@@ -532,6 +613,9 @@ não implemente múltiplos agentes.</p>
 <li><a href="https://google.github.io/adk-docs/agents/multi-agents/">Google ADK — Multi-agent systems</a> — SequentialAgent, ParallelAgent, LoopAgent</li>
 <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/agentic-systems#multi-agent-orchestration">Anthropic — Multi-agent orchestration</a> — padrões orquestrador-subagente</li>
 <li><a href="https://docs.pydantic.dev/latest/">Pydantic — Documentação</a> — validação de dados entre agentes</li>
+<li><a href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener">Gemini AI Studio — Documentation (free)</a></li>
+<li><a href="https://console.groq.com/docs/overview" target="_blank" rel="noopener">Groq — API Documentation (free)</a></li>
+<li><a href="https://ollama.com/" target="_blank" rel="noopener">Ollama — Local LLM (free)</a></li>
 </ul>
 <hr />
 <h2 id="extensao-opcional">Extensão opcional</h2>
