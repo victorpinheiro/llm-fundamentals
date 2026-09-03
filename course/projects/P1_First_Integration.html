@@ -579,6 +579,31 @@ def classify(text: str) -> TicketClassification:
     )
     return result</code></pre>
 
+<h3 id="passo-3b-classifier">Passo 3b — Crie o ponto de entrada (<code>classifier.py</code>)</h3>
+<p>Os arquivos em <code>providers/</code> implementam a mesma interface <code>classify(text) → TicketClassification</code>.
+Crie um <code>classifier.py</code> que importa o provider da sua trilha e re-exporta a função:</p>
+<pre><code># classifier.py — single entry point for classification
+# Uncomment the provider for your track:
+
+# Track A — OpenAI
+from providers.openai_provider import classify
+
+# Track A — Anthropic
+# from providers.anthropic_provider import classify
+
+# Track B — Vertex AI
+# from providers.vertexai_provider import classify
+
+# Track C — Gemini (AI Studio)
+# from providers.gemini_provider import classify
+
+# Track C — Groq
+# from providers.groq_provider import classify
+
+# Track C — Ollama
+# from providers.ollama_provider import classify</code></pre>
+<p>Isso permite que <code>compare.py</code> e o código do Passo 6 importem de <code>classifier</code> sem saber qual provider está por trás.</p>
+
 <h3 id="passo-4-instrumentacao">Passo 4 — Entenda a instrumentação</h3>
 <p>Toda chamada a LLM em produção precisa registrar três números: <strong>latência</strong>, <strong>tokens</strong> e <strong>custo</strong>. No código acima, isso já está implementado no objeto <code>InstrumentationMeta</code>. A fórmula de custo é simples:</p>
 <pre><code># cost = (input_tokens * price_input + output_tokens * price_output) / 1_000_000
@@ -683,10 +708,10 @@ if __name__ == "__main__":
 
 <h3 id="passo-6-malformado">Passo 6 — Trate entradas malformadas</h3>
 <p>Sistemas reais recebem lixo. Envolva cada chamada em tratamento de erro robusto:</p>
-<pre><code># In your main classifier.py, wrap the call:
+<pre><code># Add this to classifier.py (created in Step 3b):
 from pydantic import ValidationError
 
-def classify_safe(text: str, classify_fn) -> TicketClassification | dict:
+def classify_safe(text: str, classify_fn=classify) -> TicketClassification | dict:
     """Attempts to classify; raises on failure."""
     if not text or not text.strip():
         return TicketClassification(
