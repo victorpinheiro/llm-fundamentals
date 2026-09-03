@@ -169,17 +169,17 @@ Perguntas do tipo: "qual o procedimento para X?"</p>
 confidencial de nenhuma organização num projeto de aprendizado.</p>
 <hr />
 <h2 id="pipeline">Pipeline</h2>
-<pre><code>Documentos
-  → decisão de fragmentação (justificada)
+<pre><code>Documents
+  → chunking decision (justified)
   → embeddings
-  → índice com metadados
+  → index with metadata
 
-Pergunta
-  → busca vetorial + busca por termo
-  → fusão de postos recíprocos
-  → filtro de permissão
-  → prompt com ancoragem
-  → resposta com citação
+Question
+  → vector search + keyword search
+  → reciprocal rank fusion
+  → permission filter
+  → grounded prompt
+  → response with citation
 </code></pre>
 <hr />
 <h2 id="passo-a-passo">Passo a passo</h2>
@@ -191,13 +191,13 @@ Conhecer o conteúdo é essencial para avaliar se as respostas estão corretas.<
 <p>Estrutura sugerida:</p>
 <pre><code>p5_rag/
 ├── corpus/
-│   ├── 01_introducao.md
-│   ├── 02_instalacao.md
-│   ├── 03_configuracao.md
+│   ├── 01_introduction.md
+│   ├── 02_installation.md
+│   ├── 03_configuration.md
 │   ├── ...
 │   └── 15_faq.md
-├── ingestao.py
-├── recuperador.py
+├── ingestion.py
+├── retriever.py
 ├── rag.py
 └── ...
 </code></pre>
@@ -211,54 +211,54 @@ O tamanho do chunk afeta diretamente a qualidade:</p>
 <li><strong>1000 chars</strong> — bom equilíbrio para a maioria dos casos</li>
 <li><strong>2000 chars</strong> — preserva mais contexto, mas reduz precisão de busca</li>
 </ul>
-<p>Crie <code>ingestao.py</code>:</p>
-<pre><code>"""ingestao.py — carrega documentos, fragmenta e indexa."""
+<p>Crie <code>ingestion.py</code>:</p>
+<pre><code>"""ingestion.py — loads documents, chunks and indexes them."""
 import os, hashlib
 from pathlib import Path
 
-# Opção 1: LangChain text splitters (pip install langchain-text-splitters)
+# Option 1: LangChain text splitters (pip install langchain-text-splitters)
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=1000,
-    chunk_overlap=200,        # sobreposição para não cortar ideias
+    chunk_overlap=200,        # overlap to avoid cutting ideas
     separators=["\n## ", "\n### ", "\n\n", "\n", ". ", " "],
 )
 
-def carregar_documentos(diretorio: str) -> list[dict]:
-    """Carrega todos os .md de um diretório e fragmenta."""
+def load_documents(directory: str) -> list[dict]:
+    """Load all .md files from a directory and chunk them."""
     chunks = []
-    for arquivo in sorted(Path(diretorio).glob("*.md")):
-        texto = arquivo.read_text(encoding="utf-8")
-        pedacos = splitter.split_text(texto)
-        for i, pedaco in enumerate(pedacos):
+    for file in sorted(Path(directory).glob("*.md")):
+        text = file.read_text(encoding="utf-8")
+        pieces = splitter.split_text(text)
+        for i, piece in enumerate(pieces):
             chunks.append({
-                "id": hashlib.md5(f"{arquivo.name}:{i}".encode()).hexdigest(),
-                "texto": pedaco,
+                "id": hashlib.md5(f"{file.name}:{i}".encode()).hexdigest(),
+                "text": piece,
                 "metadata": {
-                    "fonte": arquivo.name,
+                    "source": file.name,
                     "chunk_index": i,
-                    "total_chunks": len(pedacos),
+                    "total_chunks": len(pieces),
                 },
             })
-    print(f"Carregados {len(chunks)} chunks de {diretorio}")
+    print(f"Loaded {len(chunks)} chunks from {directory}")
     return chunks
 
-# Opção 2: Fragmentação manual (sem dependência extra)
-# def fragmentar_manual(texto: str, tamanho=1000, sobreposicao=200) -> list[str]:
+# Option 2: Manual chunking (no extra dependency)
+# def chunk_manual(text: str, size=1000, overlap=200) -> list[str]:
 #     chunks = []
-#     inicio = 0
-#     while inicio < len(texto):
-#         fim = inicio + tamanho
-#         chunks.append(texto[inicio:fim])
-#         inicio = fim - sobreposicao
+#     start = 0
+#     while start < len(text):
+#         end = start + size
+#         chunks.append(text[start:end])
+#         start = end - overlap
 #     return chunks
 
 if __name__ == "__main__":
-    chunks = carregar_documentos("corpus")
+    chunks = load_documents("corpus")
     for c in chunks[:3]:
-        print(f"[{c['metadata']['fonte']}] chunk {c['metadata']['chunk_index']}: "
-              f"{c['texto'][:80]}...")
+        print(f"[{c['metadata']['source']}] chunk {c['metadata']['chunk_index']}: "
+              f"{c['text'][:80]}...")
 </code></pre>
 
 <h3>Passo 3 — Gere embeddings</h3>
@@ -269,13 +269,13 @@ if __name__ == "__main__":
 
 client = OpenAI()
 
-def gerar_embeddings(textos: list[str]) -> list[list[float]]:
-    """Gera embeddings para uma lista de textos."""
-    resposta = client.embeddings.create(
+def generate_embeddings(texts: list[str]) -> list[list[float]]:
+    """Generate embeddings for a list of texts."""
+    response = client.embeddings.create(
         model="text-embedding-3-small",
-        input=textos,
+        input=texts,
     )
-    return [item.embedding for item in resposta.data]
+    return [item.embedding for item in response.data]
 </code></pre>
 
 <p><strong>Trilha B — Vertex AI:</strong></p>
@@ -283,13 +283,13 @@ def gerar_embeddings(textos: list[str]) -> list[list[float]]:
 
 client = genai.Client(vertexai=True, project="SEU_PROJETO", location="us-central1")
 
-def gerar_embeddings(textos: list[str]) -> list[list[float]]:
-    """Gera embeddings com Vertex AI."""
-    resultado = client.models.embed_content(
+def generate_embeddings(texts: list[str]) -> list[list[float]]:
+    """Generate embeddings with Vertex AI."""
+    result = client.models.embed_content(
         model="text-embedding-005",
-        contents=textos,
+        contents=texts,
     )
-    return [e.values for e in resultado.embeddings]
+    return [e.values for e in result.embeddings]
 </code></pre>
 
 <h4>Track C — Gemini (AI Studio)</h4>
@@ -333,39 +333,39 @@ than batched APIs but has zero cost and no rate limits.</p>
 <h3>Passo 4 — Configure o vector store com ChromaDB</h3>
 <p>ChromaDB é a opção mais simples para aprendizado: instale com <code>pip install chromadb</code>,
 sem servidor, sem configuração. Os dados ficam num diretório local.</p>
-<pre><code>"""Continuação de ingestao.py — indexação no ChromaDB."""
+<pre><code>"""Continuation of ingestion.py — indexing in ChromaDB."""
 import chromadb
 
-# Cria (ou abre) a coleção local
+# Create (or open) the local collection
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 collection = chroma_client.get_or_create_collection(
-    name="documentos",
-    metadata={"hnsw:space": "cosine"},   # distância cosseno
+    name="documents",
+    metadata={"hnsw:space": "cosine"},   # cosine distance
 )
 
-def indexar(chunks: list[dict]):
-    """Gera embeddings e adiciona ao ChromaDB."""
-    textos = [c["texto"] for c in chunks]
+def index_chunks(chunks: list[dict]):
+    """Generate embeddings and add to ChromaDB."""
+    texts = [c["text"] for c in chunks]
     ids = [c["id"] for c in chunks]
     metadatas = [c["metadata"] for c in chunks]
 
-    # Gera embeddings em lotes de 100
+    # Generate embeddings in batches of 100
     embeddings = []
-    for i in range(0, len(textos), 100):
-        lote = textos[i:i+100]
-        embeddings.extend(gerar_embeddings(lote))
+    for i in range(0, len(texts), 100):
+        batch = texts[i:i+100]
+        embeddings.extend(generate_embeddings(batch))
 
     collection.add(
         ids=ids,
         embeddings=embeddings,
-        documents=textos,
+        documents=texts,
         metadatas=metadatas,
     )
-    print(f"Indexados {len(chunks)} chunks no ChromaDB")
+    print(f"Indexed {len(chunks)} chunks in ChromaDB")
 
 if __name__ == "__main__":
-    chunks = carregar_documentos("corpus")
-    indexar(chunks)
+    chunks = load_documents("corpus")
+    index_chunks(chunks)
 </code></pre>
 
 <h3>Passo 5 — Implemente busca híbrida</h3>
@@ -375,261 +375,256 @@ A fusão de postos recíprocos (Reciprocal Rank Fusion — RRF) combina os dois 
 <p><strong>Algoritmo RRF:</strong> para cada documento que aparece em qualquer ranking,
 some <code>1 / (k + posição)</code> de cada ranking onde ele aparece. O <code>k</code> é uma constante
 (tipicamente 60) que controla o peso de posições altas. Ordene pelo score combinado.</p>
-<pre><code>"""recuperador.py — busca híbrida: vetorial + BM25 com RRF."""
+<pre><code>"""retriever.py — hybrid search: vector + BM25 with RRF."""
 import chromadb
 from rank_bm25 import BM25Okapi    # pip install rank_bm25
 
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
-collection = chroma_client.get_collection("documentos")
+collection = chroma_client.get_collection("documents")
 
-# Carrega todos os documentos para o BM25
-todos = collection.get(include=["documents", "metadatas"])
-corpus_texto = todos["documents"]
-corpus_ids = todos["ids"]
-corpus_meta = todos["metadatas"]
+# Load all documents for BM25
+all_docs = collection.get(include=["documents", "metadatas"])
+corpus_text = all_docs["documents"]
+corpus_ids = all_docs["ids"]
+corpus_meta = all_docs["metadatas"]
 
-# Tokenização simples para BM25
-corpus_tokenizado = [doc.lower().split() for doc in corpus_texto]
-bm25 = BM25Okapi(corpus_tokenizado)
+# Simple tokenization for BM25
+tokenized_corpus = [doc.lower().split() for doc in corpus_text]
+bm25 = BM25Okapi(tokenized_corpus)
 
-def busca_vetorial(pergunta: str, top_k: int = 10) -> list[dict]:
-    """Busca por similaridade semântica no ChromaDB."""
-    from ingestao import gerar_embeddings
-    emb = gerar_embeddings([pergunta])[0]
-    resultados = collection.query(query_embeddings=[emb], n_results=top_k,
-                                  include=["documents", "metadatas", "distances"])
+def vector_search(question: str, top_k: int = 10) -> list[dict]:
+    """Search by semantic similarity in ChromaDB."""
+    from ingestion import generate_embeddings
+    emb = generate_embeddings([question])[0]
+    results = collection.query(query_embeddings=[emb], n_results=top_k,
+                               include=["documents", "metadatas", "distances"])
     return [
-        {"id": resultados["ids"][0][i], "texto": resultados["documents"][0][i],
-         "metadata": resultados["metadatas"][0][i], "score": 1 - resultados["distances"][0][i]}
-        for i in range(len(resultados["ids"][0]))
+        {"id": results["ids"][0][i], "text": results["documents"][0][i],
+         "metadata": results["metadatas"][0][i], "score": 1 - results["distances"][0][i]}
+        for i in range(len(results["ids"][0]))
     ]
 
-def busca_bm25(pergunta: str, top_k: int = 10) -> list[dict]:
-    """Busca por palavras-chave com BM25."""
-    tokens = pergunta.lower().split()
+def bm25_search(question: str, top_k: int = 10) -> list[dict]:
+    """Keyword search with BM25."""
+    tokens = question.lower().split()
     scores = bm25.get_scores(tokens)
     indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
     return [
-        {"id": corpus_ids[i], "texto": corpus_texto[i],
+        {"id": corpus_ids[i], "text": corpus_text[i],
          "metadata": corpus_meta[i], "score": float(scores[i])}
         for i in indices if scores[i] > 0
     ]
 
-def fusao_rrf(resultados_vetorial: list, resultados_bm25: list, k: int = 60) -> list[dict]:
-    """Reciprocal Rank Fusion — combina dois rankings."""
+def rrf_fusion(vector_results: list, bm25_results: list, k: int = 60) -> list[dict]:
+    """Reciprocal Rank Fusion — combines two rankings."""
     scores = {}
     docs = {}
-    for ranking in [resultados_vetorial, resultados_bm25]:
-        for posicao, doc in enumerate(ranking):
+    for ranking in [vector_results, bm25_results]:
+        for position, doc in enumerate(ranking):
             doc_id = doc["id"]
-            scores[doc_id] = scores.get(doc_id, 0) + 1.0 / (k + posicao + 1)
+            scores[doc_id] = scores.get(doc_id, 0) + 1.0 / (k + position + 1)
             docs[doc_id] = doc
-    ordenados = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    return [docs[doc_id] for doc_id, _ in ordenados]
+    sorted_results = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    return [docs[doc_id] for doc_id, _ in sorted_results]
 
-def recuperar(pergunta: str, top_k: int = 5) -> list[dict]:
-    """Busca híbrida completa: vetorial + BM25 + RRF."""
-    vetorial = busca_vetorial(pergunta, top_k=10)
-    keyword = busca_bm25(pergunta, top_k=10)
-    combinados = fusao_rrf(vetorial, keyword)
-    return combinados[:top_k]
+def retrieve(question: str, top_k: int = 5) -> list[dict]:
+    """Complete hybrid search: vector + BM25 + RRF."""
+    vector = vector_search(question, top_k=10)
+    keyword = bm25_search(question, top_k=10)
+    combined = rrf_fusion(vector, keyword)
+    return combined[:top_k]
 </code></pre>
 
 <h3>Passo 6 — Construa o pipeline RAG</h3>
 <p>Crie <code>rag.py</code> que conecta recuperação à geração com ancoragem e citação:</p>
-<pre><code>"""rag.py — pipeline completo de RAG com citação de fontes."""
-from recuperador import recuperar
+<pre><code>"""rag.py — complete RAG pipeline with source citation."""
+from retriever import retrieve
 
-# === Trilha A ===
+# === Track A ===
 from openai import OpenAI
 client = OpenAI()
-MODELO = "gpt-4o-mini"
+MODEL = "gpt-4o-mini"
 
-# === Trilha B (descomente) ===
+# === Track B (uncomment) ===
 # from google import genai
-# client = genai.Client(vertexai=True, project="SEU_PROJETO", location="us-central1")
-# MODELO = "gemini-2.0-flash"
+# client = genai.Client(vertexai=True, project="YOUR_PROJECT", location="us-central1")
+# MODEL = "gemini-2.0-flash"
 
-PROMPT_SISTEMA = """\
-Você é um assistente que responde perguntas com base EXCLUSIVAMENTE nos trechos
-fornecidos abaixo. Regras:
+SYSTEM_PROMPT = """\
+You are an assistant that answers questions based EXCLUSIVELY on the excerpts
+provided below. Rules:
 
-1. Use APENAS informações presentes nos trechos. Não invente.
-2. Cite a fonte entre colchetes: [nome_do_arquivo.md]
-3. Se nenhum trecho contiver a resposta, diga: "Não encontrei essa informação
-   nos documentos disponíveis."
-4. Se a resposta estiver parcialmente nos trechos, responda o que puder e
-   indique o que não encontrou.
+1. Use ONLY information present in the excerpts. Do not make things up.
+2. Cite the source in brackets: [filename.md]
+3. If no excerpt contains the answer, say: "I could not find this information
+   in the available documents."
+4. If the answer is only partially in the excerpts, answer what you can and
+   indicate what you did not find.
 """
 
-def montar_contexto(chunks: list[dict]) -> str:
-    """Formata os chunks recuperados como contexto para o prompt."""
-    blocos = []
+def build_context(chunks: list[dict]) -> str:
+    """Format retrieved chunks as context for the prompt."""
+    blocks = []
     for i, chunk in enumerate(chunks, 1):
-        fonte = chunk["metadata"]["fonte"]
-        blocos.append(f"[Trecho {i} — {fonte}]\n{chunk['texto']}")
-    return "\n\n---\n\n".join(blocos)
+        source = chunk["metadata"]["source"]
+        blocks.append(f"[Excerpt {i} — {source}]\n{chunk['text']}")
+    return "\n\n---\n\n".join(blocks)
 
-def perguntar(pergunta: str, top_k: int = 5) -> dict:
-    """Pipeline completo: recupera, monta prompt, gera resposta."""
-    # 1. Recuperar chunks relevantes
-    chunks = recuperar(pergunta, top_k=top_k)
+def ask(question: str, top_k: int = 5) -> dict:
+    """Complete pipeline: retrieve, build prompt, generate response."""
+    # 1. Retrieve relevant chunks
+    chunks = retrieve(question, top_k=top_k)
 
     if not chunks:
         return {
-            "resposta": "Não encontrei essa informação nos documentos disponíveis.",
-            "fontes": [],
-            "chunks_usados": 0,
+            "answer": "I could not find this information in the available documents.",
+            "sources": [],
+            "chunks_used": 0,
         }
 
-    # 2. Montar prompt com contexto
-    contexto = montar_contexto(chunks)
-    prompt_usuario = f"Contexto:\n{contexto}\n\n---\nPergunta: {pergunta}"
+    # 2. Build prompt with context
+    context = build_context(chunks)
+    user_prompt = f"Context:\n{context}\n\n---\nQuestion: {question}"
 
-    # 3. Gerar resposta (Trilha A)
+    # 3. Generate response (Track A)
     resp = client.chat.completions.create(
-        model=MODELO,
+        model=MODEL,
         messages=[
-            {"role": "system", "content": PROMPT_SISTEMA},
-            {"role": "user", "content": prompt_usuario},
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_prompt},
         ],
         temperature=0,
     )
-    resposta = resp.choices[0].message.content
+    answer = resp.choices[0].message.content
 
-    # Trilha B:
+    # Track B:
     # resp = client.models.generate_content(
-    #     model=MODELO,
-    #     contents=f"{PROMPT_SISTEMA}\n\n{prompt_usuario}",
+    #     model=MODEL,
+    #     contents=f"{SYSTEM_PROMPT}\n\n{user_prompt}",
     # )
-    # resposta = resp.text
+    # answer = resp.text
 
     # === Track C — Gemini (AI Studio) ===
     # from google import genai
     # client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-    # MODELO = "gemini-2.0-flash"
+    # MODEL = "gemini-2.0-flash"
     # resp = client.models.generate_content(
-    #     model=MODELO,
-    #     contents=f"{PROMPT_SISTEMA}\n\n{prompt_usuario}",
+    #     model=MODEL,
+    #     contents=f"{SYSTEM_PROMPT}\n\n{user_prompt}",
     # )
-    # resposta = resp.text
+    # answer = resp.text
 
     # === Track C — Groq ===
     # from openai import OpenAI
     # client = OpenAI(api_key=os.getenv("GROQ_API_KEY"), base_url="https://api.groq.com/openai/v1")
-    # MODELO = "llama-3.3-70b-versatile"
+    # MODEL = "llama-3.3-70b-versatile"
     # resp = client.chat.completions.create(
-    #     model=MODELO,
+    #     model=MODEL,
     #     messages=[
-    #         {"role": "system", "content": PROMPT_SISTEMA},
-    #         {"role": "user", "content": prompt_usuario},
+    #         {"role": "system", "content": SYSTEM_PROMPT},
+    #         {"role": "user", "content": user_prompt},
     #     ],
     #     temperature=0,
     # )
-    # resposta = resp.choices[0].message.content
+    # answer = resp.choices[0].message.content
 
     # === Track C — Ollama ===
     # from openai import OpenAI
     # client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
-    # MODELO = "llama3.2"
+    # MODEL = "llama3.2"
     # resp = client.chat.completions.create(
-    #     model=MODELO,
+    #     model=MODEL,
     #     messages=[
-    #         {"role": "system", "content": PROMPT_SISTEMA},
-    #         {"role": "user", "content": prompt_usuario},
+    #         {"role": "system", "content": SYSTEM_PROMPT},
+    #         {"role": "user", "content": user_prompt},
     #     ],
     #     temperature=0,
     # )
-    # resposta = resp.choices[0].message.content
+    # answer = resp.choices[0].message.content
 
-    # 4. Extrair fontes citadas
-    fontes = list(set(c["metadata"]["fonte"] for c in chunks))
+    # 4. Extract cited sources
+    sources = list(set(c["metadata"]["source"] for c in chunks))
 
     return {
-        "resposta": resposta,
-        "fontes": fontes,
-        "chunks_usados": len(chunks),
-        "pergunta": pergunta,
+        "answer": answer,
+        "sources": sources,
+        "chunks_used": len(chunks),
+        "question": question,
     }
 
 if __name__ == "__main__":
-    resultado = perguntar("Qual o procedimento para configurar o ambiente?")
-    print(f"Resposta: {resultado['resposta']}")
-    print(f"Fontes: {', '.join(resultado['fontes'])}")
+    result = ask("Qual o procedimento para configurar o ambiente?")
+    print(f"Response: {result['answer']}")
+    print(f"Sources: {', '.join(result['sources'])}")
 </code></pre>
 
 <h3>Passo 7 — Teste os modos de falha</h3>
 <p>Cada modo de falha deve virar um teste automatizado. Crie <code>testes/test_modos_falha.py</code>:</p>
 <pre><code>"""test_modos_falha.py — testa os 6 modos de falha do RAG."""
 from rag import perguntar
-from recuperador import recuperar
+from retriever import retrieve
 
-# 1. Descasamento semântico — sinônimo encontra o documento?
-def test_descasamento_semantico():
-    """O documento fala 'instalar', a pergunta usa 'configurar o setup'."""
-    resultado = recuperar("como configurar o setup inicial")
-    fontes = [c["metadata"]["fonte"] for c in resultado]
-    # Deve encontrar o documento de instalação mesmo com palavras diferentes
-    assert any("instal" in f.lower() for f in fontes), \
-        f"Busca por sinônimo falhou. Fontes encontradas: {fontes}"
+# 1. Semantic mismatch — does a synonym find the document?
+def test_semantic_mismatch():
+    """Document says 'install', query uses 'configure the setup'."""
+    result = retrieve("how to configure the initial setup")
+    sources = [c["metadata"]["source"] for c in result]
+    assert any("instal" in s.lower() for s in sources), \
+        f"Synonym search failed. Sources found: {sources}"
 
-# 2. Fragmentação — resposta que cruza dois chunks
-def test_resposta_cruza_chunks():
-    """Pergunta cuja resposta está dividida entre dois trechos consecutivos."""
-    resultado = perguntar("Explique o processo completo de instalação e configuração")
-    # A resposta deve mencionar conteúdo de mais de um trecho
-    assert resultado["chunks_usados"] >= 2, \
-        "Esperava usar pelo menos 2 chunks para resposta completa"
+# 2. Chunking — answer that spans two chunks
+def test_answer_crosses_chunks():
+    """Question whose answer is split across two consecutive chunks."""
+    result = ask("Explain the full installation and configuration process")
+    assert result["chunks_used"] >= 2, \
+        "Expected at least 2 chunks for a complete answer"
 
-# 3. Corte curto (top-k insuficiente)
-def test_corte_curto():
-    """Aumentar top_k melhora a resposta?"""
-    r_curto = perguntar("Descreva todas as opções de configuração", top_k=2)
-    r_longo = perguntar("Descreva todas as opções de configuração", top_k=8)
-    # A resposta com mais chunks deve ser mais completa (mais caracteres)
-    assert len(r_longo["resposta"]) >= len(r_curto["resposta"]) * 0.8, \
-        "top_k maior não melhorou a resposta — investigue a recuperação"
+# 3. Short cutoff (insufficient top-k)
+def test_short_cutoff():
+    """Does increasing top_k improve the answer?"""
+    r_short = ask("Describe all configuration options", top_k=2)
+    r_long = ask("Describe all configuration options", top_k=8)
+    assert len(r_long["answer"]) >= len(r_short["answer"]) * 0.8, \
+        "Higher top_k did not improve the answer — investigate retrieval"
 
-# 4. Índice desatualizado
-def test_indice_desatualizado():
-    """Após alterar um documento, a busca reflete a mudança?"""
-    # Este teste requer re-indexação — documente o procedimento
-    # No mínimo, verifique que re-indexar com documento alterado funciona
-    pass  # Implemente com seu corpus específico
+# 4. Stale index
+def test_stale_index():
+    """After modifying a document, does search reflect the change?"""
+    # This test requires re-indexing — document the procedure
+    pass  # Implement with your specific corpus
 
-# 5. Contaminação — trecho irrelevante degrada a resposta?
-def test_contaminacao():
-    """Injeta chunk irrelevante e verifica se a resposta ignora."""
-    resultado = perguntar("Qual a versão mínima do Python necessária?")
-    # A resposta NÃO deve conter informação de trechos não relacionados
-    assert "receita de bolo" not in resultado["resposta"].lower(), \
-        "Modelo incorporou conteúdo irrelevante na resposta"
+# 5. Contamination — does an irrelevant chunk degrade the answer?
+def test_contamination():
+    """Injects irrelevant chunk and checks if the answer ignores it."""
+    result = ask("What is the minimum Python version required?")
+    assert "cake recipe" not in result["answer"].lower(), \
+        "Model incorporated irrelevant content in the answer"
 
-# 6. Alucinação apesar do contexto
-def test_alucinacao_com_contexto():
-    """Pergunta algo que NÃO está nos documentos."""
-    resultado = perguntar("Qual a previsão do tempo para amanhã em Curitiba?")
-    resposta_lower = resultado["resposta"].lower()
-    assert any(frase in resposta_lower for frase in [
-        "não encontrei", "não há informação", "não consta",
-        "documentos disponíveis", "não possuo"
-    ]), f"Modelo deveria dizer que não encontrou, mas respondeu: {resultado['resposta'][:100]}"
+# 6. Hallucination despite context
+def test_hallucination_with_context():
+    """Ask something NOT in the documents."""
+    result = ask("What is the weather forecast for tomorrow in London?")
+    answer_lower = result["answer"].lower()
+    assert any(phrase in answer_lower for phrase in [
+        "not found", "no information", "not available",
+        "available documents", "cannot find"
+    ]), f"Model should say it didn't find info, but answered: {result['answer'][:100]}"
 
 if __name__ == "__main__":
-    testes = [
-        test_descasamento_semantico,
-        test_resposta_cruza_chunks,
-        test_corte_curto,
-        test_indice_desatualizado,
-        test_contaminacao,
-        test_alucinacao_com_contexto,
+    tests = [
+        test_semantic_mismatch,
+        test_answer_crosses_chunks,
+        test_short_cutoff,
+        test_stale_index,
+        test_contamination,
+        test_hallucination_with_context,
     ]
-    for teste in testes:
+    for test in tests:
         try:
-            teste()
-            print(f"  PASS  {teste.__name__}")
+            test()
+            print(f"  PASS  {test.__name__}")
         except (AssertionError, Exception) as e:
-            print(f"  FAIL  {teste.__name__}: {e}")
+            print(f"  FAIL  {test.__name__}: {e}")
 </code></pre>
 
 <hr />
@@ -695,16 +690,16 @@ if __name__ == "__main__":
 <hr />
 <h2 id="entregavel">Entregável</h2>
 <pre><code>p5_rag/
-├── ingestao.py
-├── recuperador.py          # híbrido
+├── ingestion.py
+├── retriever.py            # hybrid
 ├── rag.py
-├── avaliacao/
-│   ├── casos.json
-│   └── resultados.md
-├── testes/
-│   └── test_modos_falha.py
+├── evaluation/
+│   ├── cases.json
+│   └── results.md
+├── tests/
+│   └── test_failure_modes.py
 └── docs/
-    └── decisoes.md
+    └── decisions.md
 </code></pre>
 <hr />
 <h2 id="definition-of-done">Definition of Done</h2>

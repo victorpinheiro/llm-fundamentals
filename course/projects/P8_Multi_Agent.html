@@ -168,7 +168,7 @@ projeto é o documento explicando isso, com os números.</p>
 Boa parte dos sistemas multi-agente em produção não deveria existir.</p>
 <hr />
 <h2 id="se-justificar">Se justificar</h2>
-<pre><code>Entrada → Orquestrador → [Especialista A ‖ Especialista B] → Crítico → Saída
+<pre><code>Input → Orchestrator → [Specialist A ‖ Specialist B] → Critic → Output
 </code></pre>
 <p>Regras:<br />
 - Cada especialista recebe apenas suas ferramentas<br />
@@ -220,29 +220,29 @@ Boa parte dos sistemas multi-agente em produção não deveria existir.</p>
 <h3>Passo 1 — Avaliar se múltiplos agentes se justificam</h3>
 <p>Antes de escrever qualquer código, preencha o documento de decisão com números reais do P7.
 Use este template como ponto de partida para <code>docs/decisao.md</code>:</p>
-<pre><code># Documento de Decisão: Agente Único vs. Múltiplos Agentes
+<pre><code># Decision Document: Single Agent vs. Multi-Agent
 
-## Pergunta 1 — Há subtarefas com capacidades fundamentalmente diferentes?
-[Liste as subtarefas do seu agente P7 e as ferramentas que cada uma usa.
-Se todas usam o mesmo conjunto de ferramentas, a resposta é não.]
+## Question 1 — Are there subtasks with fundamentally different capabilities?
+[List your P7 agent's subtasks and the tools each one uses.
+If they all use the same set of tools, the answer is no.]
 
-## Pergunta 2 — Paralelismo reduziria o tempo total de forma substancial?
-[Meça a latência das subtarefas individualmente. Se são sequenciais por
-natureza (saída de uma alimenta a próxima), paralelismo não ajuda.]
+## Question 2 — Would parallelism reduce total time substantially?
+[Measure the latency of subtasks individually. If they are sequential by
+nature (one's output feeds the next), parallelism does not help.]
 
-## Pergunta 3 — O contexto combinado estoura a janela?
-[Some o tamanho médio dos contextos. Se cabe na janela com folga, não
-há necessidade de separar agentes para economizar contexto.]
+## Question 3 — Does the combined context overflow the window?
+[Sum the average context sizes. If it fits in the window with room to spare,
+there is no need to separate agents to save context.]
 
-## Conclusão
-[Agente único é suficiente / Múltiplos agentes se justificam porque ___]
+## Conclusion
+[Single agent is sufficient / Multi-agent is justified because ___]
 </code></pre>
 <p><strong>Exemplo de conclusão "não implementar":</strong></p>
-<pre><code>Meu agente P7 executa todas as tarefas em média 3.2s a $0.004/chamada.
-As subtarefas (busca, análise, resposta) usam as mesmas ferramentas.
-Paralelismo economizaria ~1s mas adicionaria complexidade de orquestração.
-Contexto em 2k tokens, bem dentro da janela de 128k.
-Conclusão: agente único é suficiente. O ganho não justifica a complexidade.
+<pre><code>My P7 agent runs all tasks in an average of 3.2s at $0.004/call.
+The subtasks (search, analysis, response) use the same tools.
+Parallelism would save ~1s but would add orchestration complexity.
+Context at 2k tokens, well within the 128k window.
+Conclusion: single agent is sufficient. The gain does not justify the complexity.
 </code></pre>
 <p>Isso <em>é</em> o entregável. Não precisa ir ao Passo 2.</p>
 
@@ -250,30 +250,30 @@ Conclusão: agente único é suficiente. O ganho não justifica a complexidade.
 <p>Se a análise mostrou justificativa, projete a arquitetura usando o padrão
 <strong>Orquestrador-Especialista-Crítico</strong>:</p>
 <pre><code>┌─────────────────────────────────────────────────────────┐
-│                    ORQUESTRADOR                         │
-│  - Recebe a requisição do usuário                       │
-│  - Decide qual(is) especialista(s) acionar              │
-│  - Agrega os resultados                                 │
-│  - Controla orçamento de tokens                         │
+│                    ORCHESTRATOR                         │
+│  - Receives user request                                │
+│  - Decides which specialist(s) to invoke                │
+│  - Aggregates results                                   │
+│  - Controls token budget                                │
 └──────────┬──────────────────────┬───────────────────────┘
            │                      │
      ┌─────▼─────┐         ┌─────▼─────┐
-     │ ESPEC. A  │         │ ESPEC. B  │
+     │ SPEC. A   │         │ SPEC. B   │
      │           │         │           │
      │ tools: [  │         │ tools: [  │
-     │  busca,   │         │  cálculo, │
-     │  leitura  │         │  gráfico  │
+     │  search,  │         │  calc,    │
+     │  read     │         │  chart    │
      │ ]         │         │ ]         │
      └─────┬─────┘         └─────┬─────┘
            │                      │
            └──────────┬───────────┘
                 ┌─────▼─────┐
-                │  CRÍTICO  │
+                │  CRITIC   │
                 │           │
-                │ Avalia o  │
-                │ resultado │
-                │ combinado │
-                │ com pass/ │
+                │ Evaluates │
+                │ combined  │
+                │ result    │
+                │ with pass/│
                 │ fail      │
                 └───────────┘
 </code></pre>
@@ -290,95 +290,95 @@ Conclusão: agente único é suficiente. O ganho não justifica a complexidade.
 <pre><code class="language-python">from agents import Agent, Runner
 import asyncio
 
-# --- Especialistas (cada um com ferramentas isoladas) ---
-especialista_busca = Agent(
-    name="Buscador",
-    instructions="Você busca informações relevantes. Retorne apenas fatos.",
-    tools=[ferramenta_busca],  # Só recebe as ferramentas que precisa
+# --- Specialists (each with isolated tools) ---
+search_specialist = Agent(
+    name="Searcher",
+    instructions="You search for relevant information. Return only facts.",
+    tools=[search_tool],  # Only gets the tools it needs
 )
 
-especialista_analise = Agent(
-    name="Analista",
-    instructions="Você analisa dados e produz conclusões estruturadas.",
-    tools=[ferramenta_calculo],
+analysis_specialist = Agent(
+    name="Analyst",
+    instructions="You analyze data and produce structured conclusions.",
+    tools=[calculation_tool],
 )
 
-# --- Crítico ---
-critico = Agent(
-    name="Critico",
-    instructions="""Avalie o resultado combinado com estes critérios:
-1. FONTES: A resposta cita pelo menos uma fonte verificável? (pass/fail)
-2. COERÊNCIA: A conclusão segue logicamente dos dados? (pass/fail)
-3. COMPLETUDE: Todas as partes da pergunta foram respondidas? (pass/fail)
+# --- Critic ---
+critic = Agent(
+    name="Critic",
+    instructions="""Evaluate the combined result with these criteria:
+1. SOURCES: Does the answer cite at least one verifiable source? (pass/fail)
+2. COHERENCE: Does the conclusion follow logically from the data? (pass/fail)
+3. COMPLETENESS: Were all parts of the question answered? (pass/fail)
 
-Responda APENAS com: APROVADO (todos pass) ou REPROVADO (qualquer fail).
-Se REPROVADO, diga qual critério falhou e por quê.""",
+Reply ONLY with: APPROVED (all pass) or REJECTED (any fail).
+If REJECTED, state which criterion failed and why.""",
 )
 
-# --- Orquestrador ---
-orquestrador = Agent(
-    name="Orquestrador",
-    instructions="Coordene os especialistas para responder à pergunta do usuário.",
-    handoffs=[especialista_busca, especialista_analise, critico],
+# --- Orchestrator ---
+orchestrator = Agent(
+    name="Orchestrator",
+    instructions="Coordinate the specialists to answer the user's question.",
+    handoffs=[search_specialist, analysis_specialist, critic],
 )
 
-async def executar(pergunta: str):
-    resultado = await Runner.run(orquestrador, input=pergunta)
-    return resultado.final_output
+async def execute(question: str):
+    result = await Runner.run(orchestrator, input=question)
+    return result.final_output
 </code></pre>
 
 <h4>Trilha B — Google ADK</h4>
 <pre><code class="language-python">from google.adk.agents import Agent, SequentialAgent, ParallelAgent
 from google.adk.tools import FunctionTool
 
-# --- Ferramentas isoladas por especialista ---
-def buscar_documentos(query: str) -> str:
-    """Busca documentos relevantes para a query."""
-    # implementação da busca
-    return resultados
+# --- Isolated tools per specialist ---
+def search_documents(query: str) -> str:
+    """Search for documents relevant to the query."""
+    # search implementation
+    return results
 
-def analisar_dados(dados: str) -> str:
-    """Analisa dados e retorna conclusões estruturadas."""
-    # implementação da análise
-    return conclusoes
+def analyze_data(data: str) -> str:
+    """Analyze data and return structured conclusions."""
+    # analysis implementation
+    return conclusions
 
-# --- Especialistas ---
-especialista_busca = Agent(
+# --- Specialists ---
+search_specialist = Agent(
     model="gemini-2.0-flash",
-    name="buscador",
-    instruction="Você busca informações relevantes. Retorne apenas fatos.",
-    tools=[FunctionTool(buscar_documentos)],
+    name="searcher",
+    instruction="You search for relevant information. Return only facts.",
+    tools=[FunctionTool(search_documents)],
 )
 
-especialista_analise = Agent(
+analysis_specialist = Agent(
     model="gemini-2.0-flash",
-    name="analista",
-    instruction="Você analisa dados e produz conclusões estruturadas.",
-    tools=[FunctionTool(analisar_dados)],
+    name="analyst",
+    instruction="You analyze data and produce structured conclusions.",
+    tools=[FunctionTool(analyze_data)],
 )
 
-# --- Execução paralela dos especialistas ---
-especialistas_paralelos = ParallelAgent(
-    name="especialistas",
-    sub_agents=[especialista_busca, especialista_analise],
+# --- Parallel execution of specialists ---
+parallel_specialists = ParallelAgent(
+    name="specialists",
+    sub_agents=[search_specialist, analysis_specialist],
 )
 
-# --- Crítico ---
-critico = Agent(
+# --- Critic ---
+critic = Agent(
     model="gemini-2.0-flash",
-    name="critico",
-    instruction="""Avalie o resultado combinado com estes critérios:
-1. FONTES: A resposta cita pelo menos uma fonte verificável? (pass/fail)
-2. COERÊNCIA: A conclusão segue logicamente dos dados? (pass/fail)
-3. COMPLETUDE: Todas as partes da pergunta foram respondidas? (pass/fail)
+    name="critic",
+    instruction="""Evaluate the combined result with these criteria:
+1. SOURCES: Does the answer cite at least one verifiable source? (pass/fail)
+2. COHERENCE: Does the conclusion follow logically from the data? (pass/fail)
+3. COMPLETENESS: Were all parts of the question answered? (pass/fail)
 
-Responda APENAS com: APROVADO (todos pass) ou REPROVADO (qualquer fail).""",
+Reply ONLY with: APPROVED (all pass) or REJECTED (any fail).""",
 )
 
-# --- Pipeline completo ---
+# --- Full pipeline ---
 pipeline = SequentialAgent(
-    name="orquestrador",
-    sub_agents=[especialistas_paralelos, critico],
+    name="orchestrator",
+    sub_agents=[parallel_specialists, critic],
 )
 </code></pre>
 
@@ -468,36 +468,36 @@ para evitar que saída malformada ou injetada de um especialista comprometa o pr
 <pre><code class="language-python">import re
 from pydantic import BaseModel, field_validator
 
-class ResultadoEspecialista(BaseModel):
-    """Valida a saída de um especialista antes de passar ao próximo."""
-    conteudo: str
-    fontes: list[str]
-    confianca: float
+class SpecialistResult(BaseModel):
+    """Validates a specialist's output before passing it to the next agent."""
+    content: str
+    sources: list[str]
+    confidence: float
 
-    @field_validator("conteudo")
+    @field_validator("content")
     @classmethod
-    def limpar_conteudo(cls, v: str) -> str:
-        # Remove possíveis instruções injetadas
-        v = re.sub(r"(?i)(ignore previous|system prompt|you are now)", "[REMOVIDO]", v)
-        # Limita tamanho para não estourar contexto do próximo agente
+    def clean_content(cls, v: str) -> str:
+        # Remove possible injected instructions
+        v = re.sub(r"(?i)(ignore previous|system prompt|you are now)", "[REMOVED]", v)
+        # Limit size to avoid overflowing the next agent's context
         if len(v) > 5000:
-            v = v[:5000] + "\n[TRUNCADO]"
+            v = v[:5000] + "\n[TRUNCATED]"
         return v
 
-    @field_validator("confianca")
+    @field_validator("confidence")
     @classmethod
-    def validar_confianca(cls, v: float) -> float:
+    def validate_confidence(cls, v: float) -> float:
         if not 0.0 <= v <= 1.0:
-            raise ValueError(f"Confiança deve estar entre 0 e 1, recebeu {v}")
+            raise ValueError(f"Confidence must be between 0 and 1, got {v}")
         return v
 
-def sanitizar_entre_agentes(saida_bruta: str) -> ResultadoEspecialista:
-    """Valida saída antes de passá-la ao próximo agente."""
+def sanitize_between_agents(raw_output: str) -> SpecialistResult:
+    """Validates output before passing it to the next agent."""
     try:
-        resultado = ResultadoEspecialista.model_validate_json(saida_bruta)
-        return resultado
+        result = SpecialistResult.model_validate_json(raw_output)
+        return result
     except Exception as e:
-        raise ValueError(f"Saída do especialista não passou na validação: {e}")
+        raise ValueError(f"Specialist output failed validation: {e}")
 </code></pre>
 
 <h3>Passo 5 — Preencher a tabela de comparação P7 vs P8</h3>
@@ -505,33 +505,33 @@ def sanitizar_entre_agentes(saida_bruta: str) -> ResultadoEspecialista:
 <pre><code class="language-python">import time
 import numpy as np
 
-# --- Coletar latências em N execuções ---
-latencias_p7 = []
-latencias_p8 = []
-custos_p7 = []
-custos_p8 = []
+# --- Collect latencies over N runs ---
+latencies_p7 = []
+latencies_p8 = []
+costs_p7 = []
+costs_p8 = []
 
-casos_teste = carregar_casos_teste()  # Seus 40+ casos do P3
+test_cases = load_test_cases()  # Your 40+ cases from P3
 
-for caso in casos_teste:
-    # Medir P7 (agente único)
-    inicio = time.perf_counter()
-    resultado_p7 = executar_agente_p7(caso["input"])
-    latencias_p7.append(time.perf_counter() - inicio)
-    custos_p7.append(calcular_custo(resultado_p7))
+for case in test_cases:
+    # Measure P7 (single agent)
+    start = time.perf_counter()
+    result_p7 = run_agent_p7(case["input"])
+    latencies_p7.append(time.perf_counter() - start)
+    costs_p7.append(calculate_cost(result_p7))
 
-    # Medir P8 (múltiplos agentes)
-    inicio = time.perf_counter()
-    resultado_p8 = executar_agente_p8(caso["input"])
-    latencias_p8.append(time.perf_counter() - inicio)
-    custos_p8.append(calcular_custo(resultado_p8))
+    # Measure P8 (multi-agent)
+    start = time.perf_counter()
+    result_p8 = run_agent_p8(case["input"])
+    latencies_p8.append(time.perf_counter() - start)
+    costs_p8.append(calculate_cost(result_p8))
 
-# --- Calcular p95 ---
-p95_p7 = np.percentile(latencias_p7, 95)
-p95_p8 = np.percentile(latencias_p8, 95)
+# --- Calculate p95 ---
+p95_p7 = np.percentile(latencies_p7, 95)
+p95_p8 = np.percentile(latencies_p8, 95)
 
-print(f"Latência p95 — P7: {p95_p7:.2f}s | P8: {p95_p8:.2f}s")
-print(f"Custo médio  — P7: ${np.mean(custos_p7):.4f} | P8: ${np.mean(custos_p8):.4f}")
+print(f"Latency p95  — P7: {p95_p7:.2f}s | P8: {p95_p8:.2f}s")
+print(f"Average cost — P7: ${np.mean(costs_p7):.4f} | P8: ${np.mean(costs_p8):.4f}")
 </code></pre>
 <p>O <strong>p95</strong> (percentil 95) significa: 95% das execuções terminaram em menos que esse tempo.
 Ordene as latências, pegue o valor na posição <code>0.95 * len(latencias)</code>. Isso captura os casos
@@ -539,21 +539,21 @@ lentos sem ser distorcido por outliers extremos como o máximo seria.</p>
 
 <h3>Passo 6 — Escrever a conclusão honesta</h3>
 <p>A conclusão deve responder: "Valeu a pena?" com números. Template:</p>
-<pre><code># Conclusão
+<pre><code># Conclusion
 
-## O que mudou de P7 para P8
-- Latência p95: X.Xs → Y.Ys (melhoria/piora de Z%)
-- Custo por execução: $X → $Y (melhoria/piora de Z%)
-- Qualidade (score médio de avaliação): X → Y
+## What changed from P7 to P8
+- Latency p95: X.Xs → Y.Ys (improvement/degradation of Z%)
+- Cost per execution: $X → $Y (improvement/degradation of Z%)
+- Quality (average evaluation score): X → Y
 
-## O que ficou mais complexo
-- Linhas de código: N → M
-- Tempo para depurar uma falha: descreva um caso real
-- Componentes para manter: 1 → K
+## What became more complex
+- Lines of code: N → M
+- Time to debug a failure: describe a real case
+- Components to maintain: 1 → K
 
-## Veredicto
-[Multi-agente se justificou / não se justificou] porque [razão com números].
-Se fosse começar de novo, [manteria a decisão / faria diferente porque ___].
+## Verdict
+[Multi-agent was justified / was not justified] because [reason with numbers].
+If starting over, [I would keep the decision / do it differently because ___].
 </code></pre>
 <hr />
 <h2 id="quando-vale-a-pena">Quando múltiplos agentes valem a pena</h2>
@@ -625,13 +625,13 @@ Ver <a href="../tracks/Protocols.html">Protocolos de Interoperabilidade</a>.</p>
 <hr />
 <h2 id="entregavel">Entregável</h2>
 <pre><code>p8_multi/
-├── orquestrador.py
-├── agentes/
-├── comparacao/
+├── orchestrator.py
+├── agents/
+├── comparison/
 │   └── p7_vs_p8.md
-├── testes/
+├── tests/
 └── docs/
-    └── decisao.md          # com números
+    └── decision.md         # with numbers
 </code></pre>
 <hr />
 <h2 id="definition-of-done">Definition of Done</h2>

@@ -205,44 +205,44 @@ e seja explícito sobre a simulação.</p>
 <li><strong>Quais as restrições?</strong> — Privacidade, compliance, latência, custo máximo, integrações obrigatórias?</li>
 </ol>
 <p>Template para <code>01_descoberta/descoberta.md</code>:</p>
-<pre><code># Descoberta — [Nome do Projeto]
+<pre><code># Discovery — [Project Name]
 
-## 1. Problema
-[Descrição concreta. Ex: "A equipe jurídica gasta em média 45 minutos
-por consulta procurando cláusulas em contratos distribuídos em 3 sistemas.
-São ~20 consultas/semana. Isso consome 15h/semana de trabalho de advogados
-a R$200/h = R$3.000/semana."]
+## 1. Problem
+[Concrete description. E.g.: "The legal team spends an average of 45 minutes
+per query searching for clauses in contracts spread across 3 systems.
+That's ~20 queries/week. This consumes 15h/week of lawyer time
+at R$200/h = R$3,000/week."]
 
-## 2. Quem sofre
-[Ex: "3 advogados juniores que fazem due diligence. Frustração alta,
-turnover de 40% no último ano parcialmente atribuído a trabalho repetitivo."]
+## 2. Who is affected
+[E.g.: "3 junior lawyers doing due diligence. High frustration,
+40% turnover last year partially attributed to repetitive work."]
 
-## 3. Processo atual
-1. Recebe pedido por e-mail
-2. Abre SharePoint e busca por palavra-chave
-3. Abre cada documento e lê manualmente
-4. Copia trecho relevante para o parecer
-5. Tempo médio: 45 min. Taxa de erro: ~10% (trecho errado ou desatualizado)
+## 3. Current process
+1. Receives request via email
+2. Opens SharePoint and searches by keyword
+3. Opens each document and reads manually
+4. Copies relevant excerpt to the legal opinion
+5. Average time: 45 min. Error rate: ~10% (wrong or outdated excerpt)
 
-## 4. Definição de sucesso
-- Tempo de consulta reduzido para &lt;5 minutos
-- Taxa de erro &lt;2%
-- Advogados confiam o suficiente para usar sem verificar cada resposta
+## 4. Definition of success
+- Query time reduced to &lt;5 minutes
+- Error rate &lt;2%
+- Lawyers trust it enough to use without verifying every answer
 
-## 5. Dados disponíveis
-- 500 contratos em PDF no SharePoint (acesso via API Microsoft Graph)
-- Modelos de parecer em Word
-- Histórico de consultas em e-mail (não estruturado)
+## 5. Available data
+- 500 contracts in PDF on SharePoint (access via Microsoft Graph API)
+- Legal opinion templates in Word
+- Query history in email (unstructured)
 
-## 6. Restrições
-- Dados confidenciais: não podem sair do ambiente corporativo
-- Latência aceitável: até 30 segundos por consulta
-- Orçamento: até R$500/mês em API
-- Precisa funcionar com SSO da empresa
+## 6. Constraints
+- Confidential data: cannot leave the corporate environment
+- Acceptable latency: up to 30 seconds per query
+- Budget: up to R$500/month on API
+- Must work with the company's SSO
 
-## Nota sobre simulação
-[Se simulado: "Este cenário é baseado em entrevistas com X, adaptado
-para fins educacionais. Os dados reais foram substituídos por sintéticos."]
+## Note on simulation
+[If simulated: "This scenario is based on interviews with X, adapted
+for educational purposes. Real data was replaced with synthetic data."]
 </code></pre>
 <p>📄 <code>descoberta.md</code> — duas páginas</p>
 <hr />
@@ -250,20 +250,20 @@ para fins educacionais. Os dados reais foram substituídos por sintéticos."]
 <p>Aplique a <a href="../concepts/Complexity_Ladder.html">A Escada de Complexidade</a>. Para cada degrau que subir, escreva por<br />
 quê, com o que sustentaria a decisão.</p>
 <p>Template para <code>02_desenho/decisoes.md</code>:</p>
-<pre><code># Decisões de Arquitetura — [Nome do Projeto]
+<pre><code># Architecture Decisions — [Project Name]
 
-| Nível | Descrição                    | Tentei? | Resultado                                    | Por que subir?                                         |
+| Level | Description                  | Tried?  | Result                                       | Why escalate?                                          |
 |-------|------------------------------|---------|----------------------------------------------|--------------------------------------------------------|
-| 1     | Prompt único                 | Sim     | Acurácia 62% nos 40 casos de teste           | Abaixo do mínimo aceitável (80%)                       |
-| 2     | Prompt otimizado + few-shot  | Sim     | Acurácia 78%, mas alucina em docs longos     | Perto do alvo, mas alucinação é inaceitável para legal |
-| 3     | RAG com base vetorial        | Sim     | Acurácia 91%, latência 4s, custo $0.003/call | Atende os critérios. Parei aqui                        |
-| 4     | Múltiplos agentes            | Não     | —                                            | Não necessário: métricas do nível 3 atendem            |
+| 1     | Single prompt                | Yes     | 62% accuracy on 40 test cases                | Below minimum acceptable (80%)                         |
+| 2     | Optimized prompt + few-shot  | Yes     | 78% accuracy, but hallucinates on long docs  | Close to target, but hallucination unacceptable for legal |
+| 3     | RAG with vector store        | Yes     | 91% accuracy, 4s latency, $0.003/call cost   | Meets criteria. Stopped here                           |
+| 4     | Multiple agents              | No      | —                                            | Not needed: level 3 metrics are sufficient             |
 
-## Decisão final
-Implementação no Nível 3 (RAG). Justificativa:
-- Acurácia 91% &gt; meta de 80%
-- Latência 4s &lt; limite de 30s
-- Custo $0.003/call × 100 calls/dia = $9/mês &lt; orçamento de R$500/mês
+## Final decision
+Implementation at Level 3 (RAG). Justification:
+- 91% accuracy &gt; 80% target
+- 4s latency &lt; 30s limit
+- Cost $0.003/call x 100 calls/day = $9/month &lt; R$500/month budget
 </code></pre>
 <p>Para cada nível, mostre o teste real que fez — não escreva "não tentei" sem
 ter testado pelo menos um prompt básico no nível 1.</p>
@@ -273,21 +273,21 @@ ter testado pelo menos um prompt básico no nível 1.</p>
 <p>Comece no degrau um. Suba com evidência.<br />
 Reaproveite o que construiu nos projetos anteriores.</p>
 <p>Estrutura sugerida para o código:</p>
-<pre><code>03_implementacao/
+<pre><code>03_implementation/
 ├── src/
 │   ├── __init__.py
-│   ├── config.py          # Variáveis de ambiente, modelos, limites
-│   ├── prompts.py         # System prompts versionados (reuso do P2)
-│   ├── models.py          # Schemas Pydantic de entrada/saída (reuso do P1)
-│   ├── pipeline.py        # Pipeline principal
-│   ├── retriever.py       # Se usar RAG (reuso do P5)
-│   ├── tools.py           # Se usar agente (reuso do P7)
-│   └── router.py          # Se usar roteamento (reuso do P4)
+│   ├── config.py          # Environment variables, models, limits
+│   ├── prompts.py         # Versioned system prompts (reuse from P2)
+│   ├── models.py          # Pydantic input/output schemas (reuse from P1)
+│   ├── pipeline.py        # Main pipeline
+│   ├── retriever.py       # If using RAG (reuse from P5)
+│   ├── tools.py           # If using agent (reuse from P7)
+│   └── router.py          # If using routing (reuse from P4)
 ├── tests/
-│   ├── test_pipeline.py   # Testes unitários
+│   ├── test_pipeline.py   # Unit tests
 │   └── eval/
-│       ├── dataset.jsonl   # Casos de referência (reuso do P3)
-│       └── run_eval.py     # Avaliação automatizada (reuso do P3)
+│       ├── dataset.jsonl   # Reference cases (reuse from P3)
+│       └── run_eval.py     # Automated evaluation (reuse from P3)
 ├── requirements.txt
 └── README.md
 </code></pre>
@@ -371,57 +371,57 @@ For the alert on daily cost, replace it with a rate-limit alert
 <li>Revisão de segurança completa</li>
 </ul>
 <p>Template para <code>04_avaliacao/avaliacao.md</code>:</p>
-<pre><code># Avaliação — [Nome do Projeto]
+<pre><code># Evaluation — [Project Name]
 
-## Dataset de referência
-- Total de casos: [N, mínimo 40]
-- Distribuição: [ex: 15 consultas simples, 15 complexas, 10 edge cases]
-- Fonte: [como foram criados — reais, sintéticos, mix]
+## Reference dataset
+- Total cases: [N, minimum 40]
+- Distribution: [e.g.: 15 simple queries, 15 complex, 10 edge cases]
+- Source: [how they were created — real, synthetic, mix]
 
-## Métricas
-| Métrica              | Baseline (Nível 1) | Atual (Nível N) | Meta      |
-|----------------------|---------------------|------------------|-----------|
-| Acurácia             |                     |                  |           |
-| Latência p95         |                     |                  |           |
-| Custo por execução   |                     |                  |           |
-| Taxa de alucinação   |                     |                  |           |
+## Metrics
+| Metric               | Baseline (Level 1) | Current (Level N) | Target    |
+|----------------------|---------------------|-------------------|-----------|
+| Accuracy             |                     |                   |           |
+| Latency p95          |                     |                   |           |
+| Cost per execution   |                     |                   |           |
+| Hallucination rate   |                     |                   |           |
 
-## Alertas configurados
-| #  | Alerta                              | Condição                  | Testado? |
+## Configured alerts
+| #  | Alert                               | Condition                 | Tested?  |
 |----|--------------------------------------|---------------------------|----------|
-| 1  | Latência alta                        | p95 &gt; 5 segundos           | [ ]      |
-| 2  | Taxa de erro                         | &gt; 5% em janela de 1 hora  | [ ]      |
-| 3  | Custo diário                         | &gt; $X/dia                   | [ ]      |
-| 4  | Queda de qualidade                   | Score eval &lt; baseline      | [ ]      |
+| 1  | High latency                         | p95 &gt; 5 seconds            | [ ]      |
+| 2  | Error rate                           | &gt; 5% in 1-hour window     | [ ]      |
+| 3  | Daily cost                           | &gt; $X/day                   | [ ]      |
+| 4  | Quality drop                         | Eval score &lt; baseline      | [ ]      |
 </code></pre>
 <p>Exemplo de alerta básico com Python:</p>
 <pre><code class="language-python">import logging
-import httpx  # ou requests
+import httpx  # or requests
 
-logger = logging.getLogger("alertas")
+logger = logging.getLogger("alerts")
 
-def verificar_e_alertar(metricas: dict, webhook_url: str | None = None):
-    """Verifica métricas e dispara alertas se necessário."""
-    alertas = []
+def check_and_alert(metrics: dict, webhook_url: str | None = None):
+    """Check metrics and fire alerts if needed."""
+    alerts = []
 
-    if metricas["latencia_p95"] > 5.0:
-        alertas.append(f"ALERTA: Latência p95 em {metricas['latencia_p95']:.1f}s (limite: 5s)")
+    if metrics["latency_p95"] > 5.0:
+        alerts.append(f"ALERT: Latency p95 at {metrics['latency_p95']:.1f}s (limit: 5s)")
 
-    if metricas["taxa_erro"] > 0.05:
-        alertas.append(f"ALERTA: Taxa de erro em {metricas['taxa_erro']:.1%} (limite: 5%)")
+    if metrics["error_rate"] > 0.05:
+        alerts.append(f"ALERT: Error rate at {metrics['error_rate']:.1%} (limit: 5%)")
 
-    if metricas["custo_diario"] > metricas["custo_limite"]:
-        alertas.append(f"ALERTA: Custo diário ${metricas['custo_diario']:.2f} (limite: ${metricas['custo_limite']:.2f})")
+    if metrics["daily_cost"] > metrics["cost_limit"]:
+        alerts.append(f"ALERT: Daily cost ${metrics['daily_cost']:.2f} (limit: ${metrics['cost_limit']:.2f})")
 
-    if metricas["eval_score"] < metricas["eval_baseline"]:
-        alertas.append(f"ALERTA: Score {metricas['eval_score']:.2f} abaixo do baseline {metricas['eval_baseline']:.2f}")
+    if metrics["eval_score"] < metrics["eval_baseline"]:
+        alerts.append(f"ALERT: Score {metrics['eval_score']:.2f} below baseline {metrics['eval_baseline']:.2f}")
 
-    for alerta in alertas:
-        logger.warning(alerta)
+    for alert in alerts:
+        logger.warning(alert)
         if webhook_url:
-            httpx.post(webhook_url, json={"text": alerta})
+            httpx.post(webhook_url, json={"text": alert})
 
-    return alertas
+    return alerts
 </code></pre>
 <p>Cada alerta deve ser disparado uma vez intencionalmente (ex: passe um timeout
 baixo para forçar o alerta de latência) para provar que funciona.</p>
@@ -436,54 +436,54 @@ baixo para forçar o alerta de latência) para provar que funciona.</p>
 <li>Transferência real, se houver a quem transferir</li>
 </ul>
 <p>Template para <code>05_entrega/operacao.md</code>:</p>
-<pre><code># Manual de Operação — [Nome do Projeto]
+<pre><code># Operations Runbook — [Project Name]
 
-## Alerta 1 — Latência alta (p95 &gt; 5s)
-**Possíveis causas:** API do provedor lenta, documentos muito grandes no retriever, modelo sobrecarregado
-**O que fazer:**
-1. Verificar status page do provedor (status.openai.com / status.cloud.google.com)
-2. Checar logs para identificar quais requests estão lentas
-3. Se for tamanho de documento: revisar chunking no retriever
-4. Se for sistêmico: considerar fallback para modelo mais rápido (ver P4)
+## Alert 1 — High latency (p95 &gt; 5s)
+**Possible causes:** Slow provider API, oversized documents in the retriever, overloaded model
+**What to do:**
+1. Check the provider's status page (status.openai.com / status.cloud.google.com)
+2. Review logs to identify which requests are slow
+3. If document size: review chunking in the retriever
+4. If systemic: consider fallback to a faster model (see P4)
 
-## Alerta 2 — Taxa de erro &gt; 5%
-**Possíveis causas:** input malformado, mudança na API, limite de rate atingido
-**O que fazer:**
-1. Checar logs de erro para padrão (mesmo tipo de input? mesmo endpoint?)
-2. Verificar se houve mudança na API do provedor
-3. Se rate limit: implementar backoff exponencial ou reduzir concorrência
+## Alert 2 — Error rate &gt; 5%
+**Possible causes:** Malformed input, API change, rate limit reached
+**What to do:**
+1. Check error logs for a pattern (same input type? same endpoint?)
+2. Verify whether the provider API changed
+3. If rate limit: implement exponential backoff or reduce concurrency
 
-## Alerta 3 — Custo diário acima do limite
-**Possíveis causas:** aumento de uso, prompts maiores que esperado, loop infinito
-**O que fazer:**
-1. Verificar volume de requests (aumento legítimo vs. anomalia)
-2. Checar tamanho médio de prompt (mudou?)
-3. Procurar loops: agente chamando ferramenta repetidamente sem progresso
+## Alert 3 — Daily cost above limit
+**Possible causes:** Usage increase, prompts larger than expected, infinite loop
+**What to do:**
+1. Check request volume (legitimate increase vs. anomaly)
+2. Review average prompt size (did it change?)
+3. Look for loops: agent calling a tool repeatedly without progress
 
-## Alerta 4 — Score de avaliação abaixo do baseline
-**Possíveis causas:** mudança no modelo, dados de entrada diferentes, drift
-**O que fazer:**
-1. Rodar avaliação completa manualmente para confirmar
-2. Comparar resultados caso a caso com o baseline
-3. Se confirmado: investigar se mudou o modelo, os dados, ou o prompt
+## Alert 4 — Evaluation score below baseline
+**Possible causes:** Model change, different input data, drift
+**What to do:**
+1. Run the full evaluation manually to confirm
+2. Compare results case by case against the baseline
+3. If confirmed: investigate whether the model, data, or prompt changed
 </code></pre>
 <p>Template para <code>05_entrega/licoes.md</code>:</p>
-<pre><code># Lições Aprendidas — [Nome do Projeto]
+<pre><code># Lessons Learned — [Project Name]
 
-## O que funcionou
-- [Ex: "Few-shot com 3 exemplos melhorou acurácia em 16 pontos percentuais"]
-- [Ex: "Começar no nível 1 e medir antes de subir evitou RAG desnecessário"]
+## What worked
+- [E.g.: "Few-shot with 3 examples improved accuracy by 16 percentage points"]
+- [E.g.: "Starting at level 1 and measuring before escalating avoided unnecessary RAG"]
 
-## O que não funcionou
-- [Ex: "Tentei chain-of-thought mas aumentou latência 3x sem ganho de qualidade"]
-- [Ex: "Primeiro dataset de avaliação tinha só casos fáceis, métricas enganosas"]
+## What didn't work
+- [E.g.: "Tried chain-of-thought but it increased latency 3x with no quality gain"]
+- [E.g.: "First evaluation dataset had only easy cases, misleading metrics"]
 
-## O que faria diferente
-- [Ex: "Criaria o dataset de avaliação antes de escrever o primeiro prompt"]
-- [Ex: "Mediria custo desde o dia 1, não só no final"]
+## What I'd do differently
+- [E.g.: "Would create the evaluation dataset before writing the first prompt"]
+- [E.g.: "Would measure cost from day 1, not just at the end"]
 
-## Surpresas
-- [Ex: "O modelo mais barato teve qualidade comparável ao caro para 80% dos casos"]
+## Surprises
+- [E.g.: "The cheapest model had comparable quality to the expensive one for 80% of cases"]
 </code></pre>
 <p>📄 <code>operacao.md</code>, <code>README.md</code>, <code>licoes.md</code></p>
 <hr />
@@ -547,11 +547,11 @@ baixo para forçar o alerta de latência) para provar que funciona.</p>
 <hr />
 <h2 id="estrutura">Estrutura</h2>
 <pre><code>p9_final/
-├── 01_descoberta/
-├── 02_desenho/
-├── 03_implementacao/
-├── 04_avaliacao/
-├── 05_entrega/
+├── 01_discovery/
+├── 02_design/
+├── 03_implementation/
+├── 04_evaluation/
+├── 05_delivery/
 └── demo/
 </code></pre>
 <hr />

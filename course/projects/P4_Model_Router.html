@@ -156,10 +156,10 @@
 que não compensa.</p>
 <hr />
 <h2 id="arquitetura">Arquitetura</h2>
-<pre><code>entrada → classificador (modelo mais barato)
-        → simples  → modelo pequeno
-        → média    → modelo intermediário
-        → complexa → modelo grande
+<pre><code>input → classifier (cheapest model)
+      → simple   → small model
+      → medium   → mid-tier model
+      → complex  → large model
 </code></pre>
 <hr />
 <h2 id="passo-a-passo">Passo a passo</h2>
@@ -186,135 +186,135 @@ Anote os limites de taxa de cada provedor — você vai precisar disso no Passo 
 
 <h3>Passo 2 — Construa o classificador de complexidade</h3>
 <p>O classificador usa o modelo mais barato para decidir qual camada deve responder.
-Crie <code>classificador_complexidade.py</code>:</p>
-<pre><code>"""classificador_complexidade.py — classifica a complexidade de uma pergunta."""
+Crie <code>complexity_classifier.py</code>:</p>
+<pre><code>"""complexity_classifier.py — classifies the complexity of a question."""
 import os
 
-# === Opção 1: Gemini (gratuito via AI Studio — 1.500 req/dia) ===
+# === Option 1: Gemini (free via AI Studio — 1,500 req/day) ===
 from google import genai
 
 gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# === Opção 2: Groq (gratuito — 30 RPM) ===
+# === Option 2: Groq (free — 30 RPM) ===
 # from groq import Groq
-# groq_client = Groq()  # usa GROQ_API_KEY do ambiente
+# groq_client = Groq()  # uses GROQ_API_KEY from environment
 
-# === Opção 3: Ollama (local — ilimitado) ===
+# === Option 3: Ollama (local — unlimited) ===
 # from openai import OpenAI
 # ollama_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
-PROMPT_CLASSIFICADOR = """\
-Você é um roteador de complexidade. Dada a pergunta do usuário, classifique-a
-em exatamente uma categoria:
+CLASSIFIER_PROMPT = """\
+You are a complexity router. Given the user's question, classify it
+into exactly one category:
 
-- SIMPLES: pergunta factual curta, tradução direta, formatação.
-- MEDIA: resumo de texto médio, comparação entre dois itens, explicação conceitual.
-- COMPLEXA: análise multi-etapa, raciocínio lógico, geração longa ou criativa.
+- SIMPLE: short factual question, direct translation, formatting.
+- MEDIUM: medium-length text summary, comparison between two items, conceptual explanation.
+- COMPLEX: multi-step analysis, logical reasoning, long or creative generation.
 
-Responda APENAS com uma palavra: SIMPLES, MEDIA ou COMPLEXA.
+Reply with ONLY one word: SIMPLE, MEDIUM or COMPLEX.
 """
 
-def classificar(pergunta: str) -> str:
-    """Retorna 'SIMPLES', 'MEDIA' ou 'COMPLEXA'."""
+def classify(question: str) -> str:
+    """Returns 'SIMPLE', 'MEDIUM' or 'COMPLEX'."""
     # --- Gemini ---
     resp = gemini_client.models.generate_content(
-        model="gemini-2.0-flash-lite",   # modelo mais rápido para classificação
-        contents=f"{PROMPT_CLASSIFICADOR}\n\nPergunta: {pergunta}",
+        model="gemini-2.0-flash-lite",   # fastest model for classification
+        contents=f"{CLASSIFIER_PROMPT}\n\nQuestion: {question}",
     )
-    categoria = resp.text.strip().upper()
+    category = resp.text.strip().upper()
 
-    # --- Groq (descomente e comente o bloco Gemini acima) ---
+    # --- Groq (uncomment and comment out the Gemini block above) ---
     # resp = groq_client.chat.completions.create(
     #     model="llama-3.1-8b-instant",
     #     messages=[
-    #         {"role": "system", "content": PROMPT_CLASSIFICADOR},
-    #         {"role": "user", "content": pergunta},
+    #         {"role": "system", "content": CLASSIFIER_PROMPT},
+    #         {"role": "user", "content": question},
     #     ],
     #     temperature=0,
     #     max_tokens=10,
     # )
-    # categoria = resp.choices[0].message.content.strip().upper()
+    # category = resp.choices[0].message.content.strip().upper()
 
-    # --- Ollama (descomente e comente o bloco acima) ---
+    # --- Ollama (uncomment and comment out the block above) ---
     # resp = ollama_client.chat.completions.create(
     #     model="llama3.2:3b",
     #     messages=[
-    #         {"role": "system", "content": PROMPT_CLASSIFICADOR},
-    #         {"role": "user", "content": pergunta},
+    #         {"role": "system", "content": CLASSIFIER_PROMPT},
+    #         {"role": "user", "content": question},
     #     ],
     #     temperature=0,
     #     max_tokens=10,
     # )
-    # categoria = resp.choices[0].message.content.strip().upper()
+    # category = resp.choices[0].message.content.strip().upper()
 
-    if categoria not in ("SIMPLES", "MEDIA", "COMPLEXA"):
-        return "COMPLEXA"              # fallback seguro
-    return categoria
+    if category not in ("SIMPLE", "MEDIUM", "COMPLEX"):
+        return "COMPLEX"              # safe fallback
+    return category
 </code></pre>
 
 <h3>Passo 3 — Construa o roteador</h3>
-<p>O roteador conecta o classificador aos modelos. Crie <code>roteador.py</code>:</p>
-<pre><code>"""roteador.py — roteia perguntas para o modelo adequado à complexidade."""
+<p>O roteador conecta o classificador aos modelos. Crie <code>router.py</code>:</p>
+<pre><code>"""router.py — routes questions to the model matching their complexity."""
 import os, time
-from classificador_complexidade import classificar
+from complexity_classifier import classify
 
-# === Gemini (gratuito via AI Studio) ===
+# === Gemini (free via AI Studio) ===
 from google import genai
 
 gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# === Groq (gratuito — descomente para usar como alternativa) ===
+# === Groq (free — uncomment to use as alternative) ===
 # from groq import Groq
 # groq_client = Groq()
 
-# === Ollama (local — descomente para usar como alternativa) ===
+# === Ollama (local — uncomment to use as alternative) ===
 # from openai import OpenAI
 # ollama_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
-# Prompt de sistema mais detalhado para a camada "grande"
-PROMPT_SISTEMA_DETALHADO = """\
-Você é um assistente especialista. Responda com raciocínio passo a passo
-(Chain-of-Thought). Primeiro analise a pergunta, depois apresente sua
-resposta estruturada com evidências.
+# More detailed system prompt for the "large" tier
+DETAILED_SYSTEM_PROMPT = """\
+You are an expert assistant. Answer with step-by-step reasoning
+(Chain-of-Thought). First analyze the question, then present your
+structured response with evidence.
 """
 
-MODELOS = {
-    "SIMPLES":  {"provider": "gemini", "model": "gemini-2.0-flash-lite", "system": None},
-    "MEDIA":    {"provider": "gemini", "model": "gemini-2.0-flash",      "system": None},
-    "COMPLEXA": {"provider": "gemini", "model": "gemini-2.0-flash",      "system": PROMPT_SISTEMA_DETALHADO},
+MODELS = {
+    "SIMPLE":  {"provider": "gemini", "model": "gemini-2.0-flash-lite", "system": None},
+    "MEDIUM":  {"provider": "gemini", "model": "gemini-2.0-flash",      "system": None},
+    "COMPLEX": {"provider": "gemini", "model": "gemini-2.0-flash",      "system": DETAILED_SYSTEM_PROMPT},
 }
 
-# Alternativa com Groq:
-# MODELOS = {
-#     "SIMPLES":  {"provider": "groq", "model": "llama-3.1-8b-instant",      "system": None},
-#     "MEDIA":    {"provider": "groq", "model": "llama-3.3-70b-versatile",    "system": None},
-#     "COMPLEXA": {"provider": "groq", "model": "llama-3.3-70b-versatile",    "system": PROMPT_SISTEMA_DETALHADO},
+# Alternative with Groq:
+# MODELS = {
+#     "SIMPLE":  {"provider": "groq", "model": "llama-3.1-8b-instant",      "system": None},
+#     "MEDIUM":  {"provider": "groq", "model": "llama-3.3-70b-versatile",    "system": None},
+#     "COMPLEX": {"provider": "groq", "model": "llama-3.3-70b-versatile",    "system": DETAILED_SYSTEM_PROMPT},
 # }
 
-# Alternativa com Ollama:
-# MODELOS = {
-#     "SIMPLES":  {"provider": "ollama", "model": "llama3.2:3b",   "system": None},
-#     "MEDIA":    {"provider": "ollama", "model": "llama3.1:8b",   "system": None},
-#     "COMPLEXA": {"provider": "ollama", "model": "llama3.1:8b",   "system": PROMPT_SISTEMA_DETALHADO},
+# Alternative with Ollama:
+# MODELS = {
+#     "SIMPLE":  {"provider": "ollama", "model": "llama3.2:3b",   "system": None},
+#     "MEDIUM":  {"provider": "ollama", "model": "llama3.1:8b",   "system": None},
+#     "COMPLEX": {"provider": "ollama", "model": "llama3.1:8b",   "system": DETAILED_SYSTEM_PROMPT},
 # }
 
-# Limites de taxa por provedor (req/dia ou req/min)
+# Rate limits per provider (req/day or req/min)
 RATE_LIMITS = {
-    "gemini": "1.500 req/dia (gratuito via AI Studio)",
-    "groq":   "30 req/min (gratuito)",
-    "ollama": "ilimitado (local)",
+    "gemini": "1,500 req/day (free via AI Studio)",
+    "groq":   "30 req/min (free)",
+    "ollama": "unlimited (local)",
 }
 
-def chamar_modelo(pergunta: str, provider: str, model: str, system: str = None) -> dict:
-    """Chama o modelo e retorna resposta + metadados."""
+def call_model(question: str, provider: str, model: str, system: str = None) -> dict:
+    """Calls the model and returns response + metadata."""
     if provider == "gemini":
-        conteudo = f"{system}\n\n{pergunta}" if system else pergunta
+        content = f"{system}\n\n{question}" if system else question
         resp = gemini_client.models.generate_content(
             model=model,
-            contents=conteudo,
+            contents=content,
         )
         return {
-            "texto": resp.text,
+            "text": resp.text,
             "tokens_input": resp.usage_metadata.prompt_token_count,
             "tokens_output": resp.usage_metadata.candidates_token_count,
         }
@@ -322,13 +322,13 @@ def chamar_modelo(pergunta: str, provider: str, model: str, system: str = None) 
         messages = []
         if system:
             messages.append({"role": "system", "content": system})
-        messages.append({"role": "user", "content": pergunta})
+        messages.append({"role": "user", "content": question})
         resp = groq_client.chat.completions.create(
             model=model,
             messages=messages,
         )
         return {
-            "texto": resp.choices[0].message.content,
+            "text": resp.choices[0].message.content,
             "tokens_input": resp.usage.prompt_tokens,
             "tokens_output": resp.usage.completion_tokens,
         }
@@ -336,117 +336,117 @@ def chamar_modelo(pergunta: str, provider: str, model: str, system: str = None) 
         messages = []
         if system:
             messages.append({"role": "system", "content": system})
-        messages.append({"role": "user", "content": pergunta})
+        messages.append({"role": "user", "content": question})
         resp = ollama_client.chat.completions.create(
             model=model,
             messages=messages,
         )
         return {
-            "texto": resp.choices[0].message.content,
+            "text": resp.choices[0].message.content,
             "tokens_input": resp.usage.prompt_tokens,
             "tokens_output": resp.usage.completion_tokens,
         }
 
-def rotear(pergunta: str) -> dict:
-    """Classifica, roteia e retorna resposta com metadados completos."""
-    complexidade = classificar(pergunta)
-    config = MODELOS[complexidade]
+def route(question: str) -> dict:
+    """Classifies, routes and returns response with full metadata."""
+    complexity = classify(question)
+    config = MODELS[complexity]
 
-    inicio = time.time()
-    resultado = chamar_modelo(
-        pergunta, config["provider"], config["model"], config.get("system")
+    start_time = time.time()
+    result = call_model(
+        question, config["provider"], config["model"], config.get("system")
     )
-    latencia = time.time() - inicio
+    latency = time.time() - start_time
 
     return {
-        "pergunta": pergunta,
-        "complexidade": complexidade,
-        "modelo": config["model"],
+        "question": question,
+        "complexity": complexity,
+        "model": config["model"],
         "provider": config["provider"],
-        "resposta": resultado["texto"],
-        "tokens_input": resultado["tokens_input"],
-        "tokens_output": resultado["tokens_output"],
-        "latencia_s": round(latencia, 3),
+        "response": result["text"],
+        "tokens_input": result["tokens_input"],
+        "tokens_output": result["tokens_output"],
+        "latency_s": round(latency, 3),
     }
 
 if __name__ == "__main__":
-    r = rotear("Qual a capital da França?")
-    print(f"[{r['complexidade']}] {r['provider']}/{r['modelo']} — {r['latencia_s']}s")
-    print(r["resposta"][:200])
+    r = route("What is the capital of France?")
+    print(f"[{r['complexity']}] {r['provider']}/{r['model']} — {r['latency_s']}s")
+    print(r["response"][:200])
 </code></pre>
 
 <h3>Passo 4 — Construa o script de comparação</h3>
-<p>Crie <code>comparar.py</code> para rodar os 50 casos do P2 em três modos e coletar métricas:</p>
-<pre><code>"""comparar.py — compara sempre-grande vs sempre-pequeno vs roteador."""
+<p>Crie <code>compare.py</code> para rodar os 50 casos do P2 em três modos e coletar métricas:</p>
+<pre><code>"""compare.py — compares always-large vs always-small vs router."""
 import json, statistics
-from roteador import rotear, chamar_modelo, calcular_custo, MODELOS
+from router import route, call_model, calculate_cost, MODELS
 import time
 
-# Carregue os 50 casos de teste do P2
-with open("../p2_prompt/casos_teste.json") as f:
-    casos = json.load(f)
+# Load the 50 test cases from P2
+with open("../p2_prompt/test_cases.json") as f:
+    cases = json.load(f)
 
-def rodar_modo(nome: str, model_override: str | None = None):
-    """Roda todos os casos num modo e coleta métricas."""
-    resultados = []
-    for caso in casos:
-        pergunta = caso["input"]
-        inicio = time.time()
+def run_mode(name: str, model_override: str | None = None):
+    """Runs all cases in a mode and collects metrics."""
+    results = []
+    for case in cases:
+        question = case["input"]
+        start_time = time.time()
 
         if model_override:
-            # Modo fixo: sempre o mesmo modelo
-            config = MODELOS[model_override]
-            resp = chamar_modelo(pergunta, config["provider"], config["model"])
-            custo = calcular_custo(config["model"], resp["tokens_input"], resp["tokens_output"])
-            modelo_usado = config["model"]
+            # Fixed mode: always the same model
+            config = MODELS[model_override]
+            resp = call_model(question, config["provider"], config["model"])
+            cost = calculate_cost(config["model"], resp["tokens_input"], resp["tokens_output"])
+            model_used = config["model"]
         else:
-            # Modo roteador
-            r = rotear(pergunta)
-            resp = {"texto": r["resposta"], "tokens_input": r["tokens_input"],
+            # Router mode
+            r = route(question)
+            resp = {"text": r["response"], "tokens_input": r["tokens_input"],
                     "tokens_output": r["tokens_output"]}
-            custo = r["custo_usd"]
-            modelo_usado = r["modelo"]
+            cost = r["cost_usd"]
+            model_used = r["model"]
 
-        latencia = time.time() - inicio
-        resultados.append({
-            "custo": custo,
-            "latencia": latencia,
-            "modelo": modelo_usado,
-            # Adicione aqui sua métrica de qualidade (ex: score do avaliador do P3)
+        latency = time.time() - start_time
+        results.append({
+            "cost": cost,
+            "latency": latency,
+            "model": model_used,
+            # Add your quality metric here (e.g.: evaluator score from P3)
         })
 
-    custos = [r["custo"] for r in resultados]
-    latencias = [r["latencia"] for r in resultados]
+    costs = [r["cost"] for r in results]
+    latencies = [r["latency"] for r in results]
     return {
-        "modo": nome,
-        "custo_total": sum(custos),
-        "custo_medio": statistics.mean(custos),
-        "latencia_p50": statistics.median(latencias),
-        "latencia_p95": sorted(latencias)[int(len(latencias) * 0.95)],
-        "resultados": resultados,
+        "mode": name,
+        "total_cost": sum(costs),
+        "avg_cost": statistics.mean(costs),
+        "latency_p50": statistics.median(latencies),
+        "latency_p95": sorted(latencies)[int(len(latencies) * 0.95)],
+        "results": results,
     }
 
-# Rodar as três configurações
-grande  = rodar_modo("Sempre grande",  "COMPLEXA")
-pequeno = rodar_modo("Sempre pequeno", "SIMPLES")
-router  = rodar_modo("Roteador")
+# Run the three configurations
+large  = run_mode("Always large",  "COMPLEX")
+small  = run_mode("Always small",  "SIMPLE")
+router = run_mode("Router")
 
-# Exibir comparação
-print(f"{'Modo':<20} {'Custo total':>12} {'p95 latência':>14}")
+# Display comparison
+print(f"{'Mode':<20} {'Total cost':>12} {'p95 latency':>14}")
 print("-" * 50)
-for m in [grande, pequeno, router]:
-    print(f"{m['modo']:<20} ${m['custo_total']:>10.6f} {m['latencia_p95']:>12.3f}s")
+for m in [large, small, router]:
+    print(f"{m['mode']:<20} ${m['total_cost']:>10.6f} {m['latency_p95']:>12.3f}s")
 
-# Projeção mensal (exemplo: 10.000 chamadas/mês)
-CHAMADAS_MES = 10_000
-fator = CHAMADAS_MES / len(casos)
-print(f"\nProjeção mensal ({CHAMADAS_MES:,} chamadas):")
-for m in [grande, pequeno, router]:
-    print(f"  {m['modo']}: ${m['custo_total'] * fator:.2f}/mês")
+# Monthly projection (example: 10,000 calls/month)
+CALLS_PER_MONTH = 10_000
+factor = CALLS_PER_MONTH / len(cases)
+print(f"\nMonthly projection ({CALLS_PER_MONTH:,} calls):")
+for m in [large, small, router]:
+    print(f"  {m['mode']}: ${m['total_cost'] * factor:.2f}/month")
 
-# Salvar resultados
-with open("resultados/analise_custo.json", "w") as f:
-    json.dump({"grande": grande, "pequeno": pequeno, "roteador": router}, f, indent=2)
+# Save results
+with open("results/cost_analysis.json", "w") as f:
+    json.dump({"large": large, "small": small, "router": router}, f, indent=2)
 </code></pre>
 
 <h3>Passo 5 — Teste cache de contexto</h3>
@@ -459,42 +459,42 @@ Verifique no campo <code>usage.prompt_tokens_details.cached_tokens</code> da res
 Não precisa mudar código.</p>
 
 <p><strong>Anthropic</strong> — use <code>cache_control</code> para marcar blocos que devem ser cacheados:</p>
-<pre><code># Cache de contexto com Anthropic
+<pre><code># Context caching with Anthropic
 resp = anthropic_client.messages.create(
     model="claude-sonnet-4-20250514",
     max_tokens=1024,
     system=[
         {
             "type": "text",
-            "text": "Seu prompt de sistema longo aqui...",
-            "cache_control": {"type": "ephemeral"},  # marca para cache
+            "text": "Your long system prompt here...",
+            "cache_control": {"type": "ephemeral"},  # mark for caching
         }
     ],
-    messages=[{"role": "user", "content": pergunta}],
+    messages=[{"role": "user", "content": question}],
 )
-# Tokens cacheados aparecem em resp.usage.cache_read_input_tokens
-print(f"Tokens cacheados: {resp.usage.cache_read_input_tokens}")
-print(f"Tokens criados no cache: {resp.usage.cache_creation_input_tokens}")
+# Cached tokens appear in resp.usage.cache_read_input_tokens
+print(f"Cached tokens: {resp.usage.cache_read_input_tokens}")
+print(f"Cache creation tokens: {resp.usage.cache_creation_input_tokens}")
 </code></pre>
 
 <p><strong>Vertex AI (Trilha B)</strong> — use a API de context caching para prompts muito longos (32k+ tokens):</p>
-<pre><code># Cache de contexto com Vertex AI
+<pre><code># Context caching with Vertex AI
 from google import genai
 from google.genai.types import Content, Part
 
-client = genai.Client(vertexai=True, project="SEU_PROJETO", location="us-central1")
+client = genai.Client(vertexai=True, project="YOUR_PROJECT", location="us-central1")
 
-# Cria o cache (válido por 1 hora por padrão)
+# Create the cache (valid for 1 hour by default)
 cache = client.caches.create(
     model="gemini-2.5-pro",
-    contents=[Content(parts=[Part(text="Seu contexto longo aqui...")])],
+    contents=[Content(parts=[Part(text="Your long context here...")])],
     config={"display_name": "cache-p4", "ttl": "3600s"},
 )
 
-# Usa o cache nas chamadas seguintes
+# Use the cache in subsequent calls
 resp = client.models.generate_content(
     model="gemini-2.5-pro",
-    contents="Pergunta do usuário",
+    contents="User question",
     config={"cached_content": cache.name},
 )
 </code></pre>
@@ -534,7 +534,7 @@ use Gemini AI Studio as your primary provider.</p>
 <p>Compare o custo com e sem cache para o mesmo conjunto de perguntas e registre a diferença.</p>
 
 <h3>Passo 6 — Preencha a tabela, projete e conclua</h3>
-<p>Use os resultados do <code>comparar.py</code> para preencher a tabela de comparação abaixo.
+<p>Use os resultados do <code>compare.py</code> para preencher a tabela de comparação abaixo.
 Calcule a projeção mensal com o volume real esperado (ou use 10.000 chamadas como referência).
 Escreva uma conclusão honesta: o roteador compensa ou não? Por quê?</p>
 
@@ -621,13 +621,13 @@ julgamento.</p>
 </ul>
 <hr />
 <h2 id="entregavel">Entregável</h2>
-<pre><code>p4_roteador/
-├── roteador.py
-├── classificador_complexidade.py
-├── comparar.py
-├── resultados/
-│   └── analise_custo.md
-└── testes/
+<pre><code>p4_router/
+├── router.py
+├── complexity_classifier.py
+├── compare.py
+├── results/
+│   └── cost_analysis.md
+└── tests/
 </code></pre>
 <hr />
 <h2 id="definition-of-done">Definition of Done</h2>

@@ -152,21 +152,21 @@
 <p>Complemento aos módulos <a href="../modules/Module_08_Agents.html">Módulo 8 — Agentes e Uso de Ferramentas</a> e <a href="../modules/Module_09_Multi_Agent.html">Módulo 9 — Múltiplos Agentes e Protocolos</a>.</p>
 <hr />
 <h2 id="laco-de-raciocinio-e-acao">Laço de raciocínio e ação</h2>
-<pre><code>enquanto não concluído e iterações &lt; limite:
-    decisão = modelo(objetivo, histórico, ferramentas_disponíveis)
+<pre><code>while not done and iterations &lt; limit:
+    decision = model(goal, history, available_tools)
 
-    se decisão é resposta final:
-        retornar resposta
+    if decision is final_answer:
+        return answer
 
-    se decisão é chamada de ferramenta:
-        validar argumentos contra esquema
-        resultado = executar(ferramenta, argumentos)
-        sanitizar(resultado)          # não confiável
-        histórico.acrescentar(decisão, resultado)
+    if decision is tool_call:
+        validate arguments against schema
+        result = execute(tool, arguments)
+        sanitize(result)              # untrusted
+        history.append(decision, result)
 
-    iterações += 1
+    iterations += 1
 
-retornar falha_por_limite
+return failure_limit_reached
 </code></pre>
 <p>Duas linhas que costumam faltar em implementações ingênuas: a validação<br />
 de argumentos e a sanitização do resultado. Ambas são fonte comum de<br />

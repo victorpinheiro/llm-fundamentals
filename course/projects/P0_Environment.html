@@ -229,51 +229,51 @@ GOOGLE_CLOUD_LOCATION=</code></pre>
 <p>Este é o momento da verdade: uma chamada real ao modelo. Escolha o código da sua trilha.</p>
 
 <h4>Trilha A — OpenAI</h4>
-<pre><code># hello.py — Trilha A (OpenAI)
+<pre><code># hello.py — Track A (OpenAI)
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
 
-client = OpenAI()  # usa OPENAI_API_KEY do .env automaticamente
+client = OpenAI()  # uses OPENAI_API_KEY from .env automatically
 
-resposta = client.chat.completions.create(
+response = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
-        {"role": "system", "content": "Você é um assistente útil."},
-        {"role": "user", "content": "Diga 'Olá, mundo!' e explique em uma frase o que é um LLM."}
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Say 'Hello, world!' and explain in one sentence what an LLM is."}
     ],
     temperature=0,
 )
 
-print(resposta.choices[0].message.content)
-print(f"\nTokens usados: {resposta.usage.total_tokens}")</code></pre>
+print(response.choices[0].message.content)
+print(f"\nTokens used: {response.usage.total_tokens}")</code></pre>
 
 <h4>Trilha A — Anthropic</h4>
-<pre><code># hello.py — Trilha A (Anthropic)
+<pre><code># hello.py — Track A (Anthropic)
 import os
 from dotenv import load_dotenv
 import anthropic
 
 load_dotenv()
 
-client = anthropic.Anthropic()  # usa ANTHROPIC_API_KEY do .env automaticamente
+client = anthropic.Anthropic()  # uses ANTHROPIC_API_KEY from .env automatically
 
-resposta = client.messages.create(
+response = client.messages.create(
     model="claude-sonnet-4-20250514",
     max_tokens=256,
     messages=[
-        {"role": "user", "content": "Diga 'Olá, mundo!' e explique em uma frase o que é um LLM."}
+        {"role": "user", "content": "Say 'Hello, world!' and explain in one sentence what an LLM is."}
     ],
     temperature=0,
 )
 
-print(resposta.content[0].text)
-print(f"\nTokens — entrada: {resposta.usage.input_tokens}, saída: {resposta.usage.output_tokens}")</code></pre>
+print(response.content[0].text)
+print(f"\nTokens — input: {response.usage.input_tokens}, output: {response.usage.output_tokens}")</code></pre>
 
 <h4>Trilha B — Vertex AI</h4>
-<pre><code># hello.py — Trilha B (Vertex AI)
+<pre><code># hello.py — Track B (Vertex AI)
 import os
 from dotenv import load_dotenv
 import vertexai
@@ -286,16 +286,16 @@ vertexai.init(
     location=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"),
 )
 
-modelo = GenerativeModel("gemini-2.0-flash")
+model = GenerativeModel("gemini-2.0-flash")
 
-resposta = modelo.generate_content(
-    "Diga 'Olá, mundo!' e explique em uma frase o que é um LLM.",
+response = model.generate_content(
+    "Say 'Hello, world!' and explain in one sentence what an LLM is.",
     generation_config={"temperature": 0},
 )
 
-print(resposta.text)
-print(f"\nTokens — entrada: {resposta.usage_metadata.prompt_token_count}, "
-      f"saída: {resposta.usage_metadata.candidates_token_count}")</code></pre>
+print(response.text)
+print(f"\nTokens — input: {response.usage_metadata.prompt_token_count}, "
+      f"output: {response.usage_metadata.candidates_token_count}")</code></pre>
 
 <h4>Track C — Gemini (AI Studio)</h4>
 <pre><code># hello_gemini.py — Track C (Gemini via AI Studio, free tier)
@@ -387,10 +387,10 @@ git commit -m "P0: ambiente configurado e primeira chamada funcionando"</code></
 <hr />
 <h2 id="entregavel">Entregável</h2>
 <pre><code>p0_setup/
-├── .env.example        # sem valores reais
+├── .env.example        # no real values
 ├── .gitignore
-├── hello.py            # chamada de teste
-└── README.md           # como rodar
+├── hello.py            # test call
+└── README.md           # how to run
 </code></pre>
 <hr />
 <h2 id="definition-of-done">Definition of Done</h2>

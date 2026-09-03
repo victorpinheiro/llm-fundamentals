@@ -162,21 +162,21 @@ produz classificação estruturada.</p>
 erros de digitação, em idioma inesperado. Sistemas reais recebem isso.</p>
 <hr />
 <h2 id="especificacao">Especificação</h2>
-<pre><code>Entrada: &quot;sistema fora do ar desde ontem, ninguem consegue acessar, urgente&quot;
+<pre><code>Input: &quot;sistema fora do ar desde ontem, ninguem consegue acessar, urgente&quot;
 
-Saída:
+Output:
 {
-  &quot;categoria&quot;: &quot;indisponibilidade&quot;,
-  &quot;urgencia&quot;: 5,
-  &quot;area_responsavel&quot;: &quot;infraestrutura&quot;,
-  &quot;resumo&quot;: &quot;Sistema indisponível desde ontem, acesso bloqueado&quot;,
-  &quot;requer_escalonamento&quot;: true,
+  &quot;category&quot;: &quot;outage&quot;,
+  &quot;urgency&quot;: 5,
+  &quot;responsible_area&quot;: &quot;infrastructure&quot;,
+  &quot;summary&quot;: &quot;System unavailable since yesterday, access blocked&quot;,
+  &quot;requires_escalation&quot;: true,
   &quot;_meta&quot;: {
-    &quot;modelo&quot;: &quot;...&quot;,
-    &quot;latencia_ms&quot;: 0,
-    &quot;tokens_entrada&quot;: 0,
-    &quot;tokens_saida&quot;: 0,
-    &quot;custo_usd&quot;: 0.0
+    &quot;model&quot;: &quot;...&quot;,
+    &quot;latency_ms&quot;: 0,
+    &quot;input_tokens&quot;: 0,
+    &quot;output_tokens&quot;: 0,
+    &quot;cost_usd&quot;: 0.0
   }
 }
 </code></pre>
@@ -197,194 +197,194 @@ de modelo. Nunca use chave de API.</p>
 
 <h2 id="passo-a-passo">Passo a passo</h2>
 
-<h3 id="passo-1-esquema">Passo 1 — Defina o esquema de saída (<code>esquemas.py</code>)</h3>
+<h3 id="passo-1-esquema">Passo 1 — Defina o esquema de saída (<code>schemas.py</code>)</h3>
 <p>Antes de escrever qualquer prompt, defina <strong>exatamente</strong> o que você espera receber. O Pydantic serve como contrato entre o modelo e o seu código — se a saída não bater, a validação explode imediatamente em vez de propagar lixo silenciosamente.</p>
-<pre><code># esquemas.py
+<pre><code># schemas.py
 from pydantic import BaseModel, Field
 from typing import Literal
 
 
-class MetaInstrumentacao(BaseModel):
-    """Metadados de instrumentação de cada chamada."""
-    modelo: str
-    latencia_ms: float = Field(ge=0, description="Latência da chamada em milissegundos")
-    tokens_entrada: int = Field(ge=0)
-    tokens_saida: int = Field(ge=0)
-    custo_usd: float = Field(ge=0, description="Custo estimado em dólares")
+class InstrumentationMeta(BaseModel):
+    """Instrumentation metadata for each LLM call."""
+    model: str
+    latency_ms: float = Field(ge=0, description="Call latency in milliseconds")
+    input_tokens: int = Field(ge=0)
+    output_tokens: int = Field(ge=0)
+    cost_usd: float = Field(ge=0, description="Estimated cost in dollars")
 
 
-class ClassificacaoTicket(BaseModel):
-    """Resultado da classificação de um ticket de suporte."""
-    categoria: Literal[
-        "indisponibilidade",
-        "lentidao",
-        "erro_funcional",
-        "duvida",
-        "solicitacao",
-        "seguranca",
+class TicketClassification(BaseModel):
+    """Result of classifying a support ticket."""
+    category: Literal[
+        "outage",
+        "slowness",
+        "functional_error",
+        "question",
+        "request",
+        "security",
     ]
-    urgencia: int = Field(ge=1, le=5, description="1=baixa, 5=crítica")
-    area_responsavel: Literal[
-        "infraestrutura",
+    urgency: int = Field(ge=1, le=5, description="1=low, 5=critical")
+    responsible_area: Literal[
+        "infrastructure",
         "backend",
         "frontend",
-        "dados",
-        "seguranca",
-        "suporte_n1",
+        "data",
+        "security",
+        "support_l1",
     ]
-    resumo: str = Field(max_length=200, description="Resumo limpo do pedido")
-    requer_escalonamento: bool
+    summary: str = Field(max_length=200, description="Clean summary of the request")
+    requires_escalation: bool
 
-    _meta: MetaInstrumentacao | None = None</code></pre>
+    _meta: InstrumentationMeta | None = None</code></pre>
 
 <h3 id="passo-2-prompt">Passo 2 — Escreva o prompt de classificação</h3>
 <p>O prompt é o coração do sistema. Ele deve ser preciso, com exemplos, e deixar claro o que fazer com entradas ambíguas.</p>
 <pre><code># prompt.py
-SYSTEM_PROMPT = """Você é um sistema de triagem de tickets de suporte técnico.
+SYSTEM_PROMPT = """You are a technical support ticket triage system.
 
-Sua tarefa: receber o texto de um ticket e produzir uma classificação estruturada.
+Your task: receive the text of a support ticket and produce a structured classification.
 
-## Regras
-1. categoria: escolha entre indisponibilidade, lentidao, erro_funcional, duvida, solicitacao, seguranca.
-2. urgencia: inteiro de 1 (baixa) a 5 (crítica).
-   - 5 = sistema fora do ar, dados vazando, ou impacto em todos os usuários.
-   - 4 = funcionalidade crítica degradada, workaround difícil.
-   - 3 = problema impacta parte dos usuários, existe workaround.
-   - 2 = inconveniente, não bloqueia trabalho.
-   - 1 = dúvida ou melhoria.
-3. area_responsavel: escolha entre infraestrutura, backend, frontend, dados, seguranca, suporte_n1.
-4. resumo: reescreva o pedido em no máximo 200 caracteres, corrigindo erros e mantendo o sentido.
-5. requer_escalonamento: true se urgencia >= 4.
+## Rules
+1. category: choose from outage, slowness, functional_error, question, request, security.
+2. urgency: integer from 1 (low) to 5 (critical).
+   - 5 = system down, data leaking, or all users impacted.
+   - 4 = critical functionality degraded, workaround is difficult.
+   - 3 = problem impacts some users, workaround exists.
+   - 2 = inconvenience, does not block work.
+   - 1 = question or improvement request.
+3. responsible_area: choose from infrastructure, backend, frontend, data, security, support_l1.
+4. summary: rewrite the request in at most 200 characters, fixing errors and preserving meaning.
+5. requires_escalation: true if urgency >= 4.
 
-## Entradas malformadas
-- Se o texto estiver vazio ou for incompreensível, classifique como categoria="duvida", urgencia=1, area_responsavel="suporte_n1".
-- Se o idioma não for português, ainda assim classifique pelo conteúdo.
+## Malformed inputs
+- If the text is empty or incomprehensible, classify as category="question", urgency=1, responsible_area="support_l1".
+- If the language is not English, still classify based on the content.
 
-Responda APENAS com o JSON estruturado, sem texto adicional."""</code></pre>
+Respond ONLY with the structured JSON, no additional text."""</code></pre>
 
 <h3 id="passo-3-saida-estruturada">Passo 3 — Implemente a saída estruturada</h3>
 <p>Cada provedor tem seu próprio mecanismo para garantir que a resposta do modelo siga um schema JSON. Aqui está a implementação completa para cada trilha.</p>
 
 <h4>Trilha A — OpenAI (com <code>response_format</code>)</h4>
-<pre><code># provedores/openai_provider.py
+<pre><code># providers/openai_provider.py
 import os
 import time
 import json
 from dotenv import load_dotenv
 from openai import OpenAI
-from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from schemas import TicketClassification, InstrumentationMeta
 from prompt import SYSTEM_PROMPT
 
 load_dotenv()
 client = OpenAI()
 
-# Preços por 1M tokens (consulte a página de pricing para valores atuais)
-PRECO_INPUT = 0.15   # gpt-4o-mini input
-PRECO_OUTPUT = 0.60  # gpt-4o-mini output
-MODELO = "gpt-4o-mini"
+# Prices per 1M tokens (check the pricing page for current values)
+PRICE_INPUT = 0.15   # gpt-4o-mini input
+PRICE_OUTPUT = 0.60  # gpt-4o-mini output
+MODEL = "gpt-4o-mini"
 
 
-def classificar(texto: str) -> ClassificacaoTicket:
-    inicio = time.time()
+def classify(text: str) -> TicketClassification:
+    start_time = time.time()
 
-    resposta = client.chat.completions.create(
-        model=MODELO,
+    response = client.chat.completions.create(
+        model=MODEL,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": texto},
+            {"role": "user", "content": text},
         ],
         temperature=0,
         response_format={
             "type": "json_schema",
             "json_schema": {
-                "name": "ClassificacaoTicket",
+                "name": "TicketClassification",
                 "strict": True,
-                "schema": ClassificacaoTicket.model_json_schema(),
+                "schema": TicketClassification.model_json_schema(),
             },
         },
     )
 
-    latencia_ms = (time.time() - inicio) * 1000
-    dados = json.loads(resposta.choices[0].message.content)
-    resultado = ClassificacaoTicket(**dados)
+    latency_ms = (time.time() - start_time) * 1000
+    data = json.loads(response.choices[0].message.content)
+    result = TicketClassification(**data)
 
-    resultado._meta = MetaInstrumentacao(
-        modelo=MODELO,
-        latencia_ms=round(latencia_ms, 1),
-        tokens_entrada=resposta.usage.prompt_tokens,
-        tokens_saida=resposta.usage.completion_tokens,
-        custo_usd=round(
-            (resposta.usage.prompt_tokens * PRECO_INPUT
-             + resposta.usage.completion_tokens * PRECO_OUTPUT) / 1_000_000,
+    result._meta = InstrumentationMeta(
+        model=MODEL,
+        latency_ms=round(latency_ms, 1),
+        input_tokens=response.usage.prompt_tokens,
+        output_tokens=response.usage.completion_tokens,
+        cost_usd=round(
+            (response.usage.prompt_tokens * PRICE_INPUT
+             + response.usage.completion_tokens * PRICE_OUTPUT) / 1_000_000,
             6,
         ),
     )
-    return resultado</code></pre>
+    return result</code></pre>
 
 <h4>Trilha A — Anthropic (com tool use)</h4>
 <p>A Anthropic não tem um parâmetro <code>response_format</code> nativo como a OpenAI. Em vez disso, use <strong>tool use</strong>: defina uma "ferramenta" cujo schema é a sua classificação e instrua o modelo a chamá-la. O modelo retorna os argumentos estruturados da ferramenta.</p>
-<pre><code># provedores/anthropic_provider.py
+<pre><code># providers/anthropic_provider.py
 import os
 import time
 from dotenv import load_dotenv
 import anthropic
-from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from schemas import TicketClassification, InstrumentationMeta
 from prompt import SYSTEM_PROMPT
 
 load_dotenv()
 client = anthropic.Anthropic()
 
-PRECO_INPUT = 3.00    # claude-sonnet input por 1M tokens
-PRECO_OUTPUT = 15.00  # claude-sonnet output por 1M tokens
-MODELO = "claude-sonnet-4-20250514"
+PRICE_INPUT = 3.00    # claude-sonnet input per 1M tokens
+PRICE_OUTPUT = 15.00  # claude-sonnet output per 1M tokens
+MODEL = "claude-sonnet-4-20250514"
 
 TOOL_DEFINITION = {
-    "name": "registrar_classificacao",
-    "description": "Registra a classificação estruturada do ticket de suporte.",
-    "input_schema": ClassificacaoTicket.model_json_schema(),
+    "name": "record_classification",
+    "description": "Records the structured classification of a support ticket.",
+    "input_schema": TicketClassification.model_json_schema(),
 }
 
 
-def classificar(texto: str) -> ClassificacaoTicket:
-    inicio = time.time()
+def classify(text: str) -> TicketClassification:
+    start_time = time.time()
 
-    resposta = client.messages.create(
-        model=MODELO,
+    response = client.messages.create(
+        model=MODEL,
         max_tokens=512,
-        system=SYSTEM_PROMPT + "\n\nUse a ferramenta registrar_classificacao para retornar o resultado.",
-        messages=[{"role": "user", "content": texto}],
+        system=SYSTEM_PROMPT + "\n\nUse the record_classification tool to return the result.",
+        messages=[{"role": "user", "content": text}],
         tools=[TOOL_DEFINITION],
-        tool_choice={"type": "tool", "name": "registrar_classificacao"},
+        tool_choice={"type": "tool", "name": "record_classification"},
         temperature=0,
     )
 
-    latencia_ms = (time.time() - inicio) * 1000
+    latency_ms = (time.time() - start_time) * 1000
 
-    # O resultado está no bloco tool_use
-    tool_block = next(b for b in resposta.content if b.type == "tool_use")
-    resultado = ClassificacaoTicket(**tool_block.input)
+    # The result is in the tool_use block
+    tool_block = next(b for b in response.content if b.type == "tool_use")
+    result = TicketClassification(**tool_block.input)
 
-    resultado._meta = MetaInstrumentacao(
-        modelo=MODELO,
-        latencia_ms=round(latencia_ms, 1),
-        tokens_entrada=resposta.usage.input_tokens,
-        tokens_saida=resposta.usage.output_tokens,
-        custo_usd=round(
-            (resposta.usage.input_tokens * PRECO_INPUT
-             + resposta.usage.output_tokens * PRECO_OUTPUT) / 1_000_000,
+    result._meta = InstrumentationMeta(
+        model=MODEL,
+        latency_ms=round(latency_ms, 1),
+        input_tokens=response.usage.input_tokens,
+        output_tokens=response.usage.output_tokens,
+        cost_usd=round(
+            (response.usage.input_tokens * PRICE_INPUT
+             + response.usage.output_tokens * PRICE_OUTPUT) / 1_000_000,
             6,
         ),
     )
-    return resultado</code></pre>
+    return result</code></pre>
 
 <h4>Trilha B — Vertex AI (com <code>response_schema</code>)</h4>
-<pre><code># provedores/vertexai_provider.py
+<pre><code># providers/vertexai_provider.py
 import os
 import time
 from dotenv import load_dotenv
 import vertexai
 from vertexai.generative_models import GenerativeModel, GenerationConfig
-from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from schemas import TicketClassification, InstrumentationMeta
 from prompt import SYSTEM_PROMPT
 
 load_dotenv()
@@ -393,46 +393,46 @@ vertexai.init(
     location=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"),
 )
 
-# Preços por 1M tokens — Gemini 2.0 Flash (consulte a página de pricing)
-PRECO_INPUT = 0.10
-PRECO_OUTPUT = 0.40
-MODELO_NOME = "gemini-2.0-flash"
+# Prices per 1M tokens — Gemini 2.0 Flash (check the pricing page)
+PRICE_INPUT = 0.10
+PRICE_OUTPUT = 0.40
+MODEL_NAME = "gemini-2.0-flash"
 
-modelo = GenerativeModel(
-    MODELO_NOME,
+model = GenerativeModel(
+    MODEL_NAME,
     system_instruction=SYSTEM_PROMPT,
 )
 
 
-def classificar(texto: str) -> ClassificacaoTicket:
-    inicio = time.time()
+def classify(text: str) -> TicketClassification:
+    start_time = time.time()
 
-    resposta = modelo.generate_content(
-        texto,
+    response = model.generate_content(
+        text,
         generation_config=GenerationConfig(
             temperature=0,
             response_mime_type="application/json",
-            response_schema=ClassificacaoTicket.model_json_schema(),
+            response_schema=TicketClassification.model_json_schema(),
         ),
     )
 
-    latencia_ms = (time.time() - inicio) * 1000
+    latency_ms = (time.time() - start_time) * 1000
     import json
-    dados = json.loads(resposta.text)
-    resultado = ClassificacaoTicket(**dados)
+    data = json.loads(response.text)
+    result = TicketClassification(**data)
 
-    resultado._meta = MetaInstrumentacao(
-        modelo=MODELO_NOME,
-        latencia_ms=round(latencia_ms, 1),
-        tokens_entrada=resposta.usage_metadata.prompt_token_count,
-        tokens_saida=resposta.usage_metadata.candidates_token_count,
-        custo_usd=round(
-            (resposta.usage_metadata.prompt_token_count * PRECO_INPUT
-             + resposta.usage_metadata.candidates_token_count * PRECO_OUTPUT) / 1_000_000,
+    result._meta = InstrumentationMeta(
+        model=MODEL_NAME,
+        latency_ms=round(latency_ms, 1),
+        input_tokens=response.usage_metadata.prompt_token_count,
+        output_tokens=response.usage_metadata.candidates_token_count,
+        cost_usd=round(
+            (response.usage_metadata.prompt_token_count * PRICE_INPUT
+             + response.usage_metadata.candidates_token_count * PRICE_OUTPUT) / 1_000_000,
             6,
         ),
     )
-    return resultado</code></pre>
+    return result</code></pre>
 
 <h4>Track C — Gemini (AI Studio)</h4>
 <pre><code># providers/gemini_provider.py
@@ -442,7 +442,7 @@ import json
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from schemas import TicketClassification, InstrumentationMeta
 from prompt import SYSTEM_PROMPT
 
 load_dotenv()
@@ -451,29 +451,29 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 MODEL_NAME = "gemini-2.0-flash"
 
 
-def classificar(texto: str) -> ClassificacaoTicket:
+def classify(text: str) -> TicketClassification:
     start_time = time.time()
 
     response = client.models.generate_content(
         model=MODEL_NAME,
-        contents=f"{SYSTEM_PROMPT}\n\nTicket:\n{texto}",
+        contents=f"{SYSTEM_PROMPT}\n\nTicket:\n{text}",
         config=types.GenerateContentConfig(
             temperature=0,
             response_mime_type="application/json",
-            response_schema=ClassificacaoTicket,
+            response_schema=TicketClassification,
         ),
     )
 
     latency_ms = (time.time() - start_time) * 1000
     data = json.loads(response.text)
-    result = ClassificacaoTicket(**data)
+    result = TicketClassification(**data)
 
-    result._meta = MetaInstrumentacao(
-        modelo=MODEL_NAME,
-        latencia_ms=round(latency_ms, 1),
-        tokens_entrada=response.usage_metadata.prompt_token_count,
-        tokens_saida=response.usage_metadata.candidates_token_count,
-        custo_usd=0.0,  # free tier
+    result._meta = InstrumentationMeta(
+        model=MODEL_NAME,
+        latency_ms=round(latency_ms, 1),
+        input_tokens=response.usage_metadata.prompt_token_count,
+        output_tokens=response.usage_metadata.candidates_token_count,
+        cost_usd=0.0,  # free tier
     )
     return result</code></pre>
 
@@ -484,7 +484,7 @@ import time
 import json
 from dotenv import load_dotenv
 from openai import OpenAI
-from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from schemas import TicketClassification, InstrumentationMeta
 from prompt import SYSTEM_PROMPT
 
 load_dotenv()
@@ -496,36 +496,36 @@ client = OpenAI(
 MODEL_NAME = "llama-3.3-70b-versatile"
 
 
-def classificar(texto: str) -> ClassificacaoTicket:
+def classify(text: str) -> TicketClassification:
     start_time = time.time()
 
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": texto},
+            {"role": "user", "content": text},
         ],
         temperature=0,
         response_format={
             "type": "json_schema",
             "json_schema": {
-                "name": "ClassificacaoTicket",
+                "name": "TicketClassification",
                 "strict": True,
-                "schema": ClassificacaoTicket.model_json_schema(),
+                "schema": TicketClassification.model_json_schema(),
             },
         },
     )
 
     latency_ms = (time.time() - start_time) * 1000
     data = json.loads(response.choices[0].message.content)
-    result = ClassificacaoTicket(**data)
+    result = TicketClassification(**data)
 
-    result._meta = MetaInstrumentacao(
-        modelo=MODEL_NAME,
-        latencia_ms=round(latency_ms, 1),
-        tokens_entrada=response.usage.prompt_tokens,
-        tokens_saida=response.usage.completion_tokens,
-        custo_usd=0.0,  # free tier
+    result._meta = InstrumentationMeta(
+        model=MODEL_NAME,
+        latency_ms=round(latency_ms, 1),
+        input_tokens=response.usage.prompt_tokens,
+        output_tokens=response.usage.completion_tokens,
+        cost_usd=0.0,  # free tier
     )
     return result</code></pre>
 
@@ -534,7 +534,7 @@ def classificar(texto: str) -> ClassificacaoTicket:
 import time
 import json
 from openai import OpenAI
-from esquemas import ClassificacaoTicket, MetaInstrumentacao
+from schemas import TicketClassification, InstrumentationMeta
 from prompt import SYSTEM_PROMPT
 
 # Ollama runs locally — no API key needed
@@ -546,160 +546,160 @@ client = OpenAI(
 MODEL_NAME = "llama3.2"
 
 
-def classificar(texto: str) -> ClassificacaoTicket:
+def classify(text: str) -> TicketClassification:
     start_time = time.time()
 
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": texto},
+            {"role": "user", "content": text},
         ],
         temperature=0,
         response_format={
             "type": "json_schema",
             "json_schema": {
-                "name": "ClassificacaoTicket",
+                "name": "TicketClassification",
                 "strict": True,
-                "schema": ClassificacaoTicket.model_json_schema(),
+                "schema": TicketClassification.model_json_schema(),
             },
         },
     )
 
     latency_ms = (time.time() - start_time) * 1000
     data = json.loads(response.choices[0].message.content)
-    result = ClassificacaoTicket(**data)
+    result = TicketClassification(**data)
 
-    result._meta = MetaInstrumentacao(
-        modelo=MODEL_NAME,
-        latencia_ms=round(latency_ms, 1),
-        tokens_entrada=response.usage.prompt_tokens,
-        tokens_saida=response.usage.completion_tokens,
-        custo_usd=0.0,  # local, no cost
+    result._meta = InstrumentationMeta(
+        model=MODEL_NAME,
+        latency_ms=round(latency_ms, 1),
+        input_tokens=response.usage.prompt_tokens,
+        output_tokens=response.usage.completion_tokens,
+        cost_usd=0.0,  # local, no cost
     )
     return result</code></pre>
 
 <h3 id="passo-4-instrumentacao">Passo 4 — Entenda a instrumentação</h3>
-<p>Toda chamada a LLM em produção precisa registrar três números: <strong>latência</strong>, <strong>tokens</strong> e <strong>custo</strong>. No código acima, isso já está implementado no objeto <code>MetaInstrumentacao</code>. A fórmula de custo é simples:</p>
-<pre><code># Custo = (tokens_entrada * preço_input + tokens_saida * preço_output) / 1_000_000
-# Os preços são por 1 milhão de tokens — consulte sempre a página oficial:
+<p>Toda chamada a LLM em produção precisa registrar três números: <strong>latência</strong>, <strong>tokens</strong> e <strong>custo</strong>. No código acima, isso já está implementado no objeto <code>InstrumentationMeta</code>. A fórmula de custo é simples:</p>
+<pre><code># cost = (input_tokens * price_input + output_tokens * price_output) / 1_000_000
+# Prices are per 1 million tokens — always check the official page:
 # - OpenAI:    https://openai.com/api/pricing/
 # - Anthropic: https://docs.anthropic.com/en/docs/about-claude/models
 # - Vertex AI: https://cloud.google.com/vertex-ai/generative-ai/pricing</code></pre>
 <p>No P1 você coleta esses números manualmente. A partir do P3, isso vai virar pipeline automatizado.</p>
 
-<h3 id="passo-5-comparar">Passo 5 — Construa o script de comparação (<code>comparar.py</code>)</h3>
+<h3 id="passo-5-comparar">Passo 5 — Construa o script de comparação (<code>compare.py</code>)</h3>
 <p>Este script executa os mesmos 20 casos de teste em dois ou mais provedores e gera a tabela comparativa.</p>
-<pre><code># comparar.py
+<pre><code># compare.py
 import json
 import sys
 from pathlib import Path
 
-# Importe os provedores que você implementou
-# Trilha A:
-from provedores.openai_provider import classificar as classificar_openai
-from provedores.anthropic_provider import classificar as classificar_anthropic
-# Trilha B:
-# from provedores.vertexai_provider import classificar as classificar_vertexai_flash
-# (crie um segundo provider com modelo diferente para comparar)
+# Import the providers you implemented
+# Track A:
+from providers.openai_provider import classify as classify_openai
+from providers.anthropic_provider import classify as classify_anthropic
+# Track B:
+# from providers.vertexai_provider import classify as classify_vertexai_flash
+# (create a second provider with a different model to compare)
 
-PROVEDORES = {
-    "openai_gpt4o_mini": classificar_openai,
-    "anthropic_sonnet": classificar_anthropic,
-    # "vertexai_flash": classificar_vertexai_flash,
+PROVIDERS = {
+    "openai_gpt4o_mini": classify_openai,
+    "anthropic_sonnet": classify_anthropic,
+    # "vertexai_flash": classify_vertexai_flash,
 }
 
 
-def carregar_casos(caminho: str = "casos_teste.json") -> list[dict]:
-    with open(caminho) as f:
+def load_cases(path: str = "test_cases.json") -> list[dict]:
+    with open(path) as f:
         return json.load(f)
 
 
-def executar_comparacao():
-    casos = carregar_casos()
-    resultados = {nome: [] for nome in PROVEDORES}
+def run_comparison():
+    cases = load_cases()
+    results = {name: [] for name in PROVIDERS}
 
-    for i, caso in enumerate(casos, 1):
-        texto = caso["texto"]
-        print(f"\n--- Caso {i}/{len(casos)}: {texto[:60]}...")
+    for i, case in enumerate(cases, 1):
+        text = case["text"]
+        print(f"\n--- Case {i}/{len(cases)}: {text[:60]}...")
 
-        for nome, fn in PROVEDORES.items():
+        for name, fn in PROVIDERS.items():
             try:
-                resultado = fn(texto)
-                resultados[nome].append({
-                    "caso": i,
-                    "texto": texto,
-                    "classificacao": resultado.model_dump(),
-                    "meta": resultado._meta.model_dump() if resultado._meta else {},
-                    "erro": None,
+                result = fn(text)
+                results[name].append({
+                    "case": i,
+                    "text": text,
+                    "classification": result.model_dump(),
+                    "meta": result._meta.model_dump() if result._meta else {},
+                    "error": None,
                 })
-                meta = resultado._meta
-                print(f"  {nome}: {resultado.categoria} (urg={resultado.urgencia}) "
-                      f"— {meta.latencia_ms:.0f}ms, ${meta.custo_usd:.6f}")
+                meta = result._meta
+                print(f"  {name}: {result.category} (urg={result.urgency}) "
+                      f"— {meta.latency_ms:.0f}ms, ${meta.cost_usd:.6f}")
             except Exception as e:
-                resultados[nome].append({
-                    "caso": i,
-                    "texto": texto,
-                    "classificacao": None,
+                results[name].append({
+                    "case": i,
+                    "text": text,
+                    "classification": None,
                     "meta": {},
-                    "erro": str(e),
+                    "error": str(e),
                 })
-                print(f"  {nome}: ERRO — {e}")
+                print(f"  {name}: ERROR — {e}")
 
-    # Salva resultados
-    Path("resultados").mkdir(exist_ok=True)
-    with open("resultados/comparacao.json", "w") as f:
-        json.dump(resultados, f, indent=2, ensure_ascii=False)
+    # Save results
+    Path("results").mkdir(exist_ok=True)
+    with open("results/comparison.json", "w") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
 
-    # Imprime resumo
-    print("\n\n=== RESUMO ===")
-    for nome, lista in resultados.items():
-        sucessos = [r for r in lista if r["erro"] is None]
-        erros = len(lista) - len(sucessos)
-        if sucessos:
-            lat_media = sum(r["meta"]["latencia_ms"] for r in sucessos) / len(sucessos)
-            custo_total = sum(r["meta"]["custo_usd"] for r in sucessos)
-            print(f"\n{nome}:")
-            print(f"  Sucessos: {len(sucessos)}/{len(lista)}")
-            print(f"  Latência média: {lat_media:.0f}ms")
-            print(f"  Custo total (20 casos): ${custo_total:.6f}")
-            print(f"  Custo projetado (1000/dia): ${custo_total / len(sucessos) * 1000:.4f}/dia")
-            if erros:
-                print(f"  Erros: {erros}")
+    # Print summary
+    print("\n\n=== SUMMARY ===")
+    for name, entries in results.items():
+        successes = [r for r in entries if r["error"] is None]
+        errors = len(entries) - len(successes)
+        if successes:
+            avg_latency = sum(r["meta"]["latency_ms"] for r in successes) / len(successes)
+            total_cost = sum(r["meta"]["cost_usd"] for r in successes)
+            print(f"\n{name}:")
+            print(f"  Successes: {len(successes)}/{len(entries)}")
+            print(f"  Avg latency: {avg_latency:.0f}ms")
+            print(f"  Total cost (20 cases): ${total_cost:.6f}")
+            print(f"  Projected cost (1000/day): ${total_cost / len(successes) * 1000:.4f}/day")
+            if errors:
+                print(f"  Errors: {errors}")
 
 
 if __name__ == "__main__":
-    executar_comparacao()</code></pre>
+    run_comparison()</code></pre>
 
 <h3 id="passo-6-malformado">Passo 6 — Trate entradas malformadas</h3>
 <p>Sistemas reais recebem lixo. Envolva cada chamada em tratamento de erro robusto:</p>
-<pre><code># No seu classificador.py principal, encapsule a chamada:
+<pre><code># In your main classifier.py, wrap the call:
 from pydantic import ValidationError
 
-def classificar_seguro(texto: str, fn_classificar) -> ClassificacaoTicket | dict:
-    """Tenta classificar; retorna erro estruturado em caso de falha."""
-    if not texto or not texto.strip():
-        return ClassificacaoTicket(
-            categoria="duvida",
-            urgencia=1,
-            area_responsavel="suporte_n1",
-            resumo="Entrada vazia recebida",
-            requer_escalonamento=False,
+def classify_safe(text: str, classify_fn) -> TicketClassification | dict:
+    """Attempts to classify; raises on failure."""
+    if not text or not text.strip():
+        return TicketClassification(
+            category="question",
+            urgency=1,
+            responsible_area="support_l1",
+            summary="Empty input received",
+            requires_escalation=False,
         )
     try:
-        return fn_classificar(texto)
+        return classify_fn(text)
     except ValidationError as e:
-        print(f"[ERRO] Saída do modelo não passou na validação: {e}")
+        print(f"[ERROR] Model output failed validation: {e}")
         raise
     except Exception as e:
-        print(f"[ERRO] Falha na chamada ao modelo: {e}")
+        print(f"[ERROR] Model call failed: {e}")
         raise</code></pre>
 <p>Teste com entradas intencionalmente ruins: string vazia, caracteres aleatórios, texto em outro idioma, e textos com mais de 1000 palavras.</p>
 
 <hr />
 
 <h2 id="casos-de-teste">Como criar bons casos de teste</h2>
-<p>Você precisa de 20 casos em <code>casos_teste.json</code>. Não invente 20 variações do mesmo tema — distribua intencionalmente:</p>
+<p>Você precisa de 20 casos em <code>test_cases.json</code>. Não invente 20 variações do mesmo tema — distribua intencionalmente:</p>
 
 <h4>Distribuição recomendada</h4>
 <ul>
@@ -709,31 +709,31 @@ def classificar_seguro(texto: str, fn_classificar) -> ClassificacaoTicket | dict
 <li><strong>5 casos de borda:</strong> texto vazio, um único emoji, texto muito longo, pedido que não é suporte.</li>
 </ul>
 
-<h4>Exemplo de <code>casos_teste.json</code></h4>
+<h4>Exemplo de <code>test_cases.json</code></h4>
 <pre><code>[
-  {"texto": "sistema fora do ar desde ontem, ninguem consegue acessar, urgente",
-   "categoria_esperada": "indisponibilidade", "urgencia_esperada": 5},
+  {"text": "system down since yesterday, nobody can access, urgent",
+   "expected_category": "outage", "expected_urgency": 5},
 
-  {"texto": "como faço para resetar minha senha?",
-   "categoria_esperada": "duvida", "urgencia_esperada": 1},
+  {"text": "how do I reset my password?",
+   "expected_category": "question", "expected_urgency": 1},
 
-  {"texto": "pagina d login ta mto lenta hj, demora uns 30seg p carregar",
-   "categoria_esperada": "lentidao", "urgencia_esperada": 3},
+  {"text": "login page is super slow today, takes about 30s to load",
+   "expected_category": "slowness", "expected_urgency": 3},
 
-  {"texto": "botão de salvar não funciona no Chrome mas funciona no Firefox",
-   "categoria_esperada": "erro_funcional", "urgencia_esperada": 2},
+  {"text": "save button doesn't work on Chrome but works on Firefox",
+   "expected_category": "functional_error", "expected_urgency": 2},
 
-  {"texto": "",
-   "categoria_esperada": "duvida", "urgencia_esperada": 1},
+  {"text": "",
+   "expected_category": "question", "expected_urgency": 1},
 
-  {"texto": "🔥🔥🔥",
-   "categoria_esperada": "duvida", "urgencia_esperada": 1},
+  {"text": "🔥🔥🔥",
+   "expected_category": "question", "expected_urgency": 1},
 
-  {"texto": "preciso de acesso ao relatório de vendas do Q3 para apresentação amanhã",
-   "categoria_esperada": "solicitacao", "urgencia_esperada": 2},
+  {"text": "I need access to the Q3 sales report for tomorrow's presentation",
+   "expected_category": "request", "expected_urgency": 2},
 
-  {"texto": "someone is trying to access our admin panel from a foreign IP",
-   "categoria_esperada": "seguranca", "urgencia_esperada": 5}
+  {"text": "someone is trying to access our admin panel from a foreign IP",
+   "expected_category": "security", "expected_urgency": 5}
 ]</code></pre>
 <p>Adicione mais 12 casos seguindo a mesma lógica. Inclua a classificação esperada em cada caso — no P3 você vai automatizar a comparação entre esperado e real.</p>
 
@@ -752,15 +752,15 @@ def classificar_seguro(texto: str, fn_classificar) -> ClassificacaoTicket | dict
 
 <hr />
 <h2 id="entregavel">Entregável</h2>
-<pre><code>p1_integracao/
-├── classificador.py
-├── esquemas.py
-├── provedores/
-├── comparar.py
-├── casos_teste.json        # 20 casos
-├── resultados/
-│   └── comparacao.md
-└── testes/
+<pre><code>p1_integration/
+├── classifier.py
+├── schemas.py
+├── providers/
+├── compare.py
+├── test_cases.json         # 20 cases
+├── results/
+│   └── comparison.md
+└── tests/
 </code></pre>
 <hr />
 <h2 id="definition-of-done">Definition of Done</h2>
