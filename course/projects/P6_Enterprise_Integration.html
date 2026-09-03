@@ -553,6 +553,69 @@ bot.run(os.environ["DISCORD_TOKEN"])
 (<code>pip install botbuilder-core</code>). Requer registro no Azure Bot Service.
 Mais complexo de configurar, mas necessário em ambientes corporativos Microsoft.</p>
 
+<h3>Track A — Using OpenAI / Anthropic for the LLM call</h3>
+<p>The integration architecture (Slack bot, access control, task tracker) is provider-independent.
+The only provider-specific part is the <code>call_llm</code> function used inside <code>handle_question</code>.
+For Track A, replace <code>call_llm</code> with one of these:</p>
+
+<h4>Track A — OpenAI</h4>
+<pre><code class="language-python">"""call_llm implementation for OpenAI."""
+from openai import OpenAI
+
+client = OpenAI()
+
+def call_llm(prompt: str, context: str = "") -> str:
+    """Generate a response using OpenAI."""
+    messages = [{"role": "system", "content": prompt}]
+    if context:
+        messages.append({"role": "user", "content": context})
+    resp = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages,
+        temperature=0,
+    )
+    return resp.choices[0].message.content
+</code></pre>
+
+<h4>Track A — Anthropic</h4>
+<pre><code class="language-python">"""call_llm implementation for Anthropic."""
+import anthropic
+
+client = anthropic.Anthropic()
+
+def call_llm(prompt: str, context: str = "") -> str:
+    """Generate a response using Anthropic Claude."""
+    resp = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=1024,
+        system=prompt,
+        messages=[{"role": "user", "content": context or "Execute the task."}],
+        temperature=0,
+    )
+    return resp.content[0].text
+</code></pre>
+
+<h3>Track B — Using Vertex AI for the LLM call</h3>
+<p>The integration architecture (Slack bot, access control, task tracker) is provider-independent.
+The only provider-specific part is the <code>call_llm</code> function used inside <code>handle_question</code>.
+For Track B, replace <code>call_llm</code> with:</p>
+
+<h4>Track B — Vertex AI (Gemini)</h4>
+<pre><code class="language-python">"""call_llm implementation for Vertex AI."""
+import os
+import vertexai
+from vertexai.generative_models import GenerativeModel
+
+vertexai.init(project=os.getenv("GOOGLE_CLOUD_PROJECT"), location="us-central1")
+model = GenerativeModel("gemini-2.0-flash")
+
+def call_llm(prompt: str, context: str = "") -> str:
+    """Generate a response using Vertex AI Gemini."""
+    full_prompt = f"{prompt}\n\n{context}" if context else prompt
+    response = model.generate_content(full_prompt, generation_config={"temperature": 0})
+    return response.text
+</code></pre>
+
 <h3>Track C — Using free providers for the LLM call</h3>
 <p>The integration architecture (Slack bot, access control, task tracker) is provider-independent.
 The only provider-specific part is the <code>call_llm</code> function used inside <code>handle_question</code>.

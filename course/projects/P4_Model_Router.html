@@ -169,6 +169,7 @@ que não compensa.</p>
 tier gratuito, o roteamento aqui não é sobre custo monetário — é sobre <strong>limites de taxa</strong>
 (rate limits) e <strong>latência</strong>. Redirecionar perguntas simples para modelos menores preserva
 sua cota de requisições para o que realmente precisa de mais capacidade.</p>
+<p><strong>Trilha C (padrão — gratuita):</strong></p>
 <table>
 <thead>
 <tr><th>Camada</th><th>Gemini (AI Studio)</th><th>Groq</th><th>Ollama (local)</th></tr>
@@ -177,6 +178,30 @@ sua cota de requisições para o que realmente precisa de mais capacidade.</p>
 <tr><td>Pequeno (rápido)</td><td><code>gemini-2.0-flash-lite</code></td><td><code>llama-3.1-8b-instant</code></td><td><code>llama3.2:3b</code></td></tr>
 <tr><td>Intermediário</td><td><code>gemini-2.0-flash</code></td><td><code>llama-3.3-70b-versatile</code></td><td><code>llama3.1:8b</code></td></tr>
 <tr><td>Grande (detalhado)</td><td><code>gemini-2.0-flash</code> (prompt mais detalhado)</td><td><code>llama-3.3-70b-versatile</code> (com CoT)</td><td><code>llama3.1:8b</code> (com CoT)</td></tr>
+</tbody>
+</table>
+
+<p><strong>Trilha A (OpenAI / Anthropic — paga):</strong></p>
+<table>
+<thead>
+<tr><th>Camada</th><th>OpenAI</th><th>Anthropic</th></tr>
+</thead>
+<tbody>
+<tr><td>Pequeno (rápido)</td><td><code>gpt-4o-mini</code></td><td><code>claude-haiku-3.5</code></td></tr>
+<tr><td>Intermediário</td><td><code>gpt-4o</code></td><td><code>claude-sonnet-4</code></td></tr>
+<tr><td>Grande (detalhado)</td><td><code>gpt-4o</code> (com CoT)</td><td><code>claude-opus-4</code></td></tr>
+</tbody>
+</table>
+
+<p><strong>Trilha B (Vertex AI — corporativa):</strong></p>
+<table>
+<thead>
+<tr><th>Camada</th><th>Vertex AI (Gemini)</th></tr>
+</thead>
+<tbody>
+<tr><td>Pequeno (rápido)</td><td><code>gemini-2.0-flash-lite</code></td></tr>
+<tr><td>Intermediário</td><td><code>gemini-2.0-flash</code></td></tr>
+<tr><td>Grande (detalhado)</td><td><code>gemini-2.0-pro</code></td></tr>
 </tbody>
 </table>
 <p><strong>Nota:</strong> como os modelos grandes gratuitos são os mesmos dos intermediários (Gemini Flash,
@@ -190,18 +215,41 @@ Crie <code>complexity_classifier.py</code>:</p>
 <pre><code>"""complexity_classifier.py — classifies the complexity of a question."""
 import os
 
-# === Option 1: Gemini (free via AI Studio — 1,500 req/day) ===
+# =====================================================================
+# Track C (default — free providers)
+# =====================================================================
+
+# === Option C1: Gemini (free via AI Studio — 1,500 req/day) ===
 from google import genai
 
 gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# === Option 2: Groq (free — 30 RPM) ===
+# === Option C2: Groq (free — 30 RPM) ===
 # from groq import Groq
 # groq_client = Groq()  # uses GROQ_API_KEY from environment
 
-# === Option 3: Ollama (local — unlimited) ===
+# === Option C3: Ollama (local — unlimited) ===
 # from openai import OpenAI
 # ollama_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+
+# =====================================================================
+# Track A (OpenAI / Anthropic — paid) — uncomment ONE to use
+# =====================================================================
+
+# === Option A1: OpenAI ===
+# from openai import OpenAI
+# openai_client = OpenAI()  # uses OPENAI_API_KEY from environment
+
+# === Option A2: Anthropic ===
+# import anthropic
+# anthropic_client = anthropic.Anthropic()  # uses ANTHROPIC_API_KEY from environment
+
+# =====================================================================
+# Track B (Vertex AI — enterprise) — uncomment to use
+# =====================================================================
+
+# from google import genai
+# vertex_client = genai.Client(vertexai=True, project="YOUR_PROJECT", location="us-central1")
 
 CLASSIFIER_PROMPT = """\
 You are a complexity router. Given the user's question, classify it
@@ -216,14 +264,15 @@ Reply with ONLY one word: SIMPLE, MEDIUM or COMPLEX.
 
 def classify(question: str) -> str:
     """Returns 'SIMPLE', 'MEDIUM' or 'COMPLEX'."""
-    # --- Gemini ---
+
+    # --- Track C: Gemini (default) ---
     resp = gemini_client.models.generate_content(
         model="gemini-2.0-flash-lite",   # fastest model for classification
         contents=f"{CLASSIFIER_PROMPT}\n\nQuestion: {question}",
     )
     category = resp.text.strip().upper()
 
-    # --- Groq (uncomment and comment out the Gemini block above) ---
+    # --- Track C: Groq (uncomment and comment out the block above) ---
     # resp = groq_client.chat.completions.create(
     #     model="llama-3.1-8b-instant",
     #     messages=[
@@ -235,7 +284,7 @@ def classify(question: str) -> str:
     # )
     # category = resp.choices[0].message.content.strip().upper()
 
-    # --- Ollama (uncomment and comment out the block above) ---
+    # --- Track C: Ollama (uncomment and comment out the block above) ---
     # resp = ollama_client.chat.completions.create(
     #     model="llama3.2:3b",
     #     messages=[
@@ -247,6 +296,33 @@ def classify(question: str) -> str:
     # )
     # category = resp.choices[0].message.content.strip().upper()
 
+    # --- Track A: OpenAI (uncomment and comment out the block above) ---
+    # resp = openai_client.chat.completions.create(
+    #     model="gpt-4o-mini",            # cheapest OpenAI model for classification
+    #     messages=[
+    #         {"role": "system", "content": CLASSIFIER_PROMPT},
+    #         {"role": "user", "content": question},
+    #     ],
+    #     temperature=0,
+    #     max_tokens=10,
+    # )
+    # category = resp.choices[0].message.content.strip().upper()
+
+    # --- Track A: Anthropic (uncomment and comment out the block above) ---
+    # resp = anthropic_client.messages.create(
+    #     model="claude-haiku-3.5",       # cheapest Anthropic model for classification
+    #     max_tokens=10,
+    #     messages=[{"role": "user", "content": f"{CLASSIFIER_PROMPT}\n\nQuestion: {question}"}],
+    # )
+    # category = resp.content[0].text.strip().upper()
+
+    # --- Track B: Vertex AI (uncomment and comment out the block above) ---
+    # resp = vertex_client.models.generate_content(
+    #     model="gemini-2.0-flash-lite",  # fastest Vertex model for classification
+    #     contents=f"{CLASSIFIER_PROMPT}\n\nQuestion: {question}",
+    # )
+    # category = resp.text.strip().upper()
+
     if category not in ("SIMPLE", "MEDIUM", "COMPLEX"):
         return "COMPLEX"              # safe fallback
     return category
@@ -257,6 +333,10 @@ def classify(question: str) -> str:
 <pre><code>"""router.py — routes questions to the model matching their complexity."""
 import os, time
 from complexity_classifier import classify
+
+# =====================================================================
+# Track C (default — free providers)
+# =====================================================================
 
 # === Gemini (free via AI Studio) ===
 from google import genai
@@ -271,6 +351,25 @@ gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 # from openai import OpenAI
 # ollama_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
+# =====================================================================
+# Track A (OpenAI / Anthropic — paid) — uncomment ONE to use
+# =====================================================================
+
+# === OpenAI ===
+# from openai import OpenAI
+# openai_client = OpenAI()  # uses OPENAI_API_KEY from environment
+
+# === Anthropic ===
+# import anthropic
+# anthropic_client = anthropic.Anthropic()  # uses ANTHROPIC_API_KEY from environment
+
+# =====================================================================
+# Track B (Vertex AI — enterprise) — uncomment to use
+# =====================================================================
+
+# from google import genai
+# vertex_client = genai.Client(vertexai=True, project="YOUR_PROJECT", location="us-central1")
+
 # More detailed system prompt for the "large" tier
 DETAILED_SYSTEM_PROMPT = """\
 You are an expert assistant. Answer with step-by-step reasoning
@@ -278,31 +377,56 @@ You are an expert assistant. Answer with step-by-step reasoning
 structured response with evidence.
 """
 
+# ----- Track C: Gemini (default) -----
 MODELS = {
     "SIMPLE":  {"provider": "gemini", "model": "gemini-2.0-flash-lite", "system": None},
     "MEDIUM":  {"provider": "gemini", "model": "gemini-2.0-flash",      "system": None},
     "COMPLEX": {"provider": "gemini", "model": "gemini-2.0-flash",      "system": DETAILED_SYSTEM_PROMPT},
 }
 
-# Alternative with Groq:
+# ----- Track C: Groq -----
 # MODELS = {
 #     "SIMPLE":  {"provider": "groq", "model": "llama-3.1-8b-instant",      "system": None},
 #     "MEDIUM":  {"provider": "groq", "model": "llama-3.3-70b-versatile",    "system": None},
 #     "COMPLEX": {"provider": "groq", "model": "llama-3.3-70b-versatile",    "system": DETAILED_SYSTEM_PROMPT},
 # }
 
-# Alternative with Ollama:
+# ----- Track C: Ollama -----
 # MODELS = {
 #     "SIMPLE":  {"provider": "ollama", "model": "llama3.2:3b",   "system": None},
 #     "MEDIUM":  {"provider": "ollama", "model": "llama3.1:8b",   "system": None},
 #     "COMPLEX": {"provider": "ollama", "model": "llama3.1:8b",   "system": DETAILED_SYSTEM_PROMPT},
 # }
 
+# ----- Track A: OpenAI -----
+# MODELS = {
+#     "SIMPLE":  {"provider": "openai",  "model": "gpt-4o-mini",  "system": None},
+#     "MEDIUM":  {"provider": "openai",  "model": "gpt-4o",       "system": None},
+#     "COMPLEX": {"provider": "openai",  "model": "gpt-4o",       "system": DETAILED_SYSTEM_PROMPT},
+# }
+
+# ----- Track A: Anthropic -----
+# MODELS = {
+#     "SIMPLE":  {"provider": "anthropic", "model": "claude-haiku-3.5",  "system": None},
+#     "MEDIUM":  {"provider": "anthropic", "model": "claude-sonnet-4",   "system": None},
+#     "COMPLEX": {"provider": "anthropic", "model": "claude-opus-4",     "system": DETAILED_SYSTEM_PROMPT},
+# }
+
+# ----- Track B: Vertex AI -----
+# MODELS = {
+#     "SIMPLE":  {"provider": "vertex", "model": "gemini-2.0-flash-lite", "system": None},
+#     "MEDIUM":  {"provider": "vertex", "model": "gemini-2.0-flash",      "system": None},
+#     "COMPLEX": {"provider": "vertex", "model": "gemini-2.0-pro",        "system": DETAILED_SYSTEM_PROMPT},
+# }
+
 # Rate limits per provider (req/day or req/min)
 RATE_LIMITS = {
-    "gemini": "1,500 req/day (free via AI Studio)",
-    "groq":   "30 req/min (free)",
-    "ollama": "unlimited (local)",
+    "gemini":    "1,500 req/day (free via AI Studio)",
+    "groq":      "30 req/min (free)",
+    "ollama":    "unlimited (local)",
+    "openai":    "varies by tier (paid)",
+    "anthropic": "varies by tier (paid)",
+    "vertex":    "varies by quota (enterprise)",
 }
 
 def call_model(question: str, provider: str, model: str, system: str = None) -> dict:
@@ -345,6 +469,42 @@ def call_model(question: str, provider: str, model: str, system: str = None) -> 
             "text": resp.choices[0].message.content,
             "tokens_input": resp.usage.prompt_tokens,
             "tokens_output": resp.usage.completion_tokens,
+        }
+    elif provider == "openai":
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": question})
+        resp = openai_client.chat.completions.create(
+            model=model,
+            messages=messages,
+        )
+        return {
+            "text": resp.choices[0].message.content,
+            "tokens_input": resp.usage.prompt_tokens,
+            "tokens_output": resp.usage.completion_tokens,
+        }
+    elif provider == "anthropic":
+        kwargs = {"model": model, "max_tokens": 4096,
+                  "messages": [{"role": "user", "content": question}]}
+        if system:
+            kwargs["system"] = system
+        resp = anthropic_client.messages.create(**kwargs)
+        return {
+            "text": resp.content[0].text,
+            "tokens_input": resp.usage.input_tokens,
+            "tokens_output": resp.usage.output_tokens,
+        }
+    elif provider == "vertex":
+        content = f"{system}\n\n{question}" if system else question
+        resp = vertex_client.models.generate_content(
+            model=model,
+            contents=content,
+        )
+        return {
+            "text": resp.text,
+            "tokens_input": resp.usage_metadata.prompt_token_count,
+            "tokens_output": resp.usage_metadata.candidates_token_count,
         }
 
 def route(question: str) -> dict:

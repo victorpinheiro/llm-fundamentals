@@ -602,11 +602,21 @@ from providers.anthropic_provider import classify as classify_anthropic
 # Track B:
 # from providers.vertexai_provider import classify as classify_vertexai_flash
 # (create a second provider with a different model to compare)
+# Track C:
+# from providers.gemini_provider import classify as classify_gemini
+# from providers.groq_provider import classify as classify_groq
+# from providers.ollama_provider import classify as classify_ollama
 
 PROVIDERS = {
+    # Track A
     "openai_gpt4o_mini": classify_openai,
     "anthropic_sonnet": classify_anthropic,
+    # Track B
     # "vertexai_flash": classify_vertexai_flash,
+    # Track C
+    # "gemini_flash": classify_gemini,
+    # "groq_llama70b": classify_groq,
+    # "ollama_llama32": classify_ollama,
 }
 
 
