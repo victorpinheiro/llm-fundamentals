@@ -448,6 +448,8 @@ from prompt import SYSTEM_PROMPT
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+# NOTE: Gemini models change frequently. Check available models:
+# https://ai.google.dev/gemini-api/docs/models
 MODEL_NAME = "gemini-2.0-flash"
 
 
@@ -493,13 +495,20 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
 )
 
-MODEL_NAME = "llama-3.3-70b-versatile"
+# NOTE: Groq models change frequently. Check available models:
+# curl -s https://api.groq.com/openai/v1/models \
+#   -H "Authorization: Bearer $GROQ_API_KEY" | python -m json.tool
+MODEL_NAME = "qwen/qwen3.6-27b"
 
 
 def classify(text: str) -> TicketClassification:
     start_time = time.time()
 
-    response = client.chat.completions.create(
+    # Strict mode requires additionalProperties: false in the schema
+    pure_schema = TicketClassification.model_json_schema()
+    pure_schema["additionalProperties"] = False
+
+    response = client.beta.chat.completions.parse(
         model=MODEL_NAME,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -511,7 +520,7 @@ def classify(text: str) -> TicketClassification:
             "json_schema": {
                 "name": "TicketClassification",
                 "strict": True,
-                "schema": TicketClassification.model_json_schema(),
+                "schema": pure_schema,
             },
         },
     )
@@ -549,6 +558,13 @@ MODEL_NAME = "llama3.2"
 def classify(text: str) -> TicketClassification:
     start_time = time.time()
 
+    # Strict mode requires additionalProperties: false in the schema.
+    # Ollama (unlike OpenAI) does not auto-add it.
+    # NOTE: json_schema support depends on Ollama version and model.
+    # See: https://github.com/ollama/ollama/blob/main/docs/openai.md
+    pure_schema = TicketClassification.model_json_schema()
+    pure_schema["additionalProperties"] = False
+
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages=[
@@ -561,7 +577,7 @@ def classify(text: str) -> TicketClassification:
             "json_schema": {
                 "name": "TicketClassification",
                 "strict": True,
-                "schema": TicketClassification.model_json_schema(),
+                "schema": pure_schema,
             },
         },
     )

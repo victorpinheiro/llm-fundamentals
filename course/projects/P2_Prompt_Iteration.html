@@ -402,9 +402,11 @@ If the ticket is incomprehensible or empty, return:
 <pre><code>"""evaluate.py — Evaluates three prompt versions on the same test set."""
 import json, time, os
 from pathlib import Path
+from dotenv import load_dotenv
 from openai import OpenAI  # or: from anthropic import Anthropic
 
-client = OpenAI()  # uses OPENAI_API_KEY from environment
+load_dotenv()
+client = OpenAI()  # uses OPENAI_API_KEY from .env
 
 def load_prompt(version: str) -> str:
     return Path(f"prompts/{version}.txt").read_text(encoding="utf-8")
@@ -519,8 +521,13 @@ def classify(system_prompt: str, ticket: str) -> dict:
 <pre><code>"""evaluate.py — Track C version using Gemini (AI Studio, free tier)."""
 import json, time, os
 from pathlib import Path
+from dotenv import load_dotenv
 from google import genai
 
+load_dotenv()
+
+# NOTE: Gemini models change frequently. Check available models:
+# https://ai.google.dev/gemini-api/docs/models
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def load_prompt(version: str) -> str:
@@ -594,12 +601,20 @@ if __name__ == "__main__":
 <pre><code>"""evaluate.py — Track C version using Groq (free tier, OpenAI-compatible)."""
 import json, time, os
 from pathlib import Path
+from dotenv import load_dotenv
 from openai import OpenAI
+
+load_dotenv()
 
 client = OpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1",
 )
+
+# NOTE: Groq models change frequently. Check available models:
+# curl -s https://api.groq.com/openai/v1/models \
+#   -H "Authorization: Bearer $GROQ_API_KEY" | python -m json.tool
+MODEL_NAME = "allam-2-7b"
 
 def load_prompt(version: str) -> str:
     return Path(f"prompts/{version}.txt").read_text(encoding="utf-8")
@@ -609,23 +624,79 @@ def load_cases() -> list[dict]:
 
 def classify(system_prompt: str, ticket: str) -> dict:
     start_time = time.perf_counter()
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": ticket},
-        ],
-        temperature=0,
-    )
-    latency_ms = (time.perf_counter() - start_time) * 1000
-    text = response.choices[0].message.content.strip()
     try:
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": ticket},
+            ],
+            temperature=0,
+            response_format={"type": "json_object"},
+        )
+        text = response.choices[0].message.content
+        if not text:
+            raise ValueError("Model returned empty content")
         result = json.loads(text)
-    except json.JSONDecodeError:
+    except Exception as e:
+        print(f"Error in request/parse: {e}")
         result = None
+    latency_ms = (time.perf_counter() - start_time) * 1000
     return {"result": result, "latency_ms": latency_ms, "cost_usd": 0.0}
 
-# The evaluate_version and main functions are identical to the Gemini version above.
+def evaluate_version(version: str, cases: list[dict]) -> dict:
+    prompt = load_prompt(version)
+    total = len(cases)
+    valid, correct_cat, correct_urg, edge_ok, adv_ok = 0, 0, 0, 0, 0
+    latencies, costs = [], []
+    edge_total = sum(1 for c in cases if c.get("type") == "edge")
+    adv_total = sum(1 for c in cases if c.get("type") == "adversarial")
+
+    for case in cases:
+        r = classify(prompt, case["input"])
+        latencies.append(r["latency_ms"])
+        costs.append(r["cost_usd"])
+
+        # Sleep to avoid rate limiting (RPM) on Groq free tier
+        time.sleep(1)
+
+        res = r.get("result")
+        if not isinstance(res, dict):
+            continue
+
+        # urgency must be an integer (strings like "2" are invalid)
+        urgency = res.get("urgency")
+        if not isinstance(urgency, int) or isinstance(urgency, bool):
+            continue
+
+        valid += 1
+        if res.get("category") == case.get("expected_category"):
+            correct_cat += 1
+        expected_urgency = case.get("expected_urgency", 0)
+        if abs(urgency - expected_urgency) &lt;= 1:
+            correct_urg += 1
+        if case.get("type") == "edge" and res.get("category") == case.get("expected_category"):
+            edge_ok += 1
+        if case.get("type") == "adversarial" and res.get("category") == case.get("expected_category"):
+            adv_ok += 1
+
+    return {
+        "valid_output_%": round(valid / total * 100, 1) if total else 0,
+        "correct_category_%": round(correct_cat / total * 100, 1) if total else 0,
+        "urgency_+-1_%": round(correct_urg / total * 100, 1) if total else 0,
+        "edge_cases_handled": f"{edge_ok}/{edge_total}",
+        "adversarials_blocked": f"{adv_ok}/{adv_total}",
+        "avg_latency_ms": round(sum(latencies) / len(latencies), 0) if latencies else 0,
+        "avg_cost_usd": 0.0,
+    }
+
+if __name__ == "__main__":
+    cases = load_cases()
+    for v in ["v1", "v2", "v3"]:
+        print(f"\n=== {v.upper()} ===")
+        metrics = evaluate_version(v, cases)
+        for k, val in metrics.items():
+            print(f"  {k}: {val}")
 </code></pre>
 </details>
 
@@ -636,10 +707,15 @@ import json, time
 from pathlib import Path
 from openai import OpenAI
 
+# Ollama runs locally — no API key or .env needed
 client = OpenAI(
     base_url="http://localhost:11434/v1",
     api_key="ollama",
 )
+
+# NOTE: Check installed models with: ollama list
+# Pull a model with: ollama pull llama3.2
+MODEL_NAME = "llama3.2"
 
 def load_prompt(version: str) -> str:
     return Path(f"prompts/{version}.txt").read_text(encoding="utf-8")
@@ -649,23 +725,75 @@ def load_cases() -> list[dict]:
 
 def classify(system_prompt: str, ticket: str) -> dict:
     start_time = time.perf_counter()
-    response = client.chat.completions.create(
-        model="llama3.2",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": ticket},
-        ],
-        temperature=0,
-    )
-    latency_ms = (time.perf_counter() - start_time) * 1000
-    text = response.choices[0].message.content.strip()
     try:
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": ticket},
+            ],
+            temperature=0,
+            response_format={"type": "json_object"},
+        )
+        text = response.choices[0].message.content
+        if not text:
+            raise ValueError("Model returned empty content")
         result = json.loads(text)
-    except json.JSONDecodeError:
+    except Exception as e:
+        print(f"Error in request/parse: {e}")
         result = None
+    latency_ms = (time.perf_counter() - start_time) * 1000
     return {"result": result, "latency_ms": latency_ms, "cost_usd": 0.0}
 
-# The evaluate_version and main functions are identical to the Gemini version above.
+def evaluate_version(version: str, cases: list[dict]) -> dict:
+    prompt = load_prompt(version)
+    total = len(cases)
+    valid, correct_cat, correct_urg, edge_ok, adv_ok = 0, 0, 0, 0, 0
+    latencies, costs = [], []
+    edge_total = sum(1 for c in cases if c.get("type") == "edge")
+    adv_total = sum(1 for c in cases if c.get("type") == "adversarial")
+
+    for case in cases:
+        r = classify(prompt, case["input"])
+        latencies.append(r["latency_ms"])
+        costs.append(r["cost_usd"])
+
+        res = r.get("result")
+        if not isinstance(res, dict):
+            continue
+
+        urgency = res.get("urgency")
+        if not isinstance(urgency, int) or isinstance(urgency, bool):
+            continue
+
+        valid += 1
+        if res.get("category") == case.get("expected_category"):
+            correct_cat += 1
+        expected_urgency = case.get("expected_urgency", 0)
+        if abs(urgency - expected_urgency) &lt;= 1:
+            correct_urg += 1
+        if case.get("type") == "edge" and res.get("category") == case.get("expected_category"):
+            edge_ok += 1
+        if case.get("type") == "adversarial" and res.get("category") == case.get("expected_category"):
+            adv_ok += 1
+
+    return {
+        "valid_output_%": round(valid / total * 100, 1) if total else 0,
+        "correct_category_%": round(correct_cat / total * 100, 1) if total else 0,
+        "urgency_+-1_%": round(correct_urg / total * 100, 1) if total else 0,
+        "edge_cases_handled": f"{edge_ok}/{edge_total}",
+        "adversarials_blocked": f"{adv_ok}/{adv_total}",
+        "avg_latency_ms": round(sum(latencies) / len(latencies), 0) if latencies else 0,
+        "avg_cost_usd": 0.0,
+    }
+
+if __name__ == "__main__":
+    cases = load_cases()
+    for v in ["v1", "v2", "v3"]:
+        print(f"\n=== {v.upper()} ===")
+        metrics = evaluate_version(v, cases)
+        for k, val in metrics.items():
+            print(f"  {k}: {val}")
 </code></pre>
 </details>
 

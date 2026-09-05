@@ -290,8 +290,10 @@ def test_adversarials_have_low_urgency(cases):
 import json, os
 import pytest
 from pathlib import Path
+from dotenv import load_dotenv
 from openai import OpenAI
 
+load_dotenv()
 client = OpenAI()
 PROMPT = Path(__file__).parent.parent / "prompts" / "v2.txt"  # use the winning prompt from P2
 
@@ -370,12 +372,14 @@ def test_easy_cases_no_regression(results):
 <details>
 <summary><strong>Trilha B — Google Cloud / Vertex AI</strong></summary>
 <pre><code>"""test_regression.py — Vertex AI version."""
-import json
+import json, os
 import pytest
 from pathlib import Path
+from dotenv import load_dotenv
 import vertexai
 from vertexai.generative_models import GenerativeModel
 
+load_dotenv()
 vertexai.init(project=os.environ["GCP_PROJECT"], location="us-central1")
 model = GenerativeModel("gemini-2.0-flash")
 PROMPT = Path(__file__).parent.parent / "prompts" / "v2.txt"
@@ -418,8 +422,10 @@ def results():
 import json, os
 import pytest
 from pathlib import Path
+from dotenv import load_dotenv
 from google import genai
 
+load_dotenv()
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 PROMPT = Path(__file__).parent.parent / "prompts" / "v2.txt"
 
@@ -493,11 +499,13 @@ def test_easy_cases_no_regression(results):
 <details>
 <summary><strong>Track C — Groq</strong></summary>
 <pre><code>"""test_regression.py — Track C version using Groq (free tier, OpenAI-compatible)."""
-import json, os
+import json, os, time
 import pytest
 from pathlib import Path
+from dotenv import load_dotenv
 from openai import OpenAI
 
+load_dotenv()
 client = OpenAI(
     api_key=os.environ["GROQ_API_KEY"],
     base_url="https://api.groq.com/openai/v1",
@@ -532,6 +540,7 @@ def results():
         except json.JSONDecodeError:
             parsed = None
         outputs.append({"case": case, "parsed": parsed})
+        time.sleep(1)  # Groq free tier rate limit (30 req/min)
 
     return outputs
 

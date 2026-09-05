@@ -303,7 +303,10 @@ Reaproveite o que construiu nos projetos anteriores.</p>
 provider setup code to use in <code>src/config.py</code>:</p>
 <pre><code class="language-python">"""src/config.py — Provider configuration for Track C (free providers)"""
 import os
+from dotenv import load_dotenv
 from openai import OpenAI
+
+load_dotenv()
 
 # -- Choose your primary provider ------------------------------------
 # All three are free. Pick based on your needs:
@@ -334,7 +337,13 @@ def get_client():
     raise ValueError(f"Unknown provider: {PROVIDER}")
 
 def get_model_name() -> str:
-    """Return the model name for the configured provider."""
+    """Return the model name for the configured provider.
+
+    NOTE: Models may be deprecated or renamed over time. Check availability:
+      Gemini: https://ai.google.dev/gemini-api/docs/models
+      Groq:   curl https://api.groq.com/openai/v1/models -H "Authorization: Bearer $GROQ_API_KEY"
+      Ollama: ollama list (local models)
+    """
     models = {
         "gemini": "gemini-2.0-flash",
         "groq": "llama-3.3-70b-versatile",

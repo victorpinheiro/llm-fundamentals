@@ -387,9 +387,12 @@ pipeline = SequentialAgent(
 orchestration framework with any free provider as the LLM backend.</p>
 <pre><code class="language-python">"""p8_multi/orchestrator_free.py — Multi-agent with free providers"""
 import os
+from dotenv import load_dotenv
 from langgraph.prebuilt import create_react_agent
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
+
+load_dotenv()
 
 # -- Pick your free provider -------------------------------------------
 # Option 1: Groq (fast, cloud-based, free)

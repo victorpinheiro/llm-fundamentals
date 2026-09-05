@@ -529,9 +529,11 @@ def run_agent(user_message: str) -&gt; str:
 <h4>Track C — Gemini AI Studio (function calling)</h4>
 <pre><code class="language-python">"""p7_agent/manual/loop_gemini.py — ReAct loop with Gemini AI Studio (free)"""
 import os, json
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
+load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 MODEL = "gemini-2.0-flash"
 MAX_ITERATIONS = 10
@@ -623,8 +625,10 @@ def run_agent(user_message: str) -> str:
 <h4>Track C — Groq (function calling, OpenAI-compatible)</h4>
 <pre><code class="language-python">"""p7_agent/manual/loop_groq.py — ReAct loop with Groq (free, OpenAI-compatible)"""
 import os, json
+from dotenv import load_dotenv
 from openai import OpenAI
 
+load_dotenv()
 client = OpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1",
@@ -894,10 +898,13 @@ agent = Agent(
 
 <h4>Track C — LangGraph with Groq (free)</h4>
 <pre><code class="language-python">"""p7_agent/framework/agent_langgraph_groq.py — LangGraph agent with Groq (free)"""
+import os
+from dotenv import load_dotenv
 from langgraph.prebuilt import create_react_agent
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
-import os
+
+load_dotenv()
 
 @tool
 def document_search(query: str) -> str:

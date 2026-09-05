@@ -438,7 +438,10 @@ def retrieve(question: str, top_k: int = 5) -> list[dict]:
 <h3>Passo 6 — Construa o pipeline RAG</h3>
 <p>Crie <code>rag.py</code> que conecta recuperação à geração com ancoragem e citação:</p>
 <pre><code>"""rag.py — complete RAG pipeline with source citation."""
+from dotenv import load_dotenv
 from retriever import retrieve
+
+load_dotenv()
 
 # === Track A ===
 from openai import OpenAI
@@ -561,7 +564,7 @@ if __name__ == "__main__":
 <h3>Passo 7 — Teste os modos de falha</h3>
 <p>Cada modo de falha deve virar um teste automatizado. Crie <code>testes/test_modos_falha.py</code>:</p>
 <pre><code>"""test_modos_falha.py — testa os 6 modos de falha do RAG."""
-from rag import perguntar
+from rag import ask
 from retriever import retrieve
 
 # 1. Semantic mismatch — does a synonym find the document?

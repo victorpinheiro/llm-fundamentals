@@ -325,21 +325,23 @@ from openai import OpenAI
 load_dotenv()
 
 client = OpenAI(
-    api_key=os.getenv("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1",
+    base_url="https://api.groq.com/openai/v1",  # free, no credit card
+    api_key=os.environ.get("GROQ_API_KEY"),
 )
 
+# NOTE: Groq models change frequently. Check available models:
+# curl -s https://api.groq.com/openai/v1/models \
+#   -H "Authorization: Bearer $GROQ_API_KEY" | python -m json.tool
 response = client.chat.completions.create(
-    model="llama-3.3-70b-versatile",
+    model="openai/gpt-oss-20b",
+    max_tokens=256,
     messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "Say 'Hello, world!' and explain in one sentence what an LLM is."},
+        {"role": "user", "content": "Say 'Hello, world!' and explain in one sentence what an LLM is."}
     ],
-    temperature=0,
 )
 
 print(response.choices[0].message.content)
-print(f"\nTokens used: {response.usage.total_tokens}")</code></pre>
+print(f"\nTokens — input: {response.usage.prompt_tokens}, output: {response.usage.completion_tokens}")</code></pre>
 
 <h4>Track C — Ollama</h4>
 <pre><code># hello_ollama.py — Track C (Ollama, local, OpenAI-compatible)

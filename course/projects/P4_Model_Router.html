@@ -214,6 +214,9 @@ Anote os limites de taxa de cada provedor — você vai precisar disso no Passo 
 Crie <code>complexity_classifier.py</code>:</p>
 <pre><code>"""complexity_classifier.py — classifies the complexity of a question."""
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # =====================================================================
 # Track C (default — free providers)
@@ -332,6 +335,9 @@ def classify(question: str) -> str:
 <p>O roteador conecta o classificador aos modelos. Crie <code>router.py</code>:</p>
 <pre><code>"""router.py — routes questions to the model matching their complexity."""
 import os, time
+from dotenv import load_dotenv
+
+load_dotenv()
 from complexity_classifier import classify
 
 # =====================================================================
@@ -507,6 +513,24 @@ def call_model(question: str, provider: str, model: str, system: str = None) -> 
             "tokens_output": resp.usage_metadata.candidates_token_count,
         }
 
+def calculate_cost(model: str, tokens_input: int, tokens_output: int) -> float:
+    """Estimate cost per call. Track C providers are free; paid tracks use pricing tables."""
+    # Track C (free providers): Gemini free tier, Groq free tier, Ollama local
+    # For paid providers, replace with actual pricing per 1M tokens:
+    # e.g. {"gpt-4o-mini": (0.15, 0.60), "gpt-4o": (2.50, 10.00)}
+    PRICING = {
+        # model: (input_per_1M, output_per_1M)
+        "gpt-4o-mini": (0.15, 0.60),
+        "gpt-4o": (2.50, 10.00),
+        "claude-haiku-3.5": (0.80, 4.00),
+        "claude-sonnet-4": (3.00, 15.00),
+        "claude-opus-4": (15.00, 75.00),
+    }
+    if model in PRICING:
+        inp, out = PRICING[model]
+        return (tokens_input * inp + tokens_output * out) / 1_000_000
+    return 0.0  # free providers
+
 def route(question: str) -> dict:
     """Classifies, routes and returns response with full metadata."""
     complexity = classify(question)
@@ -518,6 +542,8 @@ def route(question: str) -> dict:
     )
     latency = time.time() - start_time
 
+    cost = calculate_cost(config["model"], result["tokens_input"], result["tokens_output"])
+
     return {
         "question": question,
         "complexity": complexity,
@@ -527,6 +553,7 @@ def route(question: str) -> dict:
         "tokens_input": result["tokens_input"],
         "tokens_output": result["tokens_output"],
         "latency_s": round(latency, 3),
+        "cost_usd": cost,
     }
 
 if __name__ == "__main__":
@@ -568,6 +595,14 @@ def run_mode(name: str, model_override: str | None = None):
             model_used = r["model"]
 
         latency = time.time() - start_time
+
+        # Rate limiting for Groq free tier (30 req/min).
+        # In router mode, route() makes 2 API calls (classify + generate),
+        # so use a longer sleep to stay under the limit.
+        provider = config["provider"] if model_override else r["provider"]
+        if provider == "groq":
+            time.sleep(4 if not model_override else 2)
+
         results.append({
             "cost": cost,
             "latency": latency,
